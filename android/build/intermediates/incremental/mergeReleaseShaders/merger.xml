@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main"><source path="/Volumes/code/temp/cchat-project/cchat/node_modules/react-native-rsa-native/android/src/main/shaders"/></dataSet><dataSet config="release"><source path="/Volumes/code/temp/cchat-project/cchat/node_modules/react-native-rsa-native/android/src/release/shaders"/></dataSet></merger>
