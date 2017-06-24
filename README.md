@@ -6,8 +6,10 @@ Implementation is in PKCS1
 
 ## Status
 
-Android: Generation, Encryption, Decryption   
-iOS: Generation 
+Android: Generation, Encryption, Decryption  
+iOS: Generation, Encryption, Decryption  
+
+*Need to check cross platform encrypt/decrypt
 
 ## Usage
 
@@ -34,35 +36,20 @@ or if you are old:
 
 `$ npm install react-native-rsa-native --save`
 
-### Mostly automatic installation
+### Mostly automatic installation:
 
 `$ react-native link react-native-rsa-native`
 
-### Manual installation
-
 
 #### iOS
+*Needs [Cocoapods](https://cocoapods.org/)*
 
-1. In XCode, in the project navigator, right click `Libraries` ➜ `Add Files to [your project's name]`
-2. Go to `node_modules` ➜ `react-native-rsa-native` and add `RNRSA.xcodeproj`
-3. In XCode, in the project navigator, select your project. Add `libRNRSA.a` to your project's `Build Phases` ➜ `Link Binary With Libraries`
-4. Run your project (`Cmd+R`)<
+add this to your `Podfile`:
 
-#### Android
-
-1. Open up `android/app/src/main/java/[...]/MainActivity.java`
-  - Add `import com.reactlibrary.RNRSAPackage;` to the imports at the top of the file
-  - Add `new RNRSAPackage()` to the list returned by the `getPackages()` method
-2. Append the following lines to `android/settings.gradle`:
-  	```
-  	include ':react-native-rsa-native'
-  	project(':react-native-rsa-native').projectDir = new File(rootProject.projectDir, 	'../node_modules/react-native-rsa-native/android')
-  	```
-3. Insert the following lines inside the dependencies block in `android/app/build.gradle`:
-  	```
-      compile project(':react-native-rsa-native')
-  	```
+```
+pod 'react-native-rsa-native', path: '../node_modules/react-native-rsa-native'
+```
 
 ## Credit
 
-Based on https://github.com/SamSaffron/react-native-key-pair
+Originally based on https://github.com/SamSaffron/react-native-key-pair
