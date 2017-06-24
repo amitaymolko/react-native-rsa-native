@@ -4,6 +4,11 @@
 A native implementation of RSA key generation and encryption/decryption.
 Implementation is in PKCS1
 
+## Status
+
+Android: Generation, Encryption, Decryption
+iOS: Generation
+
 ## Usage
 
 ```
