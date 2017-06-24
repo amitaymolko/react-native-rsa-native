@@ -2,15 +2,23 @@
 # react-native-rsa-native
 
 A native implementation of RSA key generation and encryption/decryption.
+Implementation is in PKCS1
 
 ## Usage
 
 ```
-import RSA from 'react-native-rsa-native'
-RSA.generate((keys) => {
-  console.log(keys.private) // the private key
-  console.log(keys.public) // the public key
-})
+RSA.generate()
+  .then(keys => {
+    console.log(keys.private) // the private key
+    console.log(keys.public) // the public key
+    RSA.encrypt('1234', keys.public)
+      .then(encodedMessage => {
+        RSA.decrypt(encodedMessage, keys.private)
+          .then(message => {
+            console.log(message)
+          })
+      })
+  })
 ```
 
 ## Getting started
