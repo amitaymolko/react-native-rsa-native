@@ -1,13 +1,13 @@
 
 # react-native-rsa-native
 
-A native implementation of RSA key generation and encryption/decryption.
-Implementation is in PKCS1
+A native implementation of RSA key generation and encryption/decryption.   
+Implementation is in PKCS1  
 
 ## Status
 
-Android: Generation, Encryption, Decryption
-iOS: Generation
+Android: Generation, Encryption, Decryption   
+iOS: Generation 
 
 ## Usage
 
