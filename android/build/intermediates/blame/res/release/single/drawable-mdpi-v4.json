@@ -1,15 +1,15 @@
 [
     {
-        "merged": "/Volumes/code/temp/cchat-project/cchat/node_modules/react-native-rsa-native/android/build/intermediates/res/merged/release/drawable-mdpi-v4/abc_btn_check_to_on_mtrl_000.png",
-        "source": "/Volumes/code/temp/cchat-project/cchat/node_modules/react-native-rsa-native/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/drawable-mdpi/abc_btn_check_to_on_mtrl_000.png"
+        "merged": "/Volumes/code/temp/cchat-project/cchat/node_modules/react-native-rsa-native/android/build/intermediates/res/merged/release/drawable-mdpi-v4/abc_btn_radio_to_on_mtrl_015.png",
+        "source": "/Volumes/code/temp/cchat-project/cchat/node_modules/react-native-rsa-native/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/drawable-mdpi/abc_btn_radio_to_on_mtrl_015.png"
     },
     {
         "merged": "/Volumes/code/temp/cchat-project/cchat/node_modules/react-native-rsa-native/android/build/intermediates/res/merged/release/drawable-mdpi-v4/abc_spinner_mtrl_am_alpha.9.png",
         "source": "/Volumes/code/temp/cchat-project/cchat/node_modules/react-native-rsa-native/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/drawable-mdpi/abc_spinner_mtrl_am_alpha.9.png"
     },
     {
-        "merged": "/Volumes/code/temp/cchat-project/cchat/node_modules/react-native-rsa-native/android/build/intermediates/res/merged/release/drawable-mdpi-v4/abc_btn_radio_to_on_mtrl_015.png",
-        "source": "/Volumes/code/temp/cchat-project/cchat/node_modules/react-native-rsa-native/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/drawable-mdpi/abc_btn_radio_to_on_mtrl_015.png"
+        "merged": "/Volumes/code/temp/cchat-project/cchat/node_modules/react-native-rsa-native/android/build/intermediates/res/merged/release/drawable-mdpi-v4/abc_btn_check_to_on_mtrl_000.png",
+        "source": "/Volumes/code/temp/cchat-project/cchat/node_modules/react-native-rsa-native/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/drawable-mdpi/abc_btn_check_to_on_mtrl_000.png"
     },
     {
         "merged": "/Volumes/code/temp/cchat-project/cchat/node_modules/react-native-rsa-native/android/build/intermediates/res/merged/release/drawable-mdpi-v4/abc_cab_background_top_mtrl_alpha.9.png",

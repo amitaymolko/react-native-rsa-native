@@ -1,11 +1,11 @@
 [
     {
-        "merged": "/Volumes/code/temp/cchat-project/cchat/node_modules/react-native-rsa-native/android/build/intermediates/res/merged/release/layout/notification_media_action.xml",
-        "source": "/Volumes/code/temp/cchat-project/cchat/node_modules/react-native-rsa-native/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/layout/notification_media_action.xml"
-    },
-    {
         "merged": "/Volumes/code/temp/cchat-project/cchat/node_modules/react-native-rsa-native/android/build/intermediates/res/merged/release/layout/notification_template_big_media.xml",
         "source": "/Volumes/code/temp/cchat-project/cchat/node_modules/react-native-rsa-native/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/layout/notification_template_big_media.xml"
+    },
+    {
+        "merged": "/Volumes/code/temp/cchat-project/cchat/node_modules/react-native-rsa-native/android/build/intermediates/res/merged/release/layout/notification_media_action.xml",
+        "source": "/Volumes/code/temp/cchat-project/cchat/node_modules/react-native-rsa-native/android/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/res/layout/notification_media_action.xml"
     },
     {
         "merged": "/Volumes/code/temp/cchat-project/cchat/node_modules/react-native-rsa-native/android/build/intermediates/res/merged/release/layout/abc_screen_toolbar.xml",
