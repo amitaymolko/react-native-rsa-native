@@ -7,6 +7,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.WritableNativeMap;
+import com.facebook.react.bridge.Promise;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -26,7 +27,7 @@ public class RNRSAModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void generate(Callback callback)  {
+  public void generate(Promise promise)  {
     WritableNativeMap keys = new WritableNativeMap();
 
     try {
@@ -34,13 +35,44 @@ public class RNRSAModule extends ReactContextBaseJavaModule {
         rsa.generate();
         keys.putString("public",  rsa.getPublicKey());
         keys.putString("private",  rsa.getPrivateKey());
+        promise.resolve(keys);
     } catch(NoSuchAlgorithmException e) {
-
+      promise.reject("Error", e.getMessage());
     } catch(IOException e) {
-
+      promise.reject("Error", e.getMessage());
     }
-    callback.invoke(keys);
   }
+
+  @ReactMethod
+  public void encrypt(String message, String publicKeyString, Promise promise)  {
+
+      try {
+          RSA rsa = new RSA();
+          rsa.setPublicKey(publicKeyString);
+          String encodedMessage = rsa.encrypt(message);
+          promise.resolve(encodedMessage);
+      } catch(Exception e) {
+          promise.reject("Error", e.getMessage());
+      }
+  }
+
+
+  @ReactMethod
+  public void decrypt(String encodedMessage, String privateKeyString, Promise promise)  {
+
+      try {
+          RSA rsa = new RSA();
+          rsa.setPrivateKey(privateKeyString);
+          String message = rsa.decrypt(encodedMessage);
+          promise.resolve(message);
+
+      } catch(Exception e) {
+          promise.reject("Error", e.getMessage());
+      }
+  }
+
+
+
 
 //    @ReactMethod
 //    public void decrypt(String encodedMessage, String privateKeyString)  {

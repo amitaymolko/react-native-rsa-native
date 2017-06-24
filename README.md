@@ -1,7 +1,7 @@
 
 # react-native-rsa-native
 
-A native implementation of Public/Private RSA key generation and encryption/decryption.
+A native implementation of RSA key generation and encryption/decryption.
 
 ## Usage
 

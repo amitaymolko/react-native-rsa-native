@@ -21,6 +21,6 @@ android {
 
 dependencies {
     compile 'com.facebook.react:react-native:0.20.+'
-    compile files('core-1.56.0.0.jar')
+    compile 'com.madgag.spongycastle:core:1.56.0.0'
 }
   
