@@ -7,23 +7,22 @@
 //
 
 #import <Foundation/Foundation.h>
+#import  <MIHCrypto/MIHRSAPublicKey.h>
+#import  <MIHCrypto/MIHRSAPrivateKey.h>
 
 @interface RSANative : NSObject
 
-@property (nonatomic, retain) NSString *publicKey;
-@property (nonatomic, retain) NSString *privateKey;
+@property (nonatomic, retain) MIHRSAPublicKey *_publicKey;
+@property (nonatomic, retain) MIHRSAPrivateKey *_privateKey;
 
 - (void) generate;
 
 - (NSString *) getPublicKey;
 - (NSString *) getPrivateKey;
-- (NSString *) setPublicKey;
-- (NSString *) setPrivateKey;
+- (void) setPublicKey: (NSString *) pubKey;
+- (void) setPrivateKey: (NSString *) privKey;
 
-- (NSString *) encode: (NSString *) message;
-- (NSString *) decode: (NSString *) encodedMessage;
+- (NSString *) encrypt: (NSString *) message;
+- (NSString *) decrypt: (NSString *) encodedMessage;
 
 @end
-
-
-
