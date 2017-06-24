@@ -11,23 +11,6 @@ iOS: Generation, Encryption, Decryption
 
 *Need to check cross platform encrypt/decrypt
 
-## Usage
-
-```
-RSA.generate()
-  .then(keys => {
-    console.log(keys.private) // the private key
-    console.log(keys.public) // the public key
-    RSA.encrypt('1234', keys.public)
-      .then(encodedMessage => {
-        RSA.decrypt(encodedMessage, keys.private)
-          .then(message => {
-            console.log(message)
-          })
-      })
-  })
-```
-
 ## Getting started
 
 `$ yarn add react-native-rsa-native` 
@@ -48,6 +31,23 @@ add this to your `Podfile`:
 
 ```
 pod 'react-native-rsa-native', path: '../node_modules/react-native-rsa-native'
+```
+
+## Usage
+
+```
+RSA.generate()
+  .then(keys => {
+    console.log(keys.private) // the private key
+    console.log(keys.public) // the public key
+    RSA.encrypt('1234', keys.public)
+      .then(encodedMessage => {
+        RSA.decrypt(encodedMessage, keys.private)
+          .then(message => {
+            console.log(message)
+          })
+      })
+  })
 ```
 
 ## Credit
