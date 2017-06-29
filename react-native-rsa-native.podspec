@@ -20,8 +20,4 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   s.source_files  = "ios/*"
   s.platform     = :ios, "7.0"
-
-  s.dependency "MIHCrypto", "~> 0.4.1"
-  s.dependency "React"
-
 end

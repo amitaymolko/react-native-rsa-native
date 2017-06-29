@@ -6,14 +6,12 @@
 //  Copyright © 2017 Facebook. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import  <MIHCrypto/MIHRSAPublicKey.h>
-#import  <MIHCrypto/MIHRSAPrivateKey.h>
+@import Foundation;
 
 @interface RSANative : NSObject
 
-@property (nonatomic, retain) MIHRSAPublicKey *_publicKey;
-@property (nonatomic, retain) MIHRSAPrivateKey *_privateKey;
+@property (nonatomic) SecKeyRef publicKey;
+@property (nonatomic) SecKeyRef privateKey;
 
 - (void) generate;
 
@@ -26,6 +24,3 @@
 - (NSString *) decrypt: (NSString *) encodedMessage;
 
 @end
-
-
-
