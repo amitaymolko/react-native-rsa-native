@@ -19,7 +19,9 @@ RCT_EXPORT_METHOD(generate:(RCTPromiseResolveBlock)resolve
                            @"public" : [rsa getPublicKey]
                            };
     
-    NSLog(@"keys %@ ", keys[@"public"]);
+    NSLog(@"public key %@", keys[@"public"]);
+    NSLog(@"private key %@", keys[@"private"]);
+    
     resolve(keys);
 }
 
