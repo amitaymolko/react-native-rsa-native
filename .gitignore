@@ -2,6 +2,7 @@
 #
 .DS_Store
 
+
 # node.js
 #
 node_modules/
@@ -36,3 +37,4 @@ build/
 .gradle
 local.properties
 *.iml
+android/build
