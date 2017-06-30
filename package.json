@@ -11,5 +11,6 @@
     "rsa"
   ],
   "author": "Amitay Molko",
-  "license": "MIT"
+  "license": "MIT",
+  "url": "https://github.com/amitaymolko/react-native-rsa-native"
 }
