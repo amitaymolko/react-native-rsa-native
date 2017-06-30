@@ -6,26 +6,21 @@
 //  Copyright © 2017 Facebook. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import  <MIHCrypto/MIHRSAPublicKey.h>
-#import  <MIHCrypto/MIHRSAPrivateKey.h>
+@import Foundation;
 
 @interface RSANative : NSObject
 
-@property (nonatomic, retain) MIHRSAPublicKey *_publicKey;
-@property (nonatomic, retain) MIHRSAPrivateKey *_privateKey;
+@property (nonatomic) NSString *publicKey;
+@property (nonatomic) NSString *privateKey;
 
-- (void) generate;
+- (instancetype)initWithKeyTag:(NSString *)keyTag;
 
-- (NSString *) getPublicKey;
-- (NSString *) getPrivateKey;
-- (void) setPublicKey: (NSString *) pubKey;
-- (void) setPrivateKey: (NSString *) privKey;
+- (void)generate;
 
-- (NSString *) encrypt: (NSString *) message;
-- (NSString *) decrypt: (NSString *) encodedMessage;
+- (NSString *)encodedPublicKey;
+- (NSString *)encodedPrivateKey;
+
+- (NSString *)encrypt:(NSString *)message;
+- (NSString *)decrypt:(NSString *)encodedMessage;
 
 @end
-
-
-
