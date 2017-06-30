@@ -1,21 +1,20 @@
-
 # react-native-rsa-native
 
-A native implementation of RSA key generation and encryption/decryption.   
-Implementation is in PKCS1  
+A native implementation of RSA key generation and encryption/decryption.
+Implementation is in PKCS1
 
 ## Status
 
-Android: Generation, Encryption, Decryption  
-iOS: Generation, Encryption, Decryption  
+Android: Generation, Encryption, Decryption
+iOS: Generation, Encryption, Decryption
 
 *Need to check cross platform encrypt/decrypt
 
 ## Getting started
 
-`$ yarn add react-native-rsa-native` 
+`$ yarn add react-native-rsa-native`
 
-or if you are old: 
+or:
 
 `$ npm install react-native-rsa-native --save`
 
@@ -24,23 +23,14 @@ or if you are old:
 `$ react-native link react-native-rsa-native`
 
 
-#### iOS
-*Needs [Cocoapods](https://cocoapods.org/)*
-
-add this to your `Podfile`:
-
-```
-pod 'react-native-rsa-native', path: '../node_modules/react-native-rsa-native'
-```
-
 ## Usage
 
 ```
 RSA.generate()
   .then(keys => {
-    console.log(keys.private) // the private key
-    console.log(keys.public) // the public key
-    RSA.encrypt('1234', keys.public)
+    console.log(keys.private) // encoded private key
+    console.log(keys.public) // encoded public key
+    RSA.encrypt('secret message', keys.public)
       .then(encodedMessage => {
         RSA.decrypt(encodedMessage, keys.private)
           .then(message => {
@@ -53,3 +43,4 @@ RSA.generate()
 ## Credit
 
 Originally based on https://github.com/SamSaffron/react-native-key-pair
+iOS implementation reference https://developer.apple.com/library/content/documentation/Security/Conceptual/CertKeyTrustProgGuide/KeyRead.html#//apple_ref/doc/uid/TP40001358-CH222-SW1
