@@ -3,24 +3,36 @@
 // Code largely based on practices as defined by:
 // https://developer.apple.com/library/content/documentation/Security/Conceptual/CertKeyTrustProgGuide/KeyRead.html#//apple_ref/doc/uid/TP40001358-CH222-SW1
 
-// TODO: need to pass the tag key in during generation of the keypair for identifying
-// extracting the keys from the keychain
-
-static NSString *kKeyPairTagIdentifier = @"com.example.keys.mykey";
-
 typedef void (^SecKeyPerformBlock)(SecKeyRef key);
+
+@interface RSANative ()
+@property (nonatomic, strong) NSString * keyTag;
+@end
 
 @implementation RSANative
 
+- (instancetype)initWithKeyTag:(NSString *)keyTag {
+    self = [super init];
+    if (self) {
+        _keyTag = keyTag;
+    }
+    return self;
+}
+
 - (void)generate {
-    NSData *tag = [kKeyPairTagIdentifier dataUsingEncoding:NSUTF8StringEncoding];
+    NSMutableDictionary *privateKeyAttributes = [NSMutableDictionary dictionary];
+
+    if (self.keyTag) {
+        NSData *tag = [self.keyTag dataUsingEncoding:NSUTF8StringEncoding];
+
+        privateKeyAttributes[(id)kSecAttrIsPermanent] = @YES;
+        privateKeyAttributes[(id)kSecAttrApplicationTag] = tag;
+    }
+
     NSDictionary *attributes =
-    @{ (id)kSecAttrKeyType:               (id)kSecAttrKeyTypeRSA,
-       (id)kSecAttrKeySizeInBits:         @2048,
-       (id)kSecPrivateKeyAttrs:
-           @{ (id)kSecAttrIsPermanent:    @YES,
-              (id)kSecAttrApplicationTag: tag,
-              },
+    @{ (id)kSecAttrKeyType:       (id)kSecAttrKeyTypeRSA,
+       (id)kSecAttrKeySizeInBits: @2048,
+       (id)kSecPrivateKeyAttrs:   privateKeyAttributes
        };
 
     CFErrorRef error = NULL;
@@ -35,7 +47,7 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
 - (NSString *)encodedPublicKey {
     __block NSData *keyData = nil;
 
-    [self performWithPublicKey:^(SecKeyRef publicKey) {
+    [self performWithPublicKeyTag:self.keyTag block:^(SecKeyRef publicKey) {
         CFErrorRef error = NULL;
         keyData = (NSData *)CFBridgingRelease(SecKeyCopyExternalRepresentation(publicKey, &error));
 
@@ -51,7 +63,7 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
 - (NSString *)encodedPrivateKey {
     __block NSData *keyData = nil;
 
-    [self performWithPrivateKey:^(SecKeyRef privateKey) {
+    [self performWithPrivateKeyTag:self.keyTag block:^(SecKeyRef privateKey) {
         CFErrorRef error = NULL;
         keyData = (NSData *)CFBridgingRelease(SecKeyCopyExternalRepresentation(privateKey, &error));
 
@@ -64,17 +76,24 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
     return [keyData base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
 }
 
-- (void)setPublicKey:(NSString *)pubKey {
-    // external
-}
-- (void)setPrivateKey:(NSString *)privKey {
-    // external
+
+
+
+- (NSString *)encrypt:(NSString *)message withKey:(NSString *)publicKey {
+    return @""; // TODO
 }
 
-- (NSString *)encrypt:(NSString *)message {
+- (NSString *)decrypt:(NSString *)encodedMessage withKey:(NSString *)privateKey {
+    return @""; // TODO
+}
+
+
+
+
+- (NSString *)encrypt:(NSString *)message withKeyTag:(NSString *)keyTag {
     __block NSData *cipherText = nil;
 
-    [self performWithPublicKey:^(SecKeyRef publicKey) {
+    [self performWithPublicKeyTag:keyTag block:^(SecKeyRef publicKey) {
         BOOL canEncrypt = SecKeyIsAlgorithmSupported(publicKey,
                                                      kSecKeyOperationTypeEncrypt,
                                                      kSecKeyAlgorithmRSAEncryptionOAEPSHA512);
@@ -97,10 +116,10 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
     return [cipherText base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
 }
 
-- (NSString *)decrypt:(NSString *)encodedMessage {
+- (NSString *)decrypt:(NSString *)encodedMessage withKeyTag:(NSString *)keyTag {
     __block NSData *clearText = nil;
 
-    [self performWithPrivateKey:^(SecKeyRef privateKey) {
+    [self performWithPrivateKeyTag:keyTag block:^(SecKeyRef privateKey) {
         NSData *cipherText = [[NSData alloc] initWithBase64EncodedString:encodedMessage options:NSDataBase64DecodingIgnoreUnknownCharacters];
 
         BOOL canDecrypt = SecKeyIsAlgorithmSupported(privateKey,
@@ -124,8 +143,8 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
     return [[NSString alloc] initWithData:clearText encoding:NSUTF8StringEncoding];
 }
 
-- (void)performWithPrivateKey:(SecKeyPerformBlock)performBlock {
-    NSData *tag = [kKeyPairTagIdentifier dataUsingEncoding:NSUTF8StringEncoding];
+- (void)performWithPrivateKeyTag:(NSString *)keyTag block:(SecKeyPerformBlock)performBlock {
+    NSData *tag = [keyTag dataUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *getquery = @{ (id)kSecClass: (id)kSecClassKey,
                                 (id)kSecAttrApplicationTag: tag,
                                 (id)kSecAttrKeyType: (id)kSecAttrKeyTypeRSA,
@@ -144,8 +163,8 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
     }
 }
 
-- (void)performWithPublicKey:(SecKeyPerformBlock)performBlock {
-    [self performWithPrivateKey:^(SecKeyRef key) {
+- (void)performWithPublicKeyTag:(NSString *)tag block:(SecKeyPerformBlock)performBlock {
+    [self performWithPrivateKeyTag:tag block:^(SecKeyRef key) {
         SecKeyRef publicKey = SecKeyCopyPublicKey(key);
 
         if (performBlock) { performBlock(publicKey); }

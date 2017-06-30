@@ -24,23 +24,32 @@ or:
 
 ## iOS
 
-In your React Native Xcode project, right click on your project and go 'Add Files to ...', then navigate to <your-project-root>/node_modules/react-native-rsa-native/ios and select the RNRSA.xcodeproj file.
+In your React Native Xcode project, right click on your project and go 'Add Files to ...', then navigate to <your-project-root>/node_modules/react-native-rsa-native/ios and select the RNRSA.xcodeproj file. Then in the build settings for your target under 'Link Binary With Libraries', add libRNRSA.a.
 
 ## Usage
 
 ```
-RSA.generate()
+// Example utilizing the keychain for private key secure storage
+
+let keyTag = 'com.domain.mykey';
+let secret = "secret message";
+
+RSA.generate(keyTag)
   .then(keys => {
-    console.log(keys.private) // encoded private key
-    console.log(keys.public) // encoded public key
-    RSA.encrypt('secret message', keys.public)
+    console.log(keys.public);
+
+    console.log(secret);
+
+    RSA.encrypt(secret, keyTag)
       .then(encodedMessage => {
-        RSA.decrypt(encodedMessage, keys.private)
+        console.log(encodedMessage);
+
+        RSA.decrypt(encodedMessage, keyTag)
           .then(message => {
-            console.log(message)
+            console.log(message);
           })
-      })
-  })
+        })
+    });
 ```
 
 ## Credit

@@ -10,14 +10,17 @@
 
 @interface RSANative : NSObject
 
+- (instancetype)initWithKeyTag:(NSString *)keyTag;
+
 - (void)generate;
 
 - (NSString *)encodedPublicKey;
 - (NSString *)encodedPrivateKey;
-- (void)setPublicKey: (NSString *)pubKey;
-- (void)setPrivateKey: (NSString *)privKey;
 
-- (NSString *)encrypt:(NSString *)message;
-- (NSString *)decrypt:(NSString *)encodedMessage;
+- (NSString *)encrypt:(NSString *)message withKey:(NSString *)key;
+- (NSString *)decrypt:(NSString *)encodedMessage withKey:(NSString *)key;
+
+- (NSString *)encrypt:(NSString *)message withKeyTag:(NSString *)keyTag;
+- (NSString *)decrypt:(NSString *)encodedMessage withKeyTag:(NSString *)keyTag;
 
 @end
