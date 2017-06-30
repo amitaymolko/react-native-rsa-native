@@ -15,13 +15,9 @@ RCT_EXPORT_METHOD(generate:(RCTPromiseResolveBlock)resolve
     RSANative *rsa = [[RSANative alloc] init];
     [rsa generate];
     NSDictionary *keys = @{
-                           @"private" : [rsa getPrivateKey],
-                           @"public" : [rsa getPublicKey]
+                           @"private" : [rsa encodedPrivateKey],
+                           @"public" : [rsa encodedPublicKey]
                            };
-    
-    NSLog(@"public key %@", keys[@"public"]);
-    NSLog(@"private key %@", keys[@"private"]);
-    
     resolve(keys);
 }
 
@@ -40,5 +36,5 @@ RCT_EXPORT_METHOD(decrypt:(NSString *) encodedMessage withKey:(NSString *) key r
     NSString *message = [rsa decrypt:encodedMessage];
     resolve(message);
 }
+
 @end
-  

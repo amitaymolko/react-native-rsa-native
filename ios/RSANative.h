@@ -10,17 +10,14 @@
 
 @interface RSANative : NSObject
 
-@property (nonatomic) SecKeyRef publicKey;
-@property (nonatomic) SecKeyRef privateKey;
+- (void)generate;
 
-- (void) generate;
+- (NSString *)encodedPublicKey;
+- (NSString *)encodedPrivateKey;
+- (void)setPublicKey: (NSString *)pubKey;
+- (void)setPrivateKey: (NSString *)privKey;
 
-- (NSString *) getPublicKey;
-- (NSString *) getPrivateKey;
-- (void) setPublicKey: (NSString *) pubKey;
-- (void) setPrivateKey: (NSString *) privKey;
-
-- (NSString *) encrypt: (NSString *) message;
-- (NSString *) decrypt: (NSString *) encodedMessage;
+- (NSString *)encrypt:(NSString *)message;
+- (NSString *)decrypt:(NSString *)encodedMessage;
 
 @end

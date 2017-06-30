@@ -1,10 +1,20 @@
 #import "RSANative.h"
 
+// Code largely based on practices as defined by:
+// https://developer.apple.com/library/content/documentation/Security/Conceptual/CertKeyTrustProgGuide/KeyRead.html#//apple_ref/doc/uid/TP40001358-CH222-SW1
+
+// TODO: need to pass the tag key in during generation of the keypair for identifying
+// extracting the keys from the keychain
+
+static NSString *kKeyPairTagIdentifier = @"com.example.keys.mykey";
+
+typedef void (^SecKeyPerformBlock)(SecKeyRef key);
+
 @implementation RSANative
 
 - (void)generate {
-    NSData* tag = [@"com.example.keys.mykey" dataUsingEncoding:NSUTF8StringEncoding];
-    NSDictionary* attributes =
+    NSData *tag = [kKeyPairTagIdentifier dataUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *attributes =
     @{ (id)kSecAttrKeyType:               (id)kSecAttrKeyTypeRSA,
        (id)kSecAttrKeySizeInBits:         @2048,
        (id)kSecPrivateKeyAttrs:
@@ -14,41 +24,42 @@
        };
 
     CFErrorRef error = NULL;
-    _privateKey = SecKeyCreateRandomKey((__bridge CFDictionaryRef)attributes,
-                                                 &error);
+    SecKeyRef privateKey = SecKeyCreateRandomKey((__bridge CFDictionaryRef)attributes, &error);
 
-    if (!self.privateKey) {
+    if (!privateKey) {
         NSError *err = CFBridgingRelease(error);
         NSLog(@"%@", err);
     }
-
-    _publicKey = SecKeyCopyPublicKey(self.privateKey);
 }
 
-//-(NSString *) pemFormat:(NSString *) header :(NSString *) key {
-//    return [NSString stringWithFormat:@"-----BEGIN %@ KEY-----\n%@\n-----END %@ KEY-----", header, key, header];
-//}
+- (NSString *)encodedPublicKey {
+    __block NSData *keyData = nil;
 
-- (NSString *)getPublicKey {
-    CFErrorRef error = NULL;
-    NSData* keyData = (NSData*)CFBridgingRelease(SecKeyCopyExternalRepresentation(self.publicKey, &error));
+    [self performWithPublicKey:^(SecKeyRef publicKey) {
+        CFErrorRef error = NULL;
+        keyData = (NSData *)CFBridgingRelease(SecKeyCopyExternalRepresentation(publicKey, &error));
 
-    if (!keyData) {
-        NSError *err = CFBridgingRelease(error);  // ARC takes ownership
-        NSLog(@"%@", err);
-    }
+        if (!keyData) {
+            NSError *err = CFBridgingRelease(error);
+            NSLog(@"%@", err);
+        }
+    }];
 
     return [keyData base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
 }
 
-- (NSString *)getPrivateKey {
-    CFErrorRef error = NULL;
-    NSData* keyData = (NSData*)CFBridgingRelease(SecKeyCopyExternalRepresentation(self.privateKey, &error));
+- (NSString *)encodedPrivateKey {
+    __block NSData *keyData = nil;
 
-    if (!keyData) {
-        NSError *err = CFBridgingRelease(error);  // ARC takes ownership
-        NSLog(@"%@", err);
-    }
+    [self performWithPrivateKey:^(SecKeyRef privateKey) {
+        CFErrorRef error = NULL;
+        keyData = (NSData *)CFBridgingRelease(SecKeyCopyExternalRepresentation(privateKey, &error));
+
+        if (!keyData) {
+            NSError *err = CFBridgingRelease(error);
+            NSLog(@"%@", err);
+        }
+    }];
 
     return [keyData base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
 }
@@ -61,51 +72,60 @@
 }
 
 - (NSString *)encrypt:(NSString *)message {
-    NSData* tag = [@"com.example.keys.mykey" dataUsingEncoding:NSUTF8StringEncoding];
-    NSDictionary *getquery = @{ (id)kSecClass: (id)kSecClassKey,
-                                (id)kSecAttrApplicationTag: tag,
-                                (id)kSecAttrKeyType: (id)kSecAttrKeyTypeRSA,
-                                (id)kSecReturnRef: @YES,
-                                };
+    __block NSData *cipherText = nil;
 
-    SecKeyRef key = NULL;
-    NSData* cipherText = nil;
-    OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)getquery,
-                                          (CFTypeRef *)&key);
-    _privateKey = key;
-    _publicKey = SecKeyCopyPublicKey(self.privateKey);
-
-    if (status!=errSecSuccess) {
-        NSLog(@"error accessing the key");
-    } else  {
-        SecKeyAlgorithm algorithm = kSecKeyAlgorithmRSAEncryptionOAEPSHA512;
-
-        BOOL canEncrypt = SecKeyIsAlgorithmSupported(self.publicKey,
+    [self performWithPublicKey:^(SecKeyRef publicKey) {
+        BOOL canEncrypt = SecKeyIsAlgorithmSupported(publicKey,
                                                      kSecKeyOperationTypeEncrypt,
-                                                     algorithm);
-        NSData* plainText = [message dataUsingEncoding:NSUTF8StringEncoding];
-        canEncrypt &= ([plainText length] < (SecKeyGetBlockSize(self.publicKey)-130));
+                                                     kSecKeyAlgorithmRSAEncryptionOAEPSHA512);
+        NSData *plainText = [message dataUsingEncoding:NSUTF8StringEncoding];
+        canEncrypt &= ([plainText length] < (SecKeyGetBlockSize(publicKey)-130));
 
         if (canEncrypt) {
             CFErrorRef error = NULL;
-            cipherText = (NSData*)CFBridgingRelease(SecKeyCreateEncryptedData(self.publicKey,
-                                                                              algorithm,
-                                                                              (__bridge CFDataRef)plainText,
-                                                                              &error));
+            cipherText = (NSData *)CFBridgingRelease(SecKeyCreateEncryptedData(publicKey,
+                                                                               kSecKeyAlgorithmRSAEncryptionOAEPSHA512,
+                                                                               (__bridge CFDataRef)plainText,
+                                                                               &error));
             if (!cipherText) {
                 NSError *err = CFBridgingRelease(error);
                 NSLog(@"%@", err);
             }
         }
-    }
-
-    if (key) { CFRelease(key); }
+    }];
 
     return [cipherText base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
 }
 
 - (NSString *)decrypt:(NSString *)encodedMessage {
-    NSData* tag = [@"com.example.keys.mykey" dataUsingEncoding:NSUTF8StringEncoding];
+    __block NSData *clearText = nil;
+
+    [self performWithPrivateKey:^(SecKeyRef privateKey) {
+        NSData *cipherText = [[NSData alloc] initWithBase64EncodedString:encodedMessage options:NSDataBase64DecodingIgnoreUnknownCharacters];
+
+        BOOL canDecrypt = SecKeyIsAlgorithmSupported(privateKey,
+                                                     kSecKeyOperationTypeDecrypt,
+                                                     kSecKeyAlgorithmRSAEncryptionOAEPSHA512);
+        canDecrypt &= ([cipherText length] == SecKeyGetBlockSize(privateKey));
+
+        if (canDecrypt) {
+            CFErrorRef error = NULL;
+            clearText = (NSData *)CFBridgingRelease(SecKeyCreateDecryptedData(privateKey,
+                                                                              kSecKeyAlgorithmRSAEncryptionOAEPSHA512,
+                                                                              (__bridge CFDataRef)cipherText,
+                                                                              &error));
+            if (!clearText) {
+                NSError *err = CFBridgingRelease(error);
+                NSLog(@"%@", err);
+            }
+        }
+    }];
+
+    return [[NSString alloc] initWithData:clearText encoding:NSUTF8StringEncoding];
+}
+
+- (void)performWithPrivateKey:(SecKeyPerformBlock)performBlock {
+    NSData *tag = [kKeyPairTagIdentifier dataUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *getquery = @{ (id)kSecClass: (id)kSecClassKey,
                                 (id)kSecAttrApplicationTag: tag,
                                 (id)kSecAttrKeyType: (id)kSecAttrKeyTypeRSA,
@@ -113,36 +133,21 @@
                                 };
 
     SecKeyRef key = NULL;
-    NSData* clearText = nil;
+    NSData *clearText = nil;
     OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)getquery,
                                           (CFTypeRef *)&key);
-    _privateKey = key;
 
-    if (status!=errSecSuccess) {
-        NSLog(@"error accessing the key");
-    } else  {
-        SecKeyAlgorithm algorithm = kSecKeyAlgorithmRSAEncryptionOAEPSHA512;
-        NSData * cipherText = [[NSData alloc] initWithBase64EncodedString:encodedMessage options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    if (performBlock) { performBlock(key); }
+    if (key) { CFRelease(key); }
+}
 
-        BOOL canDecrypt = SecKeyIsAlgorithmSupported(self.privateKey,
-                                                     kSecKeyOperationTypeDecrypt,
-                                                     algorithm);
-        canDecrypt &= ([cipherText length] == SecKeyGetBlockSize(self.privateKey));
+- (void)performWithPublicKey:(SecKeyPerformBlock)performBlock {
+    [self performWithPrivateKey:^(SecKeyRef key) {
+        SecKeyRef publicKey = SecKeyCopyPublicKey(key);
 
-        if (canDecrypt) {
-            CFErrorRef error = NULL;
-            clearText = (NSData*)CFBridgingRelease(SecKeyCreateDecryptedData(self.privateKey,
-                                                                             algorithm,
-                                                                             (__bridge CFDataRef)cipherText,
-                                                                             &error));
-            if (!clearText) {
-                NSError *err = CFBridgingRelease(error);
-                NSLog(@"%@", err);
-            }
-        }
-    }
-
-    return [[NSString alloc] initWithData:clearText encoding:NSUTF8StringEncoding];
+        if (performBlock) { performBlock(publicKey); }
+        if (publicKey) { CFRelease(publicKey); }
+    }];
 }
 
 @end
