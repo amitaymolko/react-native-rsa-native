@@ -133,12 +133,15 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
                                 };
 
     SecKeyRef key = NULL;
-    NSData *clearText = nil;
     OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)getquery,
                                           (CFTypeRef *)&key);
 
-    if (performBlock) { performBlock(key); }
-    if (key) { CFRelease(key); }
+    if (status != errSecSuccess) {
+        NSLog(@"error accessing the key");
+    } else {
+        if (performBlock) { performBlock(key); }
+        if (key) { CFRelease(key); }
+    }
 }
 
 - (void)performWithPublicKey:(SecKeyPerformBlock)performBlock {
