@@ -42,5 +42,5 @@ RSA.generate()
 
 ## Credit
 
-Originally based on https://github.com/SamSaffron/react-native-key-pair
-iOS implementation reference https://developer.apple.com/library/content/documentation/Security/Conceptual/CertKeyTrustProgGuide/KeyRead.html#//apple_ref/doc/uid/TP40001358-CH222-SW1
+* Originally based on https://github.com/SamSaffron/react-native-key-pair
+* iOS implementation [reference](https://developer.apple.com/library/content/documentation/Security/Conceptual/CertKeyTrustProgGuide/KeyRead.html#//apple_ref/doc/uid/TP40001358-CH222-SW1)
