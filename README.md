@@ -22,6 +22,9 @@ or:
 
 `$ react-native link react-native-rsa-native`
 
+## iOS
+
+In your React Native Xcode project, right click on your project and go 'Add Files to ...', then navigate to <your-project-root>/node_modules/react-native-rsa-native/ios and select the RNRSA.xcodeproj file.
 
 ## Usage
 
