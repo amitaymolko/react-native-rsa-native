@@ -56,19 +56,13 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
 
 - (NSString *)encodedPublicKey {
     if (self.keyTag) {
-        __block NSData *keyData = nil;
+        __block NSString *encodedPublicKey = nil;
 
         [self performWithPublicKeyTag:self.keyTag block:^(SecKeyRef publicKey) {
-            CFErrorRef error = NULL;
-            keyData = (NSData *)CFBridgingRelease(SecKeyCopyExternalRepresentation(publicKey, &error));
-
-            if (!keyData) {
-                NSError *err = CFBridgingRelease(error);
-                NSLog(@"%@", err);
-            }
+            encodedPublicKey = [self externalRepresentationForKey:publicKey];
         }];
 
-        return [keyData base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
+        return encodedPublicKey;
     }
 
     return self.publicKey;
@@ -76,19 +70,13 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
 
 - (NSString *)encodedPrivateKey {
     if (self.keyTag) {
-        __block NSData *keyData = nil;
+        __block NSString *encodedPrivateKey = nil;
 
         [self performWithPrivateKeyTag:self.keyTag block:^(SecKeyRef privateKey) {
-            CFErrorRef error = NULL;
-            keyData = (NSData *)CFBridgingRelease(SecKeyCopyExternalRepresentation(privateKey, &error));
-
-            if (!keyData) {
-                NSError *err = CFBridgingRelease(error);
-                NSLog(@"%@", err);
-            }
+            encodedPrivateKey = [self externalRepresentationForKey:privateKey];
         }];
 
-        return [keyData base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
+        return encodedPrivateKey;
     }
 
     return self.privateKey;
