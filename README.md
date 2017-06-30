@@ -31,6 +31,8 @@ In your React Native Xcode project, right click on your project and go 'Add File
 ```
 // Example utilizing the keychain for private key secure storage
 
+import RSA from 'react-native-rsa-native';
+
 let keyTag = 'com.domain.mykey';
 let secret = "secret message";
 
@@ -50,7 +52,27 @@ RSA.generate(keyTag)
           })
         })
     });
+
+// or, alternatively you can run without keychain support and access the public and private keys directly
+
+import {RNRSA} from 'react-native-rsa-native';
+
+RNRSA.generate()
+  .then(keys => {
+    console.log(keys.private) // the private key
+    console.log(keys.public) // the public key
+    RNRSA.encrypt('1234', keys.public)
+      .then(encodedMessage => {
+        RNRSA.decrypt(encodedMessage, keys.private)
+          .then(message => {
+            console.log(message)
+          })
+        })
+    })
+
+
 ```
+
 
 ## Credit
 

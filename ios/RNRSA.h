@@ -11,3 +11,6 @@
 
 @end
   
+@interface RNRSAKeychain : NSObject <RCTBridgeModule>
+
+@end

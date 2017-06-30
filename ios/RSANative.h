@@ -10,6 +10,9 @@
 
 @interface RSANative : NSObject
 
+@property (nonatomic) NSString *publicKey;
+@property (nonatomic) NSString *privateKey;
+
 - (instancetype)initWithKeyTag:(NSString *)keyTag;
 
 - (void)generate;
@@ -17,10 +20,7 @@
 - (NSString *)encodedPublicKey;
 - (NSString *)encodedPrivateKey;
 
-- (NSString *)encrypt:(NSString *)message withKey:(NSString *)key;
-- (NSString *)decrypt:(NSString *)encodedMessage withKey:(NSString *)key;
-
-- (NSString *)encrypt:(NSString *)message withKeyTag:(NSString *)keyTag;
-- (NSString *)decrypt:(NSString *)encodedMessage withKeyTag:(NSString *)keyTag;
+- (NSString *)encrypt:(NSString *)message;
+- (NSString *)decrypt:(NSString *)encodedMessage;
 
 @end
