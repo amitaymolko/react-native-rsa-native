@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { View, Text } from 'react-native'
 
-import RSA, {RNRSA} from 'react-native-rsa-native';
+import RSA, {RNRSAKeychain} from 'react-native-rsa-native';
 
-RNRSA.generate()
+RSA.generate()
   .then(keys => {
     console.log(keys.private) // the private key
     console.log(keys.public) // the public key
@@ -20,7 +20,7 @@ RNRSA.generate()
 let keyTag = 'com.domain.mykey';
 let secret = "secret message";
 
-RSA.generate(keyTag)
+RNRSAKeychain.generate(keyTag)
   .then(keys => {
     console.log(keys.public);
 
