@@ -1,7 +1,7 @@
 
 import { NativeModules } from 'react-native';
 
-iconst { RNRSAKeychain } = NativeModules;
+const { RNRSAKeychain } = NativeModules;
 const { RNRSA } = NativeModules;
 
 export { RNRSA };
