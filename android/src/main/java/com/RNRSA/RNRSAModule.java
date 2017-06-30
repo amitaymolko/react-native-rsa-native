@@ -71,22 +71,4 @@ public class RNRSAModule extends ReactContextBaseJavaModule {
       }
   }
 
-
-
-
-//    @ReactMethod
-//    public void decrypt(String encodedMessage, String privateKeyString)  {
-//        WritableNativeMap keys = new WritableNativeMap();
-//
-//        try {
-//
-//            EncryptionManager.getInstance().generateKey();
-//            keys.putString("public",  EncryptionManager.getInstance().getPublicKey());
-//            keys.putString("private",  EncryptionManager.getInstance().getPrivateKey());
-//
-//        } catch(Exception e) {
-//
-//        }
-//        callback.invoke(keys);
-//    }
 }

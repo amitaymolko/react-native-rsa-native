@@ -1,4 +1,4 @@
-package com.example;
+package com.rnrsaexample;
 
 import android.app.Application;
 

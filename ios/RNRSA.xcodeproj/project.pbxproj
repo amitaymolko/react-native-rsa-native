@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		186F49E31F06836A00F71861 /* RSAFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 186F49E21F06836A00F71861 /* RSAFormatter.m */; };
 		BF40FFDB1F05EC9000DC4E95 /* RNRSA.m in Sources */ = {isa = PBXBuildFile; fileRef = BF40FFD71F05EC9000DC4E95 /* RNRSA.m */; };
 		BF40FFDC1F05EC9000DC4E95 /* RSANative.m in Sources */ = {isa = PBXBuildFile; fileRef = BF40FFDA1F05EC9000DC4E95 /* RSANative.m */; };
 /* End PBXBuildFile section */
@@ -24,6 +25,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		186F49E11F06836A00F71861 /* RSAFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSAFormatter.h; sourceTree = "<group>"; };
+		186F49E21F06836A00F71861 /* RSAFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSAFormatter.m; sourceTree = "<group>"; };
 		BF40FFBD1F05EC4000DC4E95 /* libRNRSA.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNRSA.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF40FFD71F05EC9000DC4E95 /* RNRSA.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNRSA.m; sourceTree = "<group>"; };
 		BF40FFD81F05EC9000DC4E95 /* RNRSA.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNRSA.h; sourceTree = "<group>"; };
@@ -45,6 +48,8 @@
 		BF40FFB41F05EC4000DC4E95 = {
 			isa = PBXGroup;
 			children = (
+				186F49E11F06836A00F71861 /* RSAFormatter.h */,
+				186F49E21F06836A00F71861 /* RSAFormatter.m */,
 				BF40FFD81F05EC9000DC4E95 /* RNRSA.h */,
 				BF40FFD71F05EC9000DC4E95 /* RNRSA.m */,
 				BF40FFD91F05EC9000DC4E95 /* RSANative.h */,
@@ -119,6 +124,7 @@
 			files = (
 				BF40FFDB1F05EC9000DC4E95 /* RNRSA.m in Sources */,
 				BF40FFDC1F05EC9000DC4E95 /* RSANative.m in Sources */,
+				186F49E31F06836A00F71861 /* RSAFormatter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
