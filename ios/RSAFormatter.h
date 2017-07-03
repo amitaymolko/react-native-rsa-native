@@ -10,8 +10,8 @@
 
 @interface RSAFormatter : NSObject
 
-+ (NSString *) PEMFormattedPublicKey:(NSData *)publicKeyData;
-+ (NSString *) PEMFormattedPrivateKey:(NSData *)privateKeyData;
-+ (NSString *) stripHeaders: (NSString *)pemString;
++ (NSString *)PEMFormattedPublicKey:(NSData *)publicKeyData;
++ (NSString *)PEMFormattedPrivateKey:(NSData *)privateKeyData;
++ (NSString *)stripHeaders:(NSString *)pemString;
 
 @end
