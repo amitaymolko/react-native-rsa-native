@@ -1,12 +1,12 @@
 # react-native-rsa-native
 
-A native implementation of RSA key generation and encryption/decryption.
+A native implementation of RSA key generation and encryption/decryption, sign/verify.
 Implementation is in PKCS1
 
 ## Status
 
 Android: Generation, Encryption, Decryption
-iOS: Generation, Encryption, Decryption, Sign
+iOS: Generation, Encryption, Decryption, Sign, Verify
 
 *Need to check cross platform encrypt/decrypt
 
@@ -40,14 +40,20 @@ RSA.generate()
       .then(encodedMessage => {
         RSA.decrypt(encodedMessage, keys.private)
           .then(message => {
-            console.log(message)
+            console.log(message);
           })
         })
-        RSA.sign(secret, keys.private)
-          .then(signature => {
-            console.log(signature);
+
+    RSA.sign(secret, keys.private)
+      .then(signature => {
+        console.log(signature);
+
+        RSA.verify(signature, secret, keys.public)
+          .then(valid => {
+            console.log(valid);
+          })
         })
-    })
+  })
 
 // Example utilizing the keychain for private key secure storage
 
@@ -69,11 +75,16 @@ RNRSAKeychain.generate(keyTag)
           })
         })
 
-        RNRSAKeychain.sign(secret, keyTag)
-          .then(signature => {
-            console.log(signature);
+    RNRSAKeychain.sign(secret, keyTag)
+      .then(signature => {
+        console.log(signature);
+
+        RNRSAKeychain.verify(signature, secret, keyTag)
+          .then(valid => {
+            console.log(valid);
           })
-    });
+        })
+  });
 ```
 
 
