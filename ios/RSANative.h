@@ -23,4 +23,6 @@
 - (NSString *)encrypt:(NSString *)message;
 - (NSString *)decrypt:(NSString *)encodedMessage;
 
+- (NSString *)sign:(NSString *)message;
+
 @end

@@ -187,6 +187,43 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
     return [[NSString alloc] initWithData:clearText encoding:NSUTF8StringEncoding];
 }
 
+- (NSString *)sign:(NSString *)message {
+    __block NSString *encodedSignature = nil;
+
+    void(^signer)(SecKeyRef) = ^(SecKeyRef privateKey) {
+        SecKeyAlgorithm algorithm = kSecKeyAlgorithmRSASignatureMessagePKCS1v15SHA512;
+
+        BOOL canSign = SecKeyIsAlgorithmSupported(privateKey,
+                                                kSecKeyOperationTypeSign,
+                                                algorithm);
+
+        NSData* data = [message dataUsingEncoding:NSUTF8StringEncoding];
+        NSData* signature = nil;
+
+        if (canSign) {
+            CFErrorRef error = NULL;
+            signature = (NSData*)CFBridgingRelease(SecKeyCreateSignature(privateKey,
+                                                                         algorithm,
+                                                                         (__bridge CFDataRef)data,
+                                                                         &error));
+            if (!signature) {
+              NSError *err = CFBridgingRelease(error);
+              NSLog(@"error: %@", err);
+            }
+        }
+
+        encodedSignature = [signature base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
+    };
+
+    if (self.keyTag) {
+        [self performWithPrivateKeyTag:self.keyTag block:signer];
+    } else {
+        signer(self.privateKeyRef);
+    }
+
+    return encodedSignature;
+}
+
 - (void)performWithPrivateKeyTag:(NSString *)keyTag block:(SecKeyPerformBlock)performBlock {
     NSData *tag = [keyTag dataUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *getquery = @{ (id)kSecClass: (id)kSecClassKey,

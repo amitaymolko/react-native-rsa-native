@@ -6,7 +6,7 @@ Implementation is in PKCS1
 ## Status
 
 Android: Generation, Encryption, Decryption
-iOS: Generation, Encryption, Decryption
+iOS: Generation, Encryption, Decryption, Sign
 
 *Need to check cross platform encrypt/decrypt
 
@@ -36,12 +36,16 @@ RSA.generate()
   .then(keys => {
     console.log(keys.private) // the private key
     console.log(keys.public) // the public key
-    RNRSA.encrypt('1234', keys.public)
+    RSA.encrypt('1234', keys.public)
       .then(encodedMessage => {
-        RNRSA.decrypt(encodedMessage, keys.private)
+        RSA.decrypt(encodedMessage, keys.private)
           .then(message => {
             console.log(message)
           })
+        })
+        RSA.sign(secret, keys.private)
+          .then(signature => {
+            console.log(signature);
         })
     })
 
@@ -53,18 +57,22 @@ let secret = "secret message";
 RNRSAKeychain.generate(keyTag)
   .then(keys => {
     console.log(keys.public);
-
     console.log(secret);
 
-    RSA.encrypt(secret, keyTag)
+    RNRSAKeychain.encrypt(secret, keyTag)
       .then(encodedMessage => {
         console.log(encodedMessage);
 
-        RSA.decrypt(encodedMessage, keyTag)
+        RNRSAKeychain.decrypt(encodedMessage, keyTag)
           .then(message => {
             console.log(message);
           })
         })
+
+        RNRSAKeychain.sign(secret, keyTag)
+          .then(signature => {
+            console.log(signature);
+          })
     });
 ```
 

@@ -38,6 +38,14 @@ RCT_EXPORT_METHOD(decrypt:(NSString *)encodedMessage withKey:(NSString *)key res
     resolve(message);
 }
 
+RCT_EXPORT_METHOD(sign:(NSString *)message withKey:(NSString *)key resolve:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject) {
+  RSANative *rsa = [[RSANative alloc] init];
+  rsa.privateKey = key;
+  NSString *signature = [rsa sign:message];
+  resolve(signature);
+}
+
 @end
 
 @implementation RNRSAKeychain
@@ -70,6 +78,13 @@ RCT_EXPORT_METHOD(decrypt:(NSString *)encodedMessage withKeyTag:(NSString *)keyT
     RSANative *rsa = [[RSANative alloc] initWithKeyTag:keyTag];
     NSString *message = [rsa decrypt:encodedMessage];
     resolve(message);
+}
+
+RCT_EXPORT_METHOD(sign:(NSString *)message withKeyTag:(NSString *)keyTag resolve:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject) {
+  RSANative *rsa = [[RSANative alloc] initWithKeyTag:keyTag];
+  NSString *signature = [rsa sign:message];
+  resolve(signature);
 }
 
 @end
