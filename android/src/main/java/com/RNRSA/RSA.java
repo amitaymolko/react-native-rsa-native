@@ -1,12 +1,20 @@
 package com.RNRSA;
 
 
+import android.annotation.TargetApi;
+import android.os.Build;
+import android.security.keystore.KeyGenParameterSpec;
+import android.security.keystore.KeyProperties;
 import android.util.Base64;
+import android.util.Log;
 
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyPair;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.PublicKey;
 import java.security.PrivateKey;
 import java.security.KeyFactory;
@@ -15,6 +23,9 @@ import java.security.NoSuchAlgorithmException;
 import java.security.InvalidKeyException;
 import java.security.Signature;
 import java.security.SignatureException;
+import java.security.UnrecoverableEntryException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
 import java.security.spec.X509EncodedKeySpec;
 import java.security.spec.RSAPublicKeySpec;
 import java.security.spec.RSAPrivateKeySpec;
@@ -39,6 +50,7 @@ import org.spongycastle.util.io.pem.PemObject;
 import org.spongycastle.util.io.pem.PemWriter;
 import org.spongycastle.util.io.pem.PemReader;
 
+import static android.security.keystore.KeyProperties.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class RSA {
@@ -48,8 +60,17 @@ public class RSA {
     private static final String PUBLIC_HEADER = "RSA PUBLIC KEY";
     private static final String PRIVATE_HEADER = "RSA PRIVATE KEY";
 
+    private String keyTag;
+
     private PublicKey publicKey;
     private PrivateKey privateKey;
+
+    public RSA() {}
+
+    public RSA(String keyTag) throws KeyStoreException, UnrecoverableEntryException, NoSuchAlgorithmException, IOException, CertificateException {
+        this.keyTag = keyTag;
+        this.loadFromKeystore();
+    }
 
     public String getPublicKey() throws IOException {
         byte[] pkcs1PublicKey = publicKeyToPkcs1(this.publicKey);
@@ -88,7 +109,9 @@ public class RSA {
         byte[] cipherText = Base64.decode(encodedMessage, Base64.DEFAULT);
         final Cipher cipher = Cipher.getInstance("RSA/NONE/PKCS1Padding");
         cipher.init(Cipher.DECRYPT_MODE, this.privateKey);
+
         byte[] data = cipher.doFinal(cipherText);
+
         message = new String(data, UTF_8);
 
         return message;
@@ -97,6 +120,7 @@ public class RSA {
     public String sign(String message) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
         Signature privateSignature = Signature.getInstance("SHA512withRSA");
         privateSignature.initSign(this.privateKey);
+
         privateSignature.update(message.getBytes(UTF_8));
         byte[] signature = privateSignature.sign();
 
@@ -160,14 +184,37 @@ public class RSA {
         return primitive.getEncoded();
     }
 
+    public void loadFromKeystore () throws KeyStoreException, UnrecoverableEntryException, NoSuchAlgorithmException, IOException, CertificateException {
+        KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
+        keyStore.load(null);
+        KeyStore.PrivateKeyEntry privateKeyEntry = (KeyStore.PrivateKeyEntry)keyStore.getEntry(this.keyTag, null);
+        this.privateKey = privateKeyEntry.getPrivateKey();
+        this.publicKey = privateKeyEntry.getCertificate().getPublicKey();
+    }
 
-    public void generate() throws IOException, NoSuchAlgorithmException {
+
+    public void generate() throws IOException, NoSuchAlgorithmException, InvalidAlgorithmParameterException {
         KeyPairGenerator kpg = KeyPairGenerator.getInstance(ALGORITHM);
         kpg.initialize(2048);
 
         KeyPair keyPair = kpg.genKeyPair();
         this.publicKey = keyPair.getPublic();
         this.privateKey = keyPair.getPrivate();
+    }
+
+    public void generate(String keyTag) throws IOException, NoSuchAlgorithmException, InvalidAlgorithmParameterException {
+        KeyPairGenerator kpg = KeyPairGenerator.getInstance(ALGORITHM);
+        kpg.initialize(new KeyGenParameterSpec.Builder(
+                keyTag,
+                PURPOSE_ENCRYPT | PURPOSE_DECRYPT | PURPOSE_SIGN | PURPOSE_VERIFY
+        )
+        .setDigests(KeyProperties.DIGEST_SHA512)
+        .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_RSA_PKCS1)
+        .setSignaturePaddings(KeyProperties.SIGNATURE_PADDING_RSA_PKCS1)
+        .build());
+
+        KeyPair keyPair = kpg.genKeyPair();
+        this.publicKey = keyPair.getPublic();
     }
 
 }

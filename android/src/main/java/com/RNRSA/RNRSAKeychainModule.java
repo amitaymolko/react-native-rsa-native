@@ -1,40 +1,39 @@
 
 package com.RNRSA;
 
-import com.facebook.react.bridge.NoSuchKeyException;
+import android.util.Log;
+
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.WritableNativeMap;
-import com.facebook.react.bridge.Promise;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
-public class RNRSAModule extends ReactContextBaseJavaModule {
+public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
 
   private final ReactApplicationContext reactContext;
 
-  public RNRSAModule(ReactApplicationContext reactContext) {
+  public RNRSAKeychainModule(ReactApplicationContext reactContext) {
     super(reactContext);
     this.reactContext = reactContext;
   }
 
   @Override
   public String getName() {
-    return "RNRSA";
+    return "RNRSAKeychain";
   }
 
   @ReactMethod
-  public void generate(Promise promise)  {
+  public void generate(String keyTag, Promise promise)  {
     WritableNativeMap keys = new WritableNativeMap();
 
     try {
         RSA rsa = new RSA();
-        rsa.generate();
+        rsa.generate(keyTag);
         keys.putString("public",  rsa.getPublicKey());
-        keys.putString("private",  rsa.getPrivateKey());
         promise.resolve(keys);
     } catch(NoSuchAlgorithmException e) {
       promise.reject("Error", e.getMessage());
@@ -44,11 +43,10 @@ public class RNRSAModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void encrypt(String message, String publicKeyString, Promise promise)  {
+  public void encrypt(String message, String keyTag, Promise promise)  {
 
       try {
-          RSA rsa = new RSA();
-          rsa.setPublicKey(publicKeyString);
+          RSA rsa = new RSA(keyTag);
           String encodedMessage = rsa.encrypt(message);
           promise.resolve(encodedMessage);
       } catch(Exception e) {
@@ -58,11 +56,10 @@ public class RNRSAModule extends ReactContextBaseJavaModule {
 
 
   @ReactMethod
-  public void decrypt(String encodedMessage, String privateKeyString, Promise promise)  {
+  public void decrypt(String encodedMessage, String keyTag, Promise promise)  {
 
       try {
-          RSA rsa = new RSA();
-          rsa.setPrivateKey(privateKeyString);
+          RSA rsa = new RSA(keyTag);
           String message = rsa.decrypt(encodedMessage);
           promise.resolve(message);
 
@@ -72,11 +69,10 @@ public class RNRSAModule extends ReactContextBaseJavaModule {
   }
 
     @ReactMethod
-    public void sign(String message, String privateKeyString, Promise promise)  {
+    public void sign(String message, String keyTag, Promise promise)  {
 
         try {
-            RSA rsa = new RSA();
-            rsa.setPrivateKey(privateKeyString);
+            RSA rsa = new RSA(keyTag);
             String signature = rsa.sign(message);
             promise.resolve(signature);
 
@@ -86,11 +82,10 @@ public class RNRSAModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void verify(String signature, String message, String publicKeyString, Promise promise)  {
+    public void verify(String signature, String message, String keyTag, Promise promise)  {
 
         try {
-            RSA rsa = new RSA();
-            rsa.setPublicKey(publicKeyString);
+            RSA rsa = new RSA(keyTag);
             boolean verified = rsa.verify(signature, message);
             promise.resolve(verified);
 
