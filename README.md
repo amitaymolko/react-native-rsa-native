@@ -30,7 +30,7 @@ In your React Native Xcode project, right click on your project and go 'Add File
 
 ```
 
-import RSA, {RNRSAKeychain} from 'react-native-rsa-native';
+import {RSA, RSAKeychain} from 'react-native-rsa-native';
 
 RSA.generate()
   .then(keys => {
@@ -60,26 +60,26 @@ RSA.generate()
 let keyTag = 'com.domain.mykey';
 let secret = "secret message";
 
-RNRSAKeychain.generate(keyTag)
+RSAKeychain.generate(keyTag)
   .then(keys => {
     console.log(keys.public);
     console.log(secret);
 
-    RNRSAKeychain.encrypt(secret, keyTag)
+    RSAKeychain.encrypt(secret, keyTag)
       .then(encodedMessage => {
         console.log(encodedMessage);
 
-        RNRSAKeychain.decrypt(encodedMessage, keyTag)
+        RSAKeychain.decrypt(encodedMessage, keyTag)
           .then(message => {
             console.log(message);
           })
         })
 
-    RNRSAKeychain.sign(secret, keyTag)
+    RSAKeychain.sign(secret, keyTag)
       .then(signature => {
         console.log(signature);
 
-        RNRSAKeychain.verify(signature, secret, keyTag)
+        RSAKeychain.verify(signature, secret, keyTag)
           .then(valid => {
             console.log(valid);
           })
