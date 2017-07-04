@@ -14,7 +14,7 @@ import com.facebook.react.bridge.JavaScriptModule;
 public class RNRSAPackage implements ReactPackage {
     @Override
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
-      return Arrays.<NativeModule>asList(new RNRSAModule(reactContext));
+      return Arrays.<NativeModule>asList(new RNRSAModule(reactContext), new RNRSAKeychainModule((reactContext)));
     }
 
     @Override

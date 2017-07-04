@@ -1,12 +1,13 @@
 # react-native-rsa-native
 
 A native implementation of RSA key generation and encryption/decryption, sign/verify.
+Keychain implementation
 Implementation is in PKCS1
 
 ## Status
 
-Android: Generation, Encryption, Decryption
-iOS: Generation, Encryption, Decryption, Sign, Verify
+Android: Generation, Encryption, Decryption, Sign, Verify, keychain support
+iOS: Generation, Encryption, Decryption, Sign, Verify, keychain support
 
 *Need to check cross platform encrypt/decrypt
 
