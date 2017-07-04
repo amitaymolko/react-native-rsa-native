@@ -187,6 +187,78 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
     return [[NSString alloc] initWithData:clearText encoding:NSUTF8StringEncoding];
 }
 
+- (NSString *)sign:(NSString *)message {
+    __block NSString *encodedSignature = nil;
+
+    void(^signer)(SecKeyRef) = ^(SecKeyRef privateKey) {
+        SecKeyAlgorithm algorithm = kSecKeyAlgorithmRSASignatureMessagePKCS1v15SHA512;
+
+        BOOL canSign = SecKeyIsAlgorithmSupported(privateKey,
+                                                kSecKeyOperationTypeSign,
+                                                algorithm);
+
+        NSData* data = [message dataUsingEncoding:NSUTF8StringEncoding];
+        NSData* signature = nil;
+
+        if (canSign) {
+            CFErrorRef error = NULL;
+            signature = (NSData*)CFBridgingRelease(SecKeyCreateSignature(privateKey,
+                                                                         algorithm,
+                                                                         (__bridge CFDataRef)data,
+                                                                         &error));
+            if (!signature) {
+              NSError *err = CFBridgingRelease(error);
+              NSLog(@"error: %@", err);
+            }
+        }
+
+        encodedSignature = [signature base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
+    };
+
+    if (self.keyTag) {
+        [self performWithPrivateKeyTag:self.keyTag block:signer];
+    } else {
+        signer(self.privateKeyRef);
+    }
+
+    return encodedSignature;
+}
+
+- (BOOL)verify:(NSString *)encodedSignature withMessage:(NSString *)message {
+    __block BOOL result = NO;
+
+    void(^verifier)(SecKeyRef) = ^(SecKeyRef publicKey) {
+        SecKeyAlgorithm algorithm = kSecKeyAlgorithmRSASignatureMessagePKCS1v15SHA512;
+
+        BOOL canVerify = SecKeyIsAlgorithmSupported(publicKey,
+                                                    kSecKeyOperationTypeVerify,
+                                                    algorithm);
+        NSData* data = [message dataUsingEncoding:NSUTF8StringEncoding];
+        NSData* signature = [[NSData alloc] initWithBase64EncodedString:encodedSignature options:NSDataBase64DecodingIgnoreUnknownCharacters];
+
+        if (canVerify) {
+            CFErrorRef error = NULL;
+            result = SecKeyVerifySignature(publicKey,
+                                           algorithm,
+                                           (__bridge CFDataRef)data,
+                                           (__bridge CFDataRef)signature,
+                                           &error);
+            if (!result) {
+                NSError *err = CFBridgingRelease(error);
+                NSLog(@"error: %@", err);
+            }
+        }
+    };
+
+    if (self.keyTag) {
+        [self performWithPublicKeyTag:self.keyTag block:verifier];
+    } else {
+        verifier(self.publicKeyRef);
+    }
+
+    return result;
+}
+
 - (void)performWithPrivateKeyTag:(NSString *)keyTag block:(SecKeyPerformBlock)performBlock {
     NSData *tag = [keyTag dataUsingEncoding:NSUTF8StringEncoding];
     NSDictionary *getquery = @{ (id)kSecClass: (id)kSecClassKey,

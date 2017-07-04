@@ -71,4 +71,35 @@ public class RNRSAModule extends ReactContextBaseJavaModule {
       }
   }
 
+    @ReactMethod
+    public void sign(String message, String privateKeyString, Promise promise)  {
+
+        try {
+            RSA rsa = new RSA();
+            rsa.setPrivateKey(privateKeyString);
+            String signature = rsa.sign(message);
+            promise.resolve(signature);
+
+        } catch(Exception e) {
+            promise.reject("Error", e.getMessage());
+        }
+    }
+
+    @ReactMethod
+    public void verify(String signature, String message, String publicKeyString, Promise promise)  {
+
+        try {
+            RSA rsa = new RSA();
+            rsa.setPublicKey(publicKeyString);
+            boolean verified = rsa.verify(signature, message);
+            promise.resolve(verified);
+
+        } catch(Exception e) {
+            promise.reject("Error", e.getMessage());
+        }
+    }
+
+
+
+
 }

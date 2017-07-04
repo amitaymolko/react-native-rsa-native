@@ -1,12 +1,12 @@
 # react-native-rsa-native
 
-A native implementation of RSA key generation and encryption/decryption.
+A native implementation of RSA key generation and encryption/decryption, sign/verify.
 Implementation is in PKCS1
 
 ## Status
 
 Android: Generation, Encryption, Decryption
-iOS: Generation, Encryption, Decryption
+iOS: Generation, Encryption, Decryption, Sign, Verify
 
 *Need to check cross platform encrypt/decrypt
 
@@ -30,42 +30,61 @@ In your React Native Xcode project, right click on your project and go 'Add File
 
 ```
 
-import RSA, {RNRSAKeychain} from 'react-native-rsa-native';
+import {RSA, RSAKeychain} from 'react-native-rsa-native';
 
 RSA.generate()
   .then(keys => {
     console.log(keys.private) // the private key
     console.log(keys.public) // the public key
-    RNRSA.encrypt('1234', keys.public)
+    RSA.encrypt('1234', keys.public)
       .then(encodedMessage => {
-        RNRSA.decrypt(encodedMessage, keys.private)
+        RSA.decrypt(encodedMessage, keys.private)
           .then(message => {
-            console.log(message)
+            console.log(message);
           })
         })
-    })
+
+    RSA.sign(secret, keys.private)
+      .then(signature => {
+        console.log(signature);
+
+        RSA.verify(signature, secret, keys.public)
+          .then(valid => {
+            console.log(valid);
+          })
+        })
+  })
 
 // Example utilizing the keychain for private key secure storage
 
 let keyTag = 'com.domain.mykey';
 let secret = "secret message";
 
-RNRSAKeychain.generate(keyTag)
+RSAKeychain.generate(keyTag)
   .then(keys => {
     console.log(keys.public);
-
     console.log(secret);
 
-    RSA.encrypt(secret, keyTag)
+    RSAKeychain.encrypt(secret, keyTag)
       .then(encodedMessage => {
         console.log(encodedMessage);
 
-        RSA.decrypt(encodedMessage, keyTag)
+        RSAKeychain.decrypt(encodedMessage, keyTag)
           .then(message => {
             console.log(message);
           })
         })
-    });
+
+    RSAKeychain.sign(secret, keyTag)
+      .then(signature => {
+        console.log(signature);
+
+        RSAKeychain.verify(signature, secret, keyTag)
+          .then(valid => {
+            console.log(valid);
+          })
+        })
+  });
 ```
 
 

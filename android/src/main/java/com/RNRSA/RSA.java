@@ -13,6 +13,8 @@ import java.security.KeyFactory;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.InvalidKeyException;
+import java.security.Signature;
+import java.security.SignatureException;
 import java.security.spec.X509EncodedKeySpec;
 import java.security.spec.RSAPublicKeySpec;
 import java.security.spec.RSAPrivateKeySpec;
@@ -90,6 +92,25 @@ public class RSA {
         message = new String(data, UTF_8);
 
         return message;
+    }
+
+    public String sign(String message) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
+        Signature privateSignature = Signature.getInstance("SHA512withRSA");
+        privateSignature.initSign(this.privateKey);
+        privateSignature.update(message.getBytes(UTF_8));
+        byte[] signature = privateSignature.sign();
+
+        return Base64.encodeToString(signature, Base64.DEFAULT);
+    }
+
+    public boolean verify(String signature, String message) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
+        Signature publicSignature = Signature.getInstance("SHA512withRSA");
+        publicSignature.initVerify(this.publicKey);
+        publicSignature.update(message.getBytes(UTF_8));
+
+        byte[] signatureBytes = Base64.decode(signature, Base64.DEFAULT);
+
+        return publicSignature.verify(signatureBytes);
     }
 
     private String dataToPem(String header, byte[] keyData) throws IOException {
