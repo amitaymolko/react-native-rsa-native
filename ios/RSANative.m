@@ -299,7 +299,7 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
 }
 
 
-- (NSString *)dataForKey:(SecKeyRef)key {
+- (NSData *)dataForKey:(SecKeyRef)key {
     CFErrorRef error = NULL;
     NSData * keyData = (NSData *)CFBridgingRelease(SecKeyCopyExternalRepresentation(key, &error));
     
