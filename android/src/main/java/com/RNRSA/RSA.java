@@ -203,7 +203,7 @@ public class RSA {
     }
 
     public void generate(String keyTag) throws IOException, NoSuchAlgorithmException, InvalidAlgorithmParameterException {
-        KeyPairGenerator kpg = KeyPairGenerator.getInstance(ALGORITHM);
+        KeyPairGenerator kpg = KeyPairGenerator.getInstance(ALGORITHM, "AndroidKeyStore");
         kpg.initialize(new KeyGenParameterSpec.Builder(
                 keyTag,
                 PURPOSE_ENCRYPT | PURPOSE_DECRYPT | PURPOSE_SIGN | PURPOSE_VERIFY
