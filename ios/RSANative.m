@@ -48,10 +48,7 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
 
     if (!self.keyTag) { // no keychain being used, store reference to keys for later use
         _privateKeyRef = privateKey;
-        _privateKey = [self externalRepresentationForPrivateKey:self.privateKeyRef];
-
         _publicKeyRef = SecKeyCopyPublicKey(privateKey);
-        _publicKey = [self externalRepresentationForPublicKey:self.publicKeyRef];
     }
 }
 
@@ -66,7 +63,7 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
         return encodedPublicKey;
     }
 
-    return self.publicKey;
+    return [self externalRepresentationForPublicKey:self.publicKeyRef];
 }
 
 - (NSString *)encodedPrivateKey {
@@ -80,7 +77,7 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
         return encodedPrivateKey;
     }
 
-    return self.privateKey;
+    return [self externalRepresentationForPublicKey:self.privateKeyRef];
 }
 
 - (void)setPublicKey:(NSString *)publicKey {
