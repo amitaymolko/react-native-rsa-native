@@ -35,6 +35,7 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.BadPaddingException;
+import javax.security.cert.X509Certificate;
 
 import java.io.IOException;
 
@@ -156,25 +157,14 @@ public class RSA {
         return pemObject.getContent();
     }
 
-    private PublicKey pkcs1ToPublicKey(byte[] pkcs1PublicKey) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
-        ASN1InputStream in = new ASN1InputStream(pkcs1PublicKey);
-        ASN1Primitive obj = in.readObject();
-        RSAPublicKey keyStruct = RSAPublicKey.getInstance(obj);
-        RSAPublicKeySpec keySpec = new RSAPublicKeySpec(keyStruct.getModulus(), keyStruct.getPublicExponent());
-        KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM);
-        return keyFactory.generatePublic(keySpec);
-    }
-
     private PublicKey pkcs1ToPublicKey(String publicKey) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         Reader keyReader = null;
         try {
             keyReader = new StringReader(publicKey);
             PEMParser pemParser = new PEMParser(keyReader);
-            PemObject pemObject = pemParser.readPemObject();
-            RSAPublicKey rsaPublicKey = RSAPublicKey.getInstance(pemObject.getContent());
-            RSAPublicKeySpec keySpec = new RSAPublicKeySpec(rsaPublicKey.getModulus(), rsaPublicKey.getPublicExponent());
-            KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM);
-            return keyFactory.generatePublic(keySpec);
+            SubjectPublicKeyInfo subjectPublicKeyInfo = (SubjectPublicKeyInfo) pemParser.readObject();
+            X509EncodedKeySpec spec = new X509EncodedKeySpec(subjectPublicKeyInfo.getEncoded());
+            return KeyFactory.getInstance("RSA").generatePublic(spec);
         } finally {
             if (keyReader != null) {
                 keyReader.close();

@@ -10,19 +10,21 @@
 
 @implementation RSAFormatter
 
-static NSString *publicTag = @"RSA PUBLIC";
-static NSString *privateTag = @"RSA PRIVATE";
+static NSString *publicTag = @"PUBLIC";
+static NSString *privateTag = @"PRIVATE";
+static NSString *publicRsaTag = @"RSA PUBLIC";
+static NSString *privateRsaTag = @"RSA PRIVATE";
 
 + (NSString *)PEMFormattedPublicKey:(NSData *)publicKeyData {
     NSMutableData * encodedKey = [[NSMutableData alloc] init];
     [encodedKey appendData:publicKeyData];
-    return [self pemFormat:encodedKey tag:publicTag];
+    return [self pemFormat:encodedKey tag:publicRsaTag];
 }
 
 + (NSString *)PEMFormattedPrivateKey:(NSData *)privateKeyData {
     NSMutableData * encodedKey = [[NSMutableData alloc] init];
     [encodedKey appendData:privateKeyData];
-    return [self pemFormat:encodedKey tag:privateTag];
+    return [self pemFormat:encodedKey tag:publicRsaTag];
 }
 
 + (NSString *)pemFormat:(NSData *)encodedKey tag:(NSString *)tag {
@@ -44,14 +46,20 @@ static NSString *privateTag = @"RSA PRIVATE";
 + (NSString *)stripHeaders:(NSString *)pemString {
     NSRange spos;
     NSRange epos;
-    spos = [pemString rangeOfString:[self headerForTag:privateTag]];
-    if(spos.length > 0){
+    if ([pemString rangeOfString:[self headerForTag:privateRsaTag]].length > 0) {
+        spos = [pemString rangeOfString:[self headerForTag:privateRsaTag]];
+        epos = [pemString rangeOfString:[self footerForTag:privateRsaTag]];
+    } else if ([pemString rangeOfString:[self headerForTag:publicRsaTag]].length > 0) {
+        spos = [pemString rangeOfString:[self headerForTag:publicRsaTag]];
+        epos = [pemString rangeOfString:[self footerForTag:publicRsaTag]];
+    } else if ([pemString rangeOfString:[self headerForTag:privateTag]].length > 0) {
+        spos = [pemString rangeOfString:[self headerForTag:privateTag]];
         epos = [pemString rangeOfString:[self footerForTag:privateTag]];
-    }else{
+    } else if ([pemString rangeOfString:[self headerForTag:publicTag]].length > 0) {
         spos = [pemString rangeOfString:[self headerForTag:publicTag]];
         epos = [pemString rangeOfString:[self footerForTag:publicTag]];
-
     }
+
     if(spos.location != NSNotFound && epos.location != NSNotFound){
         NSUInteger s = spos.location + spos.length;
         NSUInteger e = epos.location;

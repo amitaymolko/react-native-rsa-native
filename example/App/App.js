@@ -26,10 +26,28 @@ RSA.generate()
         })
   })
 
+const pkcs1PublicKey = `-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAx9Van+tCkoPDTs/U8KAl
+k5LDUZ7f643MPz50lKT1CJbhosefAFrI7CP+joy61ROCx2JYeRo6BrA98oanPm5m
+0fcqLDV8gpT/LYSbsafU9e7t8mkTd052QimI8UmZGbhcg5L2cbOE9PSNFSqGR+vN
+FFgRYYMBu4uN3HCSrW8N6ObqlQCz57EGrpRbfAdqLKjXxtXOhL4UxV06geUUFzjf
+QU0Iko6xshRJvCV4+SIF9MRPTXnUsMWcNCsRKGQXx6dMQEsh/PV6cXIoIdVuPqZg
+CWXOeyTIZI/Hmpv+7OkaBtDREa3rvDFXOE17pjXRXd1QIUQfcpytlP8scLIFrO8M
+2wIDAQAB
+-----END PUBLIC KEY-----`;
+
+RSA.encrypt('1234', pkcs1PublicKey)
+  .then(encryptedMessage => {
+    console.log('pkcs1PublicKey', encryptedMessage)
+  })
+  .catch(err => {
+    console.log('err', err)
+  })
+
 // Example utilizing the keychain for private key secure storage
 
 let keyTag = 'com.domain.mykey';
-let secret = "secret message";
+let secret = 'secret message';
 
 RSAKeychain.generate(keyTag)
   .then(keys => {
