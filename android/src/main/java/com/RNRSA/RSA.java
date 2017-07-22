@@ -49,6 +49,9 @@ import org.spongycastle.asn1.x509.RSAPublicKeyStructure;
 import org.spongycastle.util.io.pem.PemObject;
 import org.spongycastle.util.io.pem.PemWriter;
 import org.spongycastle.util.io.pem.PemReader;
+import org.spongycastle.asn1.pkcs.RSAPublicKey;
+import org.spongycastle.openssl.PEMParser;
+import org.spongycastle.util.io.pem.PemObject;
 
 import static android.security.keystore.KeyProperties.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -65,7 +68,8 @@ public class RSA {
     private PublicKey publicKey;
     private PrivateKey privateKey;
 
-    public RSA() {}
+    public RSA() {
+    }
 
     public RSA(String keyTag) throws KeyStoreException, UnrecoverableEntryException, NoSuchAlgorithmException, IOException, CertificateException {
         this.keyTag = keyTag;
@@ -84,12 +88,11 @@ public class RSA {
         return dataToPem(PRIVATE_HEADER, pkcs1PrivateKey);
     }
 
-    public void setPublicKey(String publicKey) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException  {
-        byte[] pkcs1PublicKey = pemToData(publicKey);
-        this.publicKey = pkcs1ToPublicKey(pkcs1PublicKey);
+    public void setPublicKey(String publicKey) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+        this.publicKey = pkcs1ToPublicKey(publicKey);
     }
 
-    public void setPrivateKey(String privateKey) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException  {
+    public void setPrivateKey(String privateKey) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         byte[] pkcs1PrivateKey = pemToData(privateKey);
         this.privateKey = pkcs1ToPrivateKey(pkcs1PrivateKey);
     }
@@ -162,6 +165,23 @@ public class RSA {
         return keyFactory.generatePublic(keySpec);
     }
 
+    private PublicKey pkcs1ToPublicKey(String publicKey) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+        Reader keyReader = null;
+        try {
+            keyReader = new StringReader(publicKey);
+            PEMParser pemParser = new PEMParser(keyReader);
+            PemObject pemObject = pemParser.readPemObject();
+            RSAPublicKey rsaPublicKey = RSAPublicKey.getInstance(pemObject.getContent());
+            RSAPublicKeySpec keySpec = new RSAPublicKeySpec(rsaPublicKey.getModulus(), rsaPublicKey.getPublicExponent());
+            KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM);
+            return keyFactory.generatePublic(keySpec);
+        } finally {
+            if (keyReader != null) {
+                keyReader.close();
+            }
+        }
+    }
+
     private PrivateKey pkcs1ToPrivateKey(byte[] pkcs1PrivateKey) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         ASN1InputStream in = new ASN1InputStream(pkcs1PrivateKey);
         ASN1Primitive obj = in.readObject();
@@ -184,10 +204,10 @@ public class RSA {
         return primitive.getEncoded();
     }
 
-    public void loadFromKeystore () throws KeyStoreException, UnrecoverableEntryException, NoSuchAlgorithmException, IOException, CertificateException {
+    public void loadFromKeystore() throws KeyStoreException, UnrecoverableEntryException, NoSuchAlgorithmException, IOException, CertificateException {
         KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
         keyStore.load(null);
-        KeyStore.PrivateKeyEntry privateKeyEntry = (KeyStore.PrivateKeyEntry)keyStore.getEntry(this.keyTag, null);
+        KeyStore.PrivateKeyEntry privateKeyEntry = (KeyStore.PrivateKeyEntry) keyStore.getEntry(this.keyTag, null);
         this.privateKey = privateKeyEntry.getPrivateKey();
         this.publicKey = privateKeyEntry.getCertificate().getPublicKey();
     }
@@ -208,10 +228,10 @@ public class RSA {
                 keyTag,
                 PURPOSE_ENCRYPT | PURPOSE_DECRYPT | PURPOSE_SIGN | PURPOSE_VERIFY
         )
-        .setDigests(KeyProperties.DIGEST_SHA512)
-        .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_RSA_PKCS1)
-        .setSignaturePaddings(KeyProperties.SIGNATURE_PADDING_RSA_PKCS1)
-        .build());
+                .setDigests(KeyProperties.DIGEST_SHA512)
+                .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_RSA_PKCS1)
+                .setSignaturePaddings(KeyProperties.SIGNATURE_PADDING_RSA_PKCS1)
+                .build());
 
         KeyPair keyPair = kpg.genKeyPair();
         this.publicKey = keyPair.getPublic();

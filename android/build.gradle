@@ -22,5 +22,7 @@ android {
 dependencies {
     compile 'com.facebook.react:react-native:0.20.+'
     compile 'com.madgag.spongycastle:core:1.56.0.0'
+    compile 'com.madgag.spongycastle:prov:1.56.0.0'
+    compile 'com.madgag.spongycastle:bcpkix-jdk15on:1.56.0.0'
 }
   
