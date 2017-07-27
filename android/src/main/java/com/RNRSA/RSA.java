@@ -15,6 +15,7 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyPair;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
+import java.security.NoSuchProviderException;
 import java.security.PublicKey;
 import java.security.PrivateKey;
 import java.security.KeyFactory;
@@ -212,7 +213,7 @@ public class RSA {
         this.privateKey = keyPair.getPrivate();
     }
 
-    public void generate(String keyTag) throws IOException, NoSuchAlgorithmException, InvalidAlgorithmParameterException {
+    public void generate(String keyTag) throws IOException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, NoSuchProviderException {
         KeyPairGenerator kpg = KeyPairGenerator.getInstance(ALGORITHM, "AndroidKeyStore");
         kpg.initialize(new KeyGenParameterSpec.Builder(
                 keyTag,
