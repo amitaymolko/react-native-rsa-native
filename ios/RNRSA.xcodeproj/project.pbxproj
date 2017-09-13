@@ -10,16 +10,21 @@
 		186F49E31F06836A00F71861 /* RSAFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 186F49E21F06836A00F71861 /* RSAFormatter.m */; };
 		BF40FFDB1F05EC9000DC4E95 /* RNRSA.m in Sources */ = {isa = PBXBuildFile; fileRef = BF40FFD71F05EC9000DC4E95 /* RNRSA.m */; };
 		BF40FFDC1F05EC9000DC4E95 /* RSANative.m in Sources */ = {isa = PBXBuildFile; fileRef = BF40FFDA1F05EC9000DC4E95 /* RSANative.m */; };
+		BFCDFE2A1F694B870016F50C /* RSANative.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = BF40FFD91F05EC9000DC4E95 /* RSANative.h */; };
+		BFCDFE2B1F694B890016F50C /* RSAFormatter.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = 186F49E11F06836A00F71861 /* RSAFormatter.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		BF40FFBB1F05EC4000DC4E95 /* CopyFiles */ = {
+		BF40FFBB1F05EC4000DC4E95 /* Copy Headers */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
+				BFCDFE2B1F694B890016F50C /* RSAFormatter.h in Copy Headers */,
+				BFCDFE2A1F694B870016F50C /* RSANative.h in Copy Headers */,
 			);
+			name = "Copy Headers";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -75,7 +80,7 @@
 			buildPhases = (
 				BF40FFB91F05EC4000DC4E95 /* Sources */,
 				BF40FFBA1F05EC4000DC4E95 /* Frameworks */,
-				BF40FFBB1F05EC4000DC4E95 /* CopyFiles */,
+				BF40FFBB1F05EC4000DC4E95 /* Copy Headers */,
 			);
 			buildRules = (
 			);
@@ -177,7 +182,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -224,7 +229,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
