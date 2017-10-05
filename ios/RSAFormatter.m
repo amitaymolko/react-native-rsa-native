@@ -24,7 +24,7 @@ static NSString *privateRsaTag = @"RSA PRIVATE";
 + (NSString *)PEMFormattedPrivateKey:(NSData *)privateKeyData {
     NSMutableData * encodedKey = [[NSMutableData alloc] init];
     [encodedKey appendData:privateKeyData];
-    return [self pemFormat:encodedKey tag:publicRsaTag];
+    return [self pemFormat:encodedKey tag:privateRsaTag];
 }
 
 + (NSString *)pemFormat:(NSData *)encodedKey tag:(NSString *)tag {
