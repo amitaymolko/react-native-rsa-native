@@ -58,8 +58,7 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
                                     (id)kSecAttrApplicationTag: self.keyTag,
                                     (id)kSecAttrKeyType: (id)kSecAttrKeyTypeRSA,
                                     };
-        OSStatus status = SecItemDelete((CFDictionaryRef)getquery);
-        NSLog(@"something");
+        SecItemDelete((CFDictionaryRef)getquery);
     } else {
         self.privateKey = nil;
     }
