@@ -52,6 +52,19 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
     }
 }
 
+- (void)deletePrivateKey {
+    if (self.keyTag) {
+        NSDictionary *getquery = @{ (id)kSecClass: (id)kSecClassKey,
+                                    (id)kSecAttrApplicationTag: self.keyTag,
+                                    (id)kSecAttrKeyType: (id)kSecAttrKeyTypeRSA,
+                                    };
+        OSStatus status = SecItemDelete((CFDictionaryRef)getquery);
+        NSLog(@"something");
+    } else {
+        self.privateKey = nil;
+    }
+}
+
 - (NSString *)encodedPublicKey {
     if (self.keyTag) {
         __block NSString *encodedPublicKey = nil;
