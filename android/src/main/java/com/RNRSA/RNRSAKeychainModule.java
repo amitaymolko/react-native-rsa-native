@@ -43,6 +43,19 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
+  public void deletePrivateKey(String keyTag, Promise promise)  {
+    try {
+        RSA rsa = new RSA(keyTag);
+        rsa.deletePrivateKey();
+        promise.resolve(1);
+    } catch(NoSuchAlgorithmException e) {
+      promise.reject("Error", e.getMessage());
+    } catch(Exception e) {
+      promise.reject("Error", e.getMessage());
+    }
+  }
+
+  @ReactMethod
   public void encrypt(String message, String keyTag, Promise promise)  {
 
       try {

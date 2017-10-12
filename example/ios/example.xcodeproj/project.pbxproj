@@ -36,7 +36,7 @@
 		2DCD954D1E0B4F2C00145EB5 /* exampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* exampleTests.m */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
-		C0E01164738046ECB8A05DBD /* libRNRSA.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E099A9DCCD04324A05A4E8A /* libRNRSA.a */; };
+		A83DB4C7C1D24F0D974ADCC7 /* libRNRSA.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EA60C9770F5141158BE9460C /* libRNRSA.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -117,9 +117,9 @@
 			remoteGlobalIDString = 139D7E881E25C6D100323FB7;
 			remoteInfo = "double-conversion";
 		};
-		186F49DF1F06437200F71861 /* PBXContainerItemProxy */ = {
+		188297021F8F499800727405 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = B3E06F217B8B462D96EAA9F1 /* RNRSA.xcodeproj */;
+			containerPortal = 5753E8C6213D4DAC884A5006 /* RNRSA.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = BF40FFBD1F05EC4000DC4E95;
 			remoteInfo = RNRSA;
@@ -274,11 +274,11 @@
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* example-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "example-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* example-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "example-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		4E099A9DCCD04324A05A4E8A /* libRNRSA.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNRSA.a; sourceTree = "<group>"; };
+		5753E8C6213D4DAC884A5006 /* RNRSA.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNRSA.xcodeproj; path = "../node_modules/react-native-rsa-native/ios/RNRSA.xcodeproj"; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
-		B3E06F217B8B462D96EAA9F1 /* RNRSA.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNRSA.xcodeproj; path = "../node_modules/react-native-rsa-native/ios/RNRSA.xcodeproj"; sourceTree = "<group>"; };
+		EA60C9770F5141158BE9460C /* libRNRSA.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNRSA.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -305,7 +305,7 @@
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
-				C0E01164738046ECB8A05DBD /* libRNRSA.a in Frameworks */,
+				A83DB4C7C1D24F0D974ADCC7 /* libRNRSA.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -445,15 +445,15 @@
 		180CA7D31F78D95800E1E9AD /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
-				4E099A9DCCD04324A05A4E8A /* libRNRSA.a */,
+				EA60C9770F5141158BE9460C /* libRNRSA.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
 		};
-		186F49BD1F06437200F71861 /* Products */ = {
+		188296FF1F8F499800727405 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				186F49E01F06437200F71861 /* libRNRSA.a */,
+				188297031F8F499800727405 /* libRNRSA.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -490,7 +490,7 @@
 				832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */,
 				00C302DF1ABCB9EE00DB3ED1 /* RCTVibration.xcodeproj */,
 				139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */,
-				B3E06F217B8B462D96EAA9F1 /* RNRSA.xcodeproj */,
+				5753E8C6213D4DAC884A5006 /* RNRSA.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -688,8 +688,8 @@
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
 				},
 				{
-					ProductGroup = 186F49BD1F06437200F71861 /* Products */;
-					ProjectRef = B3E06F217B8B462D96EAA9F1 /* RNRSA.xcodeproj */;
+					ProductGroup = 188296FF1F8F499800727405 /* Products */;
+					ProjectRef = 5753E8C6213D4DAC884A5006 /* RNRSA.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -773,11 +773,11 @@
 			remoteRef = 186F49DC1F06437200F71861 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		186F49E01F06437200F71861 /* libRNRSA.a */ = {
+		188297031F8F499800727405 /* libRNRSA.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libRNRSA.a;
-			remoteRef = 186F49DF1F06437200F71861 /* PBXContainerItemProxy */;
+			remoteRef = 188297021F8F499800727405 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		3DAD3E841DF850E9000B6D8A /* libRCTImage-tvOS.a */ = {

@@ -203,6 +203,13 @@ public class RSA {
         this.publicKey = privateKeyEntry.getCertificate().getPublicKey();
     }
 
+    public void deletePrivateKey() throws KeyStoreException, UnrecoverableEntryException, NoSuchAlgorithmException, IOException, CertificateException {
+        KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
+        keyStore.load(null);
+        keyStore.deleteEntry(this.keyTag);
+        this.privateKey = null;
+        this.publicKey = null;
+    }
 
     public void generate() throws IOException, NoSuchAlgorithmException, InvalidAlgorithmParameterException {
         KeyPairGenerator kpg = KeyPairGenerator.getInstance(ALGORITHM);

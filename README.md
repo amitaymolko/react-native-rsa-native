@@ -66,7 +66,7 @@ RSAKeychain.generate(keyTag)
     console.log(keys.public);
     console.log(secret);
 
-    RSAKeychain.encrypt(secret, keyTag)
+    return RSAKeychain.encrypt(secret, keyTag)
       .then(encodedMessage => {
         console.log(encodedMessage);
 
@@ -75,16 +75,23 @@ RSAKeychain.generate(keyTag)
             console.log(message);
           })
         })
+  })
+  .then(() => {
+  return RSAKeychain.sign(secret, keyTag)
+    .then(signature => {
+      console.log('signature', signature);
 
-    RSAKeychain.sign(secret, keyTag)
-      .then(signature => {
-        console.log(signature);
-
-        RSAKeychain.verify(signature, secret, keyTag)
-          .then(valid => {
-            console.log(valid);
-          })
+      RSAKeychain.verify(signature, secret, keyTag)
+        .then(valid => {
+          console.log('verified', valid);
         })
+      })
+  })
+  .then(() => {
+    RSAKeychain.deletePrivateKey(keyTag)
+    .then( success => {
+      console.log('delete success', success)
+    })
   });
 ```
 
