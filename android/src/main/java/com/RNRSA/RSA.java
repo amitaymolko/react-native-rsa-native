@@ -111,7 +111,7 @@ public class RSA {
 
     // Base64 input
     public String encrypt64(String b64Message){
-        byte[] data = Base64.getDecoder().decode(b64Message);
+        byte[] data = Base64.decode(b64Message);
         byte[] cipherbytes = encrypt(data);
         return Base64.encodeToString(cipherbytes, Base64.DEFAULT);
     }
