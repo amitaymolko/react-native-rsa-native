@@ -38,6 +38,23 @@ RCT_EXPORT_METHOD(decrypt:(NSString *)encodedMessage withKey:(NSString *)key res
     resolve(message);
 }
 
+RCT_EXPORT_METHOD(encrypt64:(NSString *)message withKey:(NSString *)key resolve:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject) {
+    RSANative *rsa = [[RSANative alloc] init];
+    rsa.publicKey = key;
+    NSString *encodedMessage = [rsa encrypt64:message];
+    resolve(encodedMessage);
+}
+
+RCT_EXPORT_METHOD(decrypt64:(NSString *)encodedMessage withKey:(NSString *)key resolve:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject) {
+    RSANative *rsa = [[RSANative alloc] init];
+    rsa.privateKey = key;
+    NSString *message = [rsa decrypt64:encodedMessage];
+    resolve(message);
+}
+
+
 RCT_EXPORT_METHOD(sign:(NSString *)message withKey:(NSString *)key resolve:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject) {
     RSANative *rsa = [[RSANative alloc] init];
