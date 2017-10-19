@@ -99,27 +99,50 @@ public class RSA {
         this.privateKey = pkcs1ToPrivateKey(pkcs1PrivateKey);
     }
 
-    public String encrypt(String message) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException {
+
+    // This function will be called by encrypt and encrypt64
+    private byte[] encrypt(byte[] data) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException {
         String encodedMessage = null;
         final Cipher cipher = Cipher.getInstance("RSA/NONE/PKCS1Padding");
         cipher.init(Cipher.ENCRYPT_MODE, this.publicKey);
-        byte[] data = cipher.doFinal(message.getBytes(UTF_8));
-        encodedMessage = Base64.encodeToString(data, Base64.DEFAULT);
-
-        return encodedMessage;
+        byte[] cipherbytes = cipher.doFinal(data);
+        return cipherbytes;
     }
 
-    public String decrypt(String encodedMessage) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException {
+    // Base64 input
+    public String encrypt64(String b64Message){
+        byte[] data = Base64.getDecoder().decode(b64Message);
+        byte[] cipherbytes = encrypt(data)
+        return Base64.encodeToString(cipherbytes, Base64.DEFAULT);
+    }
+
+    // UTF-8 input
+    public String encrypt(String message) {
+        byte[] data = message.getBytes(UTF_8);
+        byte[] cipherbytes = encrypt(data)
+        return new String(cipherbytes, UTF_8)
+    }
+
+    public byte[] decrypt(byte[] cipherbytes) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException {
         String message = null;
-        byte[] cipherText = Base64.decode(encodedMessage, Base64.DEFAULT);
         final Cipher cipher = Cipher.getInstance("RSA/NONE/PKCS1Padding");
         cipher.init(Cipher.DECRYPT_MODE, this.privateKey);
+        byte[] data = cipher.doFinal(cipherbytes);
+        return data;
+    }
 
-        byte[] data = cipher.doFinal(cipherText);
+    // UTF-8 input
+    public String decrypt(String message) {
+        byte[] cipherbytes = message.getBytes(UTF_8);
+        byte[] data = decrypt(cipherbytes)
+        return new String(data, UTF_8);
+    }
 
-        message = new String(data, UTF_8);
-
-        return message;
+    // Base64 input
+    public String decrypt64(String b64message) {
+        byte[] cipherbytes = Base64.decode(b64message, Base64.DEFAULT);
+        byte[] data = decrypt(cipherbytes)
+        return Base64.encodeToString(data, Base64.DEFAULT);
     }
 
     public String sign(String message) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
