@@ -197,14 +197,14 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
 }
 
 - (NSString *)decrypt64:(NSString*)message {
-    NSData *data = [self._decrypt message]
+    NSData *data = [self._decrypt message];
     NSString *base64String = [data base64EncodedStringWithOptions:0];
     return base64String;
 }
 
 - (NSString *)decrypt:(NSString *)message {
-    NSData *data = [self._decrypt message]
-    return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]
+    NSData *data = [self._decrypt message];
+    return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 }
 
 - (NSData *)_decrypt:(NSString *)encodedMessage {
