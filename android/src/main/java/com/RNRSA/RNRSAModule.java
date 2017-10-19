@@ -56,6 +56,19 @@ public class RNRSAModule extends ReactContextBaseJavaModule {
       }
   }
 
+  @ReactMethod
+  public void encrypt64(String message, String publicKeyString, Promise promise)  {
+
+      try {
+          RSA rsa = new RSA();
+          rsa.setPublicKey(publicKeyString);
+          String encodedMessage = rsa.encrypt64(message);
+          promise.resolve(encodedMessage);
+      } catch(Exception e) {
+          promise.reject("Error", e.getMessage());
+      }
+  }
+
 
   @ReactMethod
   public void decrypt(String encodedMessage, String privateKeyString, Promise promise)  {
@@ -64,6 +77,20 @@ public class RNRSAModule extends ReactContextBaseJavaModule {
           RSA rsa = new RSA();
           rsa.setPrivateKey(privateKeyString);
           String message = rsa.decrypt(encodedMessage);
+          promise.resolve(message);
+
+      } catch(Exception e) {
+          promise.reject("Error", e.getMessage());
+      }
+  }
+
+  @ReactMethod
+  public void decrypt64(String encodedMessage, String privateKeyString, Promise promise)  {
+
+      try {
+          RSA rsa = new RSA();
+          rsa.setPrivateKey(privateKeyString);
+          String message = rsa.decrypt64(encodedMessage);
           promise.resolve(message);
 
       } catch(Exception e) {
