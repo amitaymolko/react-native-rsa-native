@@ -185,7 +185,7 @@ public class RSA {
     public boolean verify(String signature, String message) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
         Signature publicSignature = Signature.getInstance("SHA512withRSA");
         publicSignature.initVerify(this.publicKey);
-        byte[] messageBytes = message.getBytes(UTF_8));
+        byte[] messageBytes = message.getBytes(UTF_8);
         byte[] signatureBytes = Base64.decode(signature, Base64.DEFAULT);
         return verify(signatureBytes, messageBytes);
     }

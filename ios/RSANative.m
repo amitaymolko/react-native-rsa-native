@@ -132,13 +132,15 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
 }
 
 - (NSString *)encrypt64:(NSString*)message {
-    NSData *decodedData = [[NSData alloc] initWithBase64EncodedString:message options:0];    
-    return [self _encrypt: decodedData];
+    NSData *data = [[NSData alloc] initWithBase64EncodedString:cipherText options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    NSData *encrypted = [self _encrypt: data];
+    return [encrypted base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
 }
 
 - (NSString *)encrypt:(NSString *)message {
     NSData *data = [message dataUsingEncoding:NSUTF8StringEncoding];
-    return [self _encrypt: data];
+    NSData *encrypted = [self _encrypt: data];
+    return [[NSString alloc] initWithData:encrypted encoding:NSUTF8StringEncoding];
 }
 
 - (NSData *)_encrypt:(NSData *)data {
@@ -193,23 +195,23 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
         encryptor(self.publicKeyRef);
     }
 
-    return [cipherText base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
+    return cipherText;
 }
 
 - (NSString *)decrypt64:(NSString*)message {
-    NSData *data = [self _decrypt: message];
-    NSString *base64String = [data base64EncodedStringWithOptions:0];
-    return base64String;
+    NSData *data = [[NSData alloc] initWithBase64EncodedString:cipherText options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    NSData *decrypted = [self _decrypt: data];
+    return [decrypted base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
 }
 
 - (NSString *)decrypt:(NSString *)message {
-    NSData *data = [self _decrypt: message];
-    return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    NSData *data = [message dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *decrypted = [self _decrypt: data];
+    return [[NSString alloc] initWithData:decrypted encoding:NSUTF8StringEncoding];
 }
 
-- (NSData *)_decrypt:(NSString *)encodedMessage {
+- (NSData *)_decrypt:(NSData *)data {
     __block NSData *clearText = nil;
-    NSData *data = [[NSData alloc] initWithBase64EncodedString:encodedMessage options:NSDataBase64DecodingIgnoreUnknownCharacters];
 
     void(^decryptor)(SecKeyRef) = ^(SecKeyRef privateKey) {
         const uint8_t *srcbuf = (const uint8_t *)[data bytes];
