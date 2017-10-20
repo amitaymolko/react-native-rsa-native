@@ -134,7 +134,7 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
 - (NSString *)encrypt64:(NSString*)message {
     NSData *data = [[NSData alloc] initWithBase64EncodedString:message options:NSDataBase64DecodingIgnoreUnknownCharacters];
     NSData *encrypted = [self _encrypt: data];
-    return [encrypted base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
+    return [encrypted base64EncodedStringWithOptions:];
 }
 
 - (NSString *)encrypt:(NSString *)message {
@@ -201,7 +201,7 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
 - (NSString *)decrypt64:(NSString*)message {
     NSData *data = [[NSData alloc] initWithBase64EncodedString:message options:NSDataBase64DecodingIgnoreUnknownCharacters];
     NSData *decrypted = [self _decrypt: data];
-    return [decrypted base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
+    return [decrypted base64EncodedStringWithOptions:];
 }
 
 - (NSString *)decrypt:(NSString *)message {
