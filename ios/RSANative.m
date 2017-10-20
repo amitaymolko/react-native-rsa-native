@@ -132,7 +132,7 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
 }
 
 - (NSString *)encrypt64:(NSString*)message {
-    NSData *data = [[NSData alloc] initWithBase64EncodedString:cipherText options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    NSData *data = [[NSData alloc] initWithBase64EncodedString:message options:NSDataBase64DecodingIgnoreUnknownCharacters];
     NSData *encrypted = [self _encrypt: data];
     return [encrypted base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
 }
@@ -140,7 +140,7 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
 - (NSString *)encrypt:(NSString *)message {
     NSData *data = [message dataUsingEncoding:NSUTF8StringEncoding];
     NSData *encrypted = [self _encrypt: data];
-    return [[NSString alloc] initWithData:encrypted encoding:NSUTF8StringEncoding];
+    return [encrypted base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
 }
 
 - (NSData *)_encrypt:(NSData *)data {
@@ -199,13 +199,13 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
 }
 
 - (NSString *)decrypt64:(NSString*)message {
-    NSData *data = [[NSData alloc] initWithBase64EncodedString:cipherText options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    NSData *data = [[NSData alloc] initWithBase64EncodedString:message options:NSDataBase64DecodingIgnoreUnknownCharacters];
     NSData *decrypted = [self _decrypt: data];
     return [decrypted base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
 }
 
 - (NSString *)decrypt:(NSString *)message {
-    NSData *data = [message dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *data = [[NSData alloc] initWithBase64EncodedString:message options:NSDataBase64DecodingIgnoreUnknownCharacters];
     NSData *decrypted = [self _decrypt: data];
     return [[NSString alloc] initWithData:decrypted encoding:NSUTF8StringEncoding];
 }
@@ -322,7 +322,7 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
     return encodedSignature;
 }
 
-- (BOOL)verify64:(NSData *)encodedSignature withMessage:(NSData *)b64message {
+- (BOOL)verify64:(NSString *)encodedSignature withMessage:(NSString *)b64message {
     NSData *messageBytes = [[NSData alloc] initWithBase64EncodedString:b64message options:NSDataBase64DecodingIgnoreUnknownCharacters];
     NSData *signatureBytes = [[NSData alloc] initWithBase64EncodedString:encodedSignature options:NSDataBase64DecodingIgnoreUnknownCharacters];
     return [self _verify: signatureBytes withMessage: messageBytes];

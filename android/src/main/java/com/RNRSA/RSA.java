@@ -120,7 +120,7 @@ public class RSA {
     public String encrypt(String message) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException {
         byte[] data = message.getBytes(UTF_8);
         byte[] cipherBytes = encrypt(data);
-        return new String(cipherBytes, UTF_8);
+        return Base64.encodeToString(cipherBytes, Base64.DEFAULT);
     }
 
     private byte[] decrypt(byte[] cipherBytes) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException {
@@ -142,7 +142,7 @@ public class RSA {
     public String decrypt64(String b64message) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException {
         byte[] cipherBytes = Base64.decode(b64message, Base64.DEFAULT);
         byte[] data = decrypt(cipherBytes);
-        return Base64.encodeToString(data, Base64.DEFAULT);
+        return new String(data, UTF_8);
     }
 
     private String sign(byte[] messageBytes) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
