@@ -134,7 +134,7 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
 - (NSString *)encrypt64:(NSString*)message {
     NSData *data = [[NSData alloc] initWithBase64EncodedString:message options:NSDataBase64DecodingIgnoreUnknownCharacters];
     NSData *encrypted = [self _encrypt: data];
-    return [encrypted base64EncodedStringWithOptions:];
+    return [encrypted base64EncodedStringWithOptions:0];
 }
 
 - (NSString *)encrypt:(NSString *)message {
@@ -150,14 +150,11 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
         BOOL canEncrypt = SecKeyIsAlgorithmSupported(publicKey,
                                                      kSecKeyOperationTypeEncrypt,
                                                      kSecKeyAlgorithmRSAEncryptionPKCS1);
-        NSData *plainText = [message dataUsingEncoding:NSUTF8StringEncoding];
-        canEncrypt &= ([plainText length] < (SecKeyGetBlockSize(publicKey)-130));
-
         if (canEncrypt) {
             CFErrorRef error = NULL;
             cipherText = (NSData *)CFBridgingRelease(SecKeyCreateEncryptedData(publicKey,
                                                                                kSecKeyAlgorithmRSAEncryptionPKCS1,
-                                                                               (__bridge CFDataRef)plainText,
+                                                                               (__bridge CFDataRef)data,
                                                                                &error));
             if (!cipherText) {
                 NSError *err = CFBridgingRelease(error);
@@ -178,7 +175,7 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
 - (NSString *)decrypt64:(NSString*)message {
     NSData *data = [[NSData alloc] initWithBase64EncodedString:message options:NSDataBase64DecodingIgnoreUnknownCharacters];
     NSData *decrypted = [self _decrypt: data];
-    return [decrypted base64EncodedStringWithOptions:];
+    return [decrypted base64EncodedStringWithOptions:0];
 }
 
 - (NSString *)decrypt:(NSString *)message {
@@ -191,18 +188,15 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
     __block NSData *clearText = nil;
 
     void(^decryptor)(SecKeyRef) = ^(SecKeyRef privateKey) {
-        NSData *cipherText = [[NSData alloc] initWithBase64EncodedString:encodedMessage options:NSDataBase64DecodingIgnoreUnknownCharacters];
 
         BOOL canDecrypt = SecKeyIsAlgorithmSupported(privateKey,
                                                      kSecKeyOperationTypeDecrypt,
                                                      kSecKeyAlgorithmRSAEncryptionPKCS1);
-        canDecrypt &= ([cipherText length] == SecKeyGetBlockSize(privateKey));
-
         if (canDecrypt) {
             CFErrorRef error = NULL;
             clearText = (NSData *)CFBridgingRelease(SecKeyCreateDecryptedData(privateKey,
                                                                               kSecKeyAlgorithmRSAEncryptionPKCS1,
-                                                                              (__bridge CFDataRef)cipherText,
+                                                                              (__bridge CFDataRef)data,
                                                                               &error));
             if (!clearText) {
                 NSError *err = CFBridgingRelease(error);
