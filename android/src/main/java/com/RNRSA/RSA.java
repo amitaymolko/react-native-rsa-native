@@ -123,7 +123,7 @@ public class RSA {
         return new String(cipherBytes, UTF_8);
     }
 
-    public byte[] decrypt(byte[] cipherBytes) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException {
+    private byte[] decrypt(byte[] cipherBytes) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException {
         String message = null;
         final Cipher cipher = Cipher.getInstance("RSA/NONE/PKCS1Padding");
         cipher.init(Cipher.DECRYPT_MODE, this.privateKey);
@@ -145,7 +145,7 @@ public class RSA {
         return Base64.encodeToString(data, Base64.DEFAULT);
     }
 
-    public String sign(byte[] messageBytes) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
+    private String sign(byte[] messageBytes) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
         Signature privateSignature = Signature.getInstance("SHA512withRSA");
         privateSignature.initSign(this.privateKey);
         privateSignature.update(messageBytes);
@@ -165,7 +165,7 @@ public class RSA {
         return sign(messageBytes);
     }
 
-    public boolean verify(byte[] signatureBytes, byte[] messageBytes) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
+    private boolean verify(byte[] signatureBytes, byte[] messageBytes) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
         Signature publicSignature = Signature.getInstance("SHA512withRSA");
         publicSignature.initVerify(this.publicKey);
         publicSignature.update(messageBytes);

@@ -33,4 +33,10 @@
 - (NSString *)sign:(NSString *)message;
 - (BOOL)verify:(NSString *)signature withMessage:(NSString *)message;
 
+- (NSString *)sign64:(NSString *)b64message;
+- (BOOL)verify64:(NSString *)signature withMessage:(NSString *)b64message;
+
+- (NSString *)_sign:(NSData *)messageBytes;
+- (BOOL)_verify:(NSData *)signatureBytes withMessage:(NSData *)messageBytes;
+
 @end

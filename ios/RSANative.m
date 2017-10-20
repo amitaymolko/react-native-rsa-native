@@ -272,7 +272,19 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
     return clearText;
 }
 
+- (NSString *)sign64:(NSString *)b64message {
+    NSData *data = [[NSData alloc] initWithBase64EncodedString:b64message options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    NSString *encodedSignature = [self _sign: data];
+    return encodedSignature;
+}
+
 - (NSString *)sign:(NSString *)message {
+    NSData* data = [message dataUsingEncoding:NSUTF8StringEncoding];
+    NSString *encodedSignature = [self _sign: data];
+    return encodedSignature;
+}
+
+- (NSString *)_sign:(NSData *)messageBytes {
     __block NSString *encodedSignature = nil;
 
     void(^signer)(SecKeyRef) = ^(SecKeyRef privateKey) {
@@ -282,14 +294,13 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
                                                 kSecKeyOperationTypeSign,
                                                 algorithm);
 
-        NSData* data = [message dataUsingEncoding:NSUTF8StringEncoding];
         NSData* signature = nil;
 
         if (canSign) {
             CFErrorRef error = NULL;
             signature = (NSData*)CFBridgingRelease(SecKeyCreateSignature(privateKey,
                                                                          algorithm,
-                                                                         (__bridge CFDataRef)data,
+                                                                         (__bridge CFDataRef)messageBytes,
                                                                          &error));
             if (!signature) {
               NSError *err = CFBridgingRelease(error);
@@ -309,7 +320,19 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
     return encodedSignature;
 }
 
+- (BOOL)verify64:(NSData *)encodedSignature withMessage:(NSData *)b64message {
+    NSData *messageBytes = [[NSData alloc] initWithBase64EncodedString:b64message options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    NSData *signatureBytes = [[NSData alloc] initWithBase64EncodedString:encodedSignature options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    return [self _verify: signatureBytes withMessage: messageBytes];
+}
+
 - (BOOL)verify:(NSString *)encodedSignature withMessage:(NSString *)message {
+    NSData *messageBytes = [message dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *signatureBytes = [[NSData alloc] initWithBase64EncodedString:encodedSignature options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    return [self _verify: signatureBytes withMessage: messageBytes];
+}
+
+- (BOOL)_verify:(NSData *)signatureBytes withMessage:(NSData *)messageBytes {
     __block BOOL result = NO;
 
     void(^verifier)(SecKeyRef) = ^(SecKeyRef publicKey) {
@@ -318,15 +341,13 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
         BOOL canVerify = SecKeyIsAlgorithmSupported(publicKey,
                                                     kSecKeyOperationTypeVerify,
                                                     algorithm);
-        NSData* data = [message dataUsingEncoding:NSUTF8StringEncoding];
-        NSData* signature = [[NSData alloc] initWithBase64EncodedString:encodedSignature options:NSDataBase64DecodingIgnoreUnknownCharacters];
 
         if (canVerify) {
             CFErrorRef error = NULL;
             result = SecKeyVerifySignature(publicKey,
                                            algorithm,
-                                           (__bridge CFDataRef)data,
-                                           (__bridge CFDataRef)signature,
+                                           (__bridge CFDataRef)messageBytes,
+                                           (__bridge CFDataRef)signatureBytes,
                                            &error);
             if (!result) {
                 NSError *err = CFBridgingRelease(error);
