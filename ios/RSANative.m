@@ -145,48 +145,25 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
 
 - (NSData *)_encrypt:(NSData *)data {
     __block NSData *cipherText = nil;
+
     void(^encryptor)(SecKeyRef) = ^(SecKeyRef publicKey) {
         BOOL canEncrypt = SecKeyIsAlgorithmSupported(publicKey,
                                                      kSecKeyOperationTypeEncrypt,
                                                      kSecKeyAlgorithmRSAEncryptionPKCS1);
+        NSData *plainText = [message dataUsingEncoding:NSUTF8StringEncoding];
+        canEncrypt &= ([plainText length] < (SecKeyGetBlockSize(publicKey)-130));
 
-        const uint8_t *srcbuf = (const uint8_t *)[data bytes];
-        size_t srclen = (size_t)data.length;
-        
-        size_t block_size = SecKeyGetBlockSize(publicKey) * sizeof(uint8_t);
-        void *outbuf = malloc(block_size);
-        size_t src_block_size = block_size - 11;
-        NSMutableData *ret = [[NSMutableData alloc] init];
-        for(int idx=0; idx<srclen; idx+=src_block_size){
-            //NSLog(@"%d/%d block_size: %d", idx, (int)srclen, (int)block_size);
-            size_t data_len = srclen - idx;
-            if(data_len > src_block_size){
-                data_len = src_block_size;
-            }
-            
-            size_t outlen = block_size;
-            OSStatus status = noErr;
-            
-
-            status = SecKeyEncrypt(publicKey,
-                                kSecPaddingPKCS1,
-                                srcbuf + idx,
-                                data_len,
-                                outbuf,
-                                &outlen
-                                );
-            
-            if (status != 0) {
-                NSLog(@"SecKeyEncrypt fail. Error Code: %d", status);
-                ret = nil;
-                break;
-            }else{
-                [ret appendBytes:outbuf length:outlen];
+        if (canEncrypt) {
+            CFErrorRef error = NULL;
+            cipherText = (NSData *)CFBridgingRelease(SecKeyCreateEncryptedData(publicKey,
+                                                                               kSecKeyAlgorithmRSAEncryptionPKCS1,
+                                                                               (__bridge CFDataRef)plainText,
+                                                                               &error));
+            if (!cipherText) {
+                NSError *err = CFBridgingRelease(error);
+                NSLog(@"%@", err);
             }
         }
-        
-        free(outbuf);
-        cipherText = ret;
     };
 
     if (self.keyTag) {
@@ -214,55 +191,24 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
     __block NSData *clearText = nil;
 
     void(^decryptor)(SecKeyRef) = ^(SecKeyRef privateKey) {
-        const uint8_t *srcbuf = (const uint8_t *)[data bytes];
-        size_t srclen = (size_t)data.length;
-        
-        size_t block_size = SecKeyGetBlockSize(privateKey) * sizeof(uint8_t);
-        UInt8 *outbuf = malloc(block_size);
-        size_t src_block_size = block_size;
-        
-        NSMutableData *ret = [[NSMutableData alloc] init];
-        for(int idx=0; idx<srclen; idx+=src_block_size){
-            //NSLog(@"%d/%d block_size: %d", idx, (int)srclen, (int)block_size);
-            size_t data_len = srclen - idx;
-            if(data_len > src_block_size){
-                data_len = src_block_size;
-            }
-            
-            size_t outlen = block_size;
-            OSStatus status = noErr;
-            status = SecKeyDecrypt(privateKey,
-                                kSecPaddingNone,
-                                srcbuf + idx,
-                                data_len,
-                                outbuf,
-                                &outlen
-                                );
-            if (status != 0) {
-                NSLog(@"SecKeyEncrypt fail. Error Code: %d", status);
-                ret = nil;
-                break;
-            }else{
-                //the actual decrypted data is in the middle, locate it!
-                int idxFirstZero = -1;
-                int idxNextZero = (int)outlen;
-                for ( int i = 0; i < outlen; i++ ) {
-                    if ( outbuf[i] == 0 ) {
-                        if ( idxFirstZero < 0 ) {
-                            idxFirstZero = i;
-                        } else {
-                            idxNextZero = i;
-                            break;
-                        }
-                    }
-                }
-                
-                [ret appendBytes:&outbuf[idxFirstZero+1] length:idxNextZero-idxFirstZero-1];
+        NSData *cipherText = [[NSData alloc] initWithBase64EncodedString:encodedMessage options:NSDataBase64DecodingIgnoreUnknownCharacters];
+
+        BOOL canDecrypt = SecKeyIsAlgorithmSupported(privateKey,
+                                                     kSecKeyOperationTypeDecrypt,
+                                                     kSecKeyAlgorithmRSAEncryptionPKCS1);
+        canDecrypt &= ([cipherText length] == SecKeyGetBlockSize(privateKey));
+
+        if (canDecrypt) {
+            CFErrorRef error = NULL;
+            clearText = (NSData *)CFBridgingRelease(SecKeyCreateDecryptedData(privateKey,
+                                                                              kSecKeyAlgorithmRSAEncryptionPKCS1,
+                                                                              (__bridge CFDataRef)cipherText,
+                                                                              &error));
+            if (!clearText) {
+                NSError *err = CFBridgingRelease(error);
+                NSLog(@"%@", err);
             }
         }
-        
-        free(outbuf);
-        clearText = ret;
     };
 
     if (self.keyTag) {
