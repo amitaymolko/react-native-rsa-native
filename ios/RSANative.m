@@ -149,11 +149,11 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
     void(^encryptor)(SecKeyRef) = ^(SecKeyRef publicKey) {
         BOOL canEncrypt = SecKeyIsAlgorithmSupported(publicKey,
                                                      kSecKeyOperationTypeEncrypt,
-                                                     kSecKeyAlgorithmRSAEncryptionPKCS1);
+                                                     kSecKeyAlgorithmRSAEncryptionOAEPSHA1);
         if (canEncrypt) {
             CFErrorRef error = NULL;
             cipherText = (NSData *)CFBridgingRelease(SecKeyCreateEncryptedData(publicKey,
-                                                                               kSecKeyAlgorithmRSAEncryptionPKCS1,
+                                                                               kSecKeyAlgorithmRSAEncryptionOAEPSHA1,
                                                                                (__bridge CFDataRef)data,
                                                                                &error));
             if (!cipherText) {
@@ -191,11 +191,11 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
 
         BOOL canDecrypt = SecKeyIsAlgorithmSupported(privateKey,
                                                      kSecKeyOperationTypeDecrypt,
-                                                     kSecKeyAlgorithmRSAEncryptionPKCS1);
+                                                     kSecKeyAlgorithmRSAEncryptionOAEPSHA1);
         if (canDecrypt) {
             CFErrorRef error = NULL;
             clearText = (NSData *)CFBridgingRelease(SecKeyCreateDecryptedData(privateKey,
-                                                                              kSecKeyAlgorithmRSAEncryptionPKCS1,
+                                                                              kSecKeyAlgorithmRSAEncryptionOAEPSHA1,
                                                                               (__bridge CFDataRef)data,
                                                                               &error));
             if (!clearText) {
