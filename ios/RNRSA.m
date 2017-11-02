@@ -63,11 +63,27 @@ RCT_EXPORT_METHOD(sign:(NSString *)message withKey:(NSString *)key resolve:(RCTP
     resolve(signature);
 }
 
+RCT_EXPORT_METHOD(sign64:(NSString *)message withKey:(NSString *)key resolve:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject) {
+    RSANative *rsa = [[RSANative alloc] init];
+    rsa.privateKey = key;
+    NSString *signature = [rsa sign64:message];
+    resolve(signature);
+}
+
 RCT_EXPORT_METHOD(verify:(NSString *)signature withMessage:(NSString *)message andKey:(NSString *)key resolve:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject) {
     RSANative *rsa = [[RSANative alloc] init];
     rsa.publicKey = key;
     BOOL valid = [rsa verify:signature withMessage:message];
+    resolve(@(valid));
+}
+
+RCT_EXPORT_METHOD(verify64:(NSString *)signature withMessage:(NSString *)message andKey:(NSString *)key resolve:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject) {
+    RSANative *rsa = [[RSANative alloc] init];
+    rsa.publicKey = key;
+    BOOL valid = [rsa verify64:signature withMessage:message];
     resolve(@(valid));
 }
 
