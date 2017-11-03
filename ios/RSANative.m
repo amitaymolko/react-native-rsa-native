@@ -89,7 +89,7 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
         return encodedPrivateKey;
     }
 
-    return [self externalRepresentationForPublicKey:self.privateKeyRef];
+    return [self externalRepresentationForPrivateKey:self.privateKeyRef];
 }
 
 - (void)setPublicKey:(NSString *)publicKey {
@@ -149,11 +149,11 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
     void(^encryptor)(SecKeyRef) = ^(SecKeyRef publicKey) {
         BOOL canEncrypt = SecKeyIsAlgorithmSupported(publicKey,
                                                      kSecKeyOperationTypeEncrypt,
-                                                     kSecKeyAlgorithmRSAEncryptionOAEPSHA1);
+                                                     kSecKeyAlgorithmRSAEncryptionPKCS1);
         if (canEncrypt) {
             CFErrorRef error = NULL;
             cipherText = (NSData *)CFBridgingRelease(SecKeyCreateEncryptedData(publicKey,
-                                                                               kSecKeyAlgorithmRSAEncryptionOAEPSHA1,
+                                                                               kSecKeyAlgorithmRSAEncryptionPKCS1,
                                                                                (__bridge CFDataRef)data,
                                                                                &error));
             if (!cipherText) {
@@ -191,11 +191,11 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
 
         BOOL canDecrypt = SecKeyIsAlgorithmSupported(privateKey,
                                                      kSecKeyOperationTypeDecrypt,
-                                                     kSecKeyAlgorithmRSAEncryptionOAEPSHA1);
+                                                     kSecKeyAlgorithmRSAEncryptionPKCS1);
         if (canDecrypt) {
             CFErrorRef error = NULL;
             clearText = (NSData *)CFBridgingRelease(SecKeyCreateDecryptedData(privateKey,
-                                                                              kSecKeyAlgorithmRSAEncryptionOAEPSHA1,
+                                                                              kSecKeyAlgorithmRSAEncryptionPKCS1,
                                                                               (__bridge CFDataRef)data,
                                                                               &error));
             if (!clearText) {

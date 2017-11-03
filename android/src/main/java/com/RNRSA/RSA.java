@@ -133,7 +133,7 @@ public class RSA {
 
     // UTF-8 input
     public String decrypt(String message) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException {
-        byte[] cipherBytes = message.getBytes(UTF_8);
+        byte[] cipherBytes = Base64.decode(message, Base64.DEFAULT);
         byte[] data = decrypt(cipherBytes);
         return new String(data, UTF_8);
     }
@@ -214,7 +214,7 @@ public class RSA {
             SubjectPublicKeyInfo subjectPublicKeyInfo = (SubjectPublicKeyInfo) pemParser.readObject();
             X509EncodedKeySpec spec = new X509EncodedKeySpec(subjectPublicKeyInfo.getEncoded());
             return KeyFactory.getInstance("RSA").generatePublic(spec);
-        } finally {
+               } finally {
             if (keyReader != null) {
                 keyReader.close();
             }

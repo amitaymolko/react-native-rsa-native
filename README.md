@@ -6,10 +6,13 @@ Implementation is in PKCS1
 
 ## Status
 
-Android: Generation, Encryption, Decryption, Sign, Verify, keychain support
-iOS: Generation, Encryption, Decryption, Sign, Verify, keychain support
-
-*Need to check cross platform encrypt/decrypt
+Features: 
+Generation, 
+Encryption, 
+Decryption, 
+Sign, 
+Verify, 
+Keychain support
 
 ## Getting started
 
@@ -94,6 +97,7 @@ RSAKeychain.generate(keyTag)
     })
   });
 ```
+Check out example App.js for a full example
 
 
 ## Credit
