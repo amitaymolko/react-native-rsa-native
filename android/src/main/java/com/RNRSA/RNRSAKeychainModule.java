@@ -67,6 +67,18 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
       }
   }
 
+  @ReactMethod
+  public void encrypt64(String message, String keyTag, Promise promise)  {
+
+      try {
+          RSA rsa = new RSA(keyTag);
+          String encodedMessage = rsa.encrypt64(message);
+          promise.resolve(encodedMessage);
+      } catch(Exception e) {
+          promise.reject("Error", e.getMessage());
+      }
+  }
+
 
   @ReactMethod
   public void decrypt(String encodedMessage, String keyTag, Promise promise)  {
@@ -74,6 +86,19 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
       try {
           RSA rsa = new RSA(keyTag);
           String message = rsa.decrypt(encodedMessage);
+          promise.resolve(message);
+
+      } catch(Exception e) {
+          promise.reject("Error", e.getMessage());
+      }
+  }
+
+  @ReactMethod
+  public void decrypt64(String encodedMessage, String keyTag, Promise promise)  {
+
+      try {
+          RSA rsa = new RSA(keyTag);
+          String message = rsa.decrypt64(encodedMessage);
           promise.resolve(message);
 
       } catch(Exception e) {
@@ -95,6 +120,19 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void sign64(String message, String keyTag, Promise promise)  {
+
+        try {
+            RSA rsa = new RSA(keyTag);
+            String signature = rsa.sign64(message);
+            promise.resolve(signature);
+
+        } catch(Exception e) {
+            promise.reject("Error", e.getMessage());
+        }
+    }
+
+    @ReactMethod
     public void verify(String signature, String message, String keyTag, Promise promise)  {
 
         try {
@@ -107,6 +145,18 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
         }
     }
 
+    @ReactMethod
+    public void verify64(String signature, String message, String keyTag, Promise promise)  {
+
+        try {
+            RSA rsa = new RSA(keyTag);
+            boolean verified = rsa.verify64(signature, message);
+            promise.resolve(verified);
+
+        } catch(Exception e) {
+            promise.reject("Error", e.getMessage());
+        }
+    }
 
 
 
