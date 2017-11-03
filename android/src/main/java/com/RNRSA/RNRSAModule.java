@@ -56,6 +56,19 @@ public class RNRSAModule extends ReactContextBaseJavaModule {
       }
   }
 
+  @ReactMethod
+  public void encrypt64(String message, String publicKeyString, Promise promise)  {
+
+      try {
+          RSA rsa = new RSA();
+          rsa.setPublicKey(publicKeyString);
+          String encodedMessage = rsa.encrypt64(message);
+          promise.resolve(encodedMessage);
+      } catch(Exception e) {
+          promise.reject("Error", e.getMessage());
+      }
+  }
+
 
   @ReactMethod
   public void decrypt(String encodedMessage, String privateKeyString, Promise promise)  {
@@ -64,6 +77,20 @@ public class RNRSAModule extends ReactContextBaseJavaModule {
           RSA rsa = new RSA();
           rsa.setPrivateKey(privateKeyString);
           String message = rsa.decrypt(encodedMessage);
+          promise.resolve(message);
+
+      } catch(Exception e) {
+          promise.reject("Error", e.getMessage());
+      }
+  }
+
+  @ReactMethod
+  public void decrypt64(String encodedMessage, String privateKeyString, Promise promise)  {
+
+      try {
+          RSA rsa = new RSA();
+          rsa.setPrivateKey(privateKeyString);
+          String message = rsa.decrypt64(encodedMessage);
           promise.resolve(message);
 
       } catch(Exception e) {
@@ -86,6 +113,20 @@ public class RNRSAModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void sign64(String message, String privateKeyString, Promise promise)  {
+
+        try {
+            RSA rsa = new RSA();
+            rsa.setPrivateKey(privateKeyString);
+            String signature = rsa.sign64(message);
+            promise.resolve(signature);
+
+        } catch(Exception e) {
+            promise.reject("Error", e.getMessage());
+        }
+    }
+
+    @ReactMethod
     public void verify(String signature, String message, String publicKeyString, Promise promise)  {
 
         try {
@@ -99,6 +140,19 @@ public class RNRSAModule extends ReactContextBaseJavaModule {
         }
     }
 
+    @ReactMethod
+    public void verify64(String signature, String message, String publicKeyString, Promise promise)  {
+
+        try {
+            RSA rsa = new RSA();
+            rsa.setPublicKey(publicKeyString);
+            boolean verified = rsa.verify64(signature, message);
+            promise.resolve(verified);
+
+        } catch(Exception e) {
+            promise.reject("Error", e.getMessage());
+        }
+    }
 
 
 
