@@ -107,6 +107,13 @@ RCT_EXPORT_METHOD(generate:(NSString *)keyTag resolve:(RCTPromiseResolveBlock)re
     resolve(keys);
 }
 
+RCT_EXPORT_METHOD(getPublicKey:(NSString *)keyTag resolve:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject) {
+    RSANative *rsa = [[RSANative alloc] initWithKeyTag:keyTag];
+    NSString *publicKey = [rsa encodedPublicKey];
+    resolve(publicKey);
+}
+
 RCT_EXPORT_METHOD(deletePrivateKey:(NSString *)keyTag resolve:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject) {
     RSANative *rsa = [[RSANative alloc] initWithKeyTag:keyTag];
