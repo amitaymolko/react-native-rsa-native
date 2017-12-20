@@ -275,7 +275,7 @@ public class RSA {
         )
                 .setDigests(KeyProperties.DIGEST_SHA1)
                 .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_RSA_OAEP)
-                .setSignaturePaddings(KeyProperties.SIGNATURE_PADDING_RSA_OAEP)
+                .setSignaturePaddings(KeyProperties.SIGNATURE_PADDING_RSA_PKCS1)
                 .build());
 
         KeyPair keyPair = kpg.genKeyPair();
