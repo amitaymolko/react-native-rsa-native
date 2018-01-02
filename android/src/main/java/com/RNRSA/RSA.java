@@ -273,14 +273,12 @@ public class RSA {
                 keyTag,
                 PURPOSE_ENCRYPT | PURPOSE_DECRYPT | PURPOSE_SIGN | PURPOSE_VERIFY
         )
-                .setDigests(KeyProperties.DIGEST_SHA1)
-                .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_RSA_OAEP)
-                .setSignaturePaddings(KeyProperties.SIGNATURE_PADDING_RSA_PKCS1)
+                // .setDigests(KeyProperties.DIGEST_SHA1)
+                // .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_RSA_OAEP)
+                // .setSignaturePaddings(KeyProperties.SIGNATURE_PADDING_RSA_PKCS1)
                 .build());
 
         KeyPair keyPair = kpg.genKeyPair();
-        System.out.println("Generated a new keypair for keyring");
-        System.out.println(kpg);
         this.publicKey = keyPair.getPublic();
     }
 
