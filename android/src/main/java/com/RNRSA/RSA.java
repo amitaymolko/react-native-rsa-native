@@ -126,7 +126,7 @@ public class RSA {
     private byte[] decrypt(byte[] cipherBytes) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException {
         String message = null;
         final Cipher cipher = Cipher.getInstance("RSA/NONE/OAEPWithSHA1AndMGF1Padding");
-        cipher.init(Cipher.DECRYPT_MODE, (RSAPrivateKey) this.privateKey);
+        cipher.init(Cipher.DECRYPT_MODE, this.privateKey);
         byte[] data = cipher.doFinal(cipherBytes);
         return data;
     }
