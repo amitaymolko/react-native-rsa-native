@@ -247,7 +247,7 @@ public class RSA {
         KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
         keyStore.load(null);
         KeyStore.PrivateKeyEntry privateKeyEntry = (KeyStore.PrivateKeyEntry) keyStore.getEntry(this.keyTag, null);
-        this.privateKey = privateKeyEntry.getPrivateKey();
+        this.privateKey = (RSAPrivateKey) privateKeyEntry.getPrivateKey();
         this.publicKey = privateKeyEntry.getCertificate().getPublicKey();
     }
 
