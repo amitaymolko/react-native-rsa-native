@@ -273,7 +273,7 @@ public class RSA {
                 keyTag,
                 PURPOSE_ENCRYPT | PURPOSE_DECRYPT | PURPOSE_SIGN | PURPOSE_VERIFY
         )
-                .setDigests(KeyProperties.DIGEST_SHA1)
+                .setDigests(KeyProperties.DIGEST_SHA512, KeyProperties.DIGEST_SHA1)
                 .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_RSA_OAEP)
                 .setSignaturePaddings(KeyProperties.SIGNATURE_PADDING_RSA_PKCS1)
                 .build());
