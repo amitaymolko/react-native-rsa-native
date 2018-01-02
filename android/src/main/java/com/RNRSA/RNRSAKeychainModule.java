@@ -115,7 +115,7 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
             promise.resolve(message);
 
         } catch (Exception e) {
-            promise.reject("Error", e.getMessage() + Log.getStackTraceString(e));
+            promise.reject("Error", e.getMessage() + Log.getStackTraceString(e) + e.getCause());
         }
     }
 
