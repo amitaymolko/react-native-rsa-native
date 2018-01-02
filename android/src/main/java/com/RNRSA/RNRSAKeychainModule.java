@@ -36,9 +36,9 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
         keys.putString("public",  rsa.getPublicKey());
         promise.resolve(keys);
     } catch(NoSuchAlgorithmException e) {
-      promise.reject("Error", e.getMessage());
+      promise.reject("Error", e.getMessage(), e.printStackTrace());
     } catch(Exception e) {
-      promise.reject("Error", e.getMessage());
+      promise.reject("Error", e.getMessage(), e.printStackTrace());
     }
   }
 
@@ -49,9 +49,9 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
         String publicKey = rsa.getPublicKey();
         promise.resolve(publicKey);
     } catch(NoSuchAlgorithmException e) {
-      promise.reject("Error", e.getMessage());
+      promise.reject("Error", e.getMessage(), e.printStackTrace());
     } catch(Exception e) {
-      promise.reject("Error", e.getMessage());
+      promise.reject("Error", e.getMessage(), e.printStackTrace());
     }
   }
 
@@ -62,9 +62,9 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
         rsa.deletePrivateKey();
         promise.resolve(1);
     } catch(NoSuchAlgorithmException e) {
-      promise.reject("Error", e.getMessage());
+      promise.reject("Error", e.getMessage(), e.printStackTrace());
     } catch(Exception e) {
-      promise.reject("Error", e.getMessage());
+      promise.reject("Error", e.getMessage(), e.printStackTrace());
     }
   }
 
@@ -76,7 +76,7 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
           String encodedMessage = rsa.encrypt(message);
           promise.resolve(encodedMessage);
       } catch(Exception e) {
-          promise.reject("Error", e.getMessage());
+          promise.reject("Error", e.getMessage(), e.printStackTrace());
       }
   }
 
@@ -88,7 +88,7 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
           String encodedMessage = rsa.encrypt64(message);
           promise.resolve(encodedMessage);
       } catch(Exception e) {
-          promise.reject("Error", e.getMessage());
+          promise.reject("Error", e.getMessage(), e.printStackTrace());
       }
   }
 
@@ -102,7 +102,7 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
           promise.resolve(message);
 
       } catch(Exception e) {
-          promise.reject("Error", e.getMessage());
+          promise.reject("Error", e.getMessage(), e.printStackTrace());
       }
   }
 
@@ -115,7 +115,7 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
           promise.resolve(message);
 
       } catch(Exception e) {
-          promise.reject("Error", e.getMessage());
+          promise.reject("Error", e.getMessage(), e.printStackTrace());
       }
   }
 
@@ -128,7 +128,7 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
             promise.resolve(signature);
 
         } catch(Exception e) {
-            promise.reject("Error", e.getMessage());
+            promise.reject("Error", e.getMessage(), e.printStackTrace());
         }
     }
 
@@ -141,7 +141,7 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
             promise.resolve(signature);
 
         } catch(Exception e) {
-            promise.reject("Error", e.getMessage());
+            promise.reject("Error", e.getMessage(), e.printStackTrace());
         }
     }
 
@@ -154,7 +154,7 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
             promise.resolve(verified);
 
         } catch(Exception e) {
-            promise.reject("Error", e.getMessage());
+            promise.reject("Error", e.getMessage(), e.printStackTrace());
         }
     }
 
@@ -167,7 +167,7 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
             promise.resolve(verified);
 
         } catch(Exception e) {
-            promise.reject("Error", e.getMessage());
+            promise.reject("Error", e.getMessage(), e.printStackTrace());
         }
     }
 
