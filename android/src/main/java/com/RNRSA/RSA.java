@@ -75,7 +75,6 @@ public class RSA {
     public RSA(String keyTag) throws KeyStoreException, UnrecoverableEntryException, NoSuchAlgorithmException, IOException, CertificateException {
         this.keyTag = keyTag;
         this.loadFromKeystore();
-        Log.v("DERP", "Private key " + this.privateKey.getEncoded());
     }
 
     public String getPublicKey() throws IOException {
@@ -275,8 +274,9 @@ public class RSA {
                 PURPOSE_ENCRYPT | PURPOSE_DECRYPT | PURPOSE_SIGN | PURPOSE_VERIFY
         )
                 .setDigests(KeyProperties.DIGEST_SHA512, KeyProperties.DIGEST_SHA1)
-                .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_RSA_OAEP)
+                .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_RSA_PKCS1)
                 .setSignaturePaddings(KeyProperties.SIGNATURE_PADDING_RSA_PKCS1)
+                .setKeySize(2048)
                 .build());
 
         KeyPair keyPair = kpg.genKeyPair();
