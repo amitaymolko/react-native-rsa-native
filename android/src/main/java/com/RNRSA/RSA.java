@@ -75,7 +75,7 @@ public class RSA {
     public RSA(String keyTag) throws KeyStoreException, UnrecoverableEntryException, NoSuchAlgorithmException, IOException, CertificateException {
         this.keyTag = keyTag;
         this.loadFromKeystore();
-        Log.v("DERP", "Private key " + this.privateKey);
+        Log.v("DERP", "Private key " + this.privateKey.getEncoded());
     }
 
     public String getPublicKey() throws IOException {
