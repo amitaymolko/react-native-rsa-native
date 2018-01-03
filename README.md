@@ -4,6 +4,11 @@ A native implementation of RSA key generation and encryption/decryption, sign/ve
 Keychain implementation
 Implementation is in PKCS1
 
+## Support
+
+iOS 10+
+android 4.1+ (API 16)
+
 ## Status
 
 Features: 
