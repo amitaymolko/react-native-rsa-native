@@ -99,7 +99,7 @@ public class RSA {
         this.privateKey = pkcs1ToPrivateKey(pkcs1PrivateKey);
     }
 
-    private final Cipher getCipher() throws NoSuchAlgorithmException {
+    private final Cipher getCipher() throws NoSuchAlgorithmException, NoSuchProviderException {
         if(this.keyTag != null){
             return Cipher.getInstance("RSA/NONE/OAEPWithSHA1AndMGF1Padding", "AndroidKeyStore");
         }else{
@@ -107,7 +107,7 @@ public class RSA {
         }
     }
 
-    private final Signature getSignature() throws NoSuchAlgorithmException {
+    private final Signature getSignature() throws NoSuchAlgorithmException, NoSuchProviderException {
         if(this.keyTag != null){
             return Signature.getInstance("SHA512withRSA", "AndroidKeyStore");
         }else{
