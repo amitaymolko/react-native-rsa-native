@@ -104,21 +104,21 @@ public class RSA {
     }
 
     private final Cipher getCipher() throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, NoSuchProviderException {
-        try {
-            Log.d("VIDA", "----------------");
-            Provider p[] = Security.getProviders();
-            for (int i = 0; i < p.length; i++) {
-                Log.d("VIDA", p[i].getName());
-                for (Enumeration e = p[i].keys(); e.hasMoreElements();)
-                    Log.d("VIDA", "\t" + e.nextElement());
-            }
-            Log.d("VIDA", "----------------");
-          } catch (Exception e) {
-            Log.d("VIDA", e.getMessage());
-          }
+        // try {
+        //     Log.d("VIDA", "----------------");
+        //     Provider p[] = Security.getProviders();
+        //     for (int i = 0; i < p.length; i++) {
+        //         Log.d("VIDA", p[i].getName());
+        //         for (Enumeration e = p[i].keys(); e.hasMoreElements();)
+        //             Log.d("VIDA", "\t" + e.nextElement());
+        //     }
+        //     Log.d("VIDA", "----------------");
+        //   } catch (Exception e) {
+        //     Log.d("VIDA", e.getMessage());
+        //   }
 
         if(this.keyTag != null){
-            return Cipher.getInstance("RSA/None/OAEPWithSHA-1AndMGF1Padding", "AndroidKeyStore");
+            return Cipher.getInstance("RSA/None/OAEPWithSHA-1AndMGF1Padding", "AndroidKeyStoreBCWorkaround");
         }else{
             return Cipher.getInstance("RSA/NONE/OAEPWithSHA1AndMGF1Padding");
         }
