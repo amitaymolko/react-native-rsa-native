@@ -101,7 +101,7 @@ public class RSA {
 
     private final Cipher getCipher() throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, NoSuchProviderException {
         if(this.keyTag != null){
-            return Cipher.getInstance("RSA/NONE/OAEPWithSHA1AndMGF1Padding", "AndroidKeyStore");
+            return Cipher.getInstance("RSA/None/OAEPWithSHA-1AndMGF1Padding", "AndroidKeyStore");
         }else{
             return Cipher.getInstance("RSA/NONE/OAEPWithSHA1AndMGF1Padding");
         }
