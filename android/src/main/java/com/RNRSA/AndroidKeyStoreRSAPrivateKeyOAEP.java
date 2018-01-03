@@ -3,7 +3,7 @@ import java.math.BigInteger;
 import java.security.PrivateKey;
 import java.security.interfaces.RSAKey;
 import java.security.interfaces.RSAPrivateKey;
-import android.security.keystore.AndroidKeyStoreRSAPrivateKey;
+import android.security.keystore.*;
 
 /**
  * This class wraps an AndroidKeyStoreRSAPrivateKey object to add the RSAPrivateKeyInterface
