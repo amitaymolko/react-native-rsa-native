@@ -108,13 +108,13 @@ public class RSA {
             Log.d("VIDA", "----------------");
             Provider p[] = Security.getProviders();
             for (int i = 0; i < p.length; i++) {
-                Log.d("VIDA", p[i]);
+                Log.d("VIDA", p[i].getName());
                 for (Enumeration e = p[i].keys(); e.hasMoreElements();)
                     Log.d("VIDA", "\t" + e.nextElement());
             }
             Log.d("VIDA", "----------------");
           } catch (Exception e) {
-            Log.d("VIDA", e);
+            Log.d("VIDA", e.getMessage());
           }
 
         if(this.keyTag != null){
