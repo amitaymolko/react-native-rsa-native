@@ -108,11 +108,11 @@ public class RSA {
     }
 
     private final Signature getSignature() throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, NoSuchProviderException {
-        if(this.keyTag != null){
-            return Signature.getInstance("SHA512withRSA", "AndroidKeyStore");
-        }else{
+        // if(this.keyTag != null){
+        //     return Signature.getInstance("SHA512withRSA", "AndroidKeyStore");
+        // }else{
             return Signature.getInstance("SHA512withRSA");
-        }
+        // }
     }
 
     // This function will be called by encrypt and encrypt64
