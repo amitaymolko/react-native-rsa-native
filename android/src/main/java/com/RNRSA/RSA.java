@@ -116,7 +116,7 @@ public class RSA {
     }
 
     // This function will be called by encrypt and encrypt64
-    private byte[] encrypt(byte[] data) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException {
+    private byte[] encrypt(byte[] data) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, NoSuchProviderException {
         String encodedMessage = null;
         final Cipher cipher = getCipher();
         cipher.init(Cipher.ENCRYPT_MODE, this.publicKey);
@@ -138,7 +138,7 @@ public class RSA {
         return Base64.encodeToString(cipherBytes, Base64.DEFAULT);
     }
 
-    private byte[] decrypt(byte[] cipherBytes) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException {
+    private byte[] decrypt(byte[] cipherBytes) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, NoSuchProviderException {
         String message = null;
         final Cipher cipher = getCipher();
         cipher.init(Cipher.DECRYPT_MODE, this.privateKey);
@@ -160,7 +160,7 @@ public class RSA {
         return Base64.encodeToString(data, Base64.DEFAULT);
     }
 
-    private String sign(byte[] messageBytes) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
+    private String sign(byte[] messageBytes) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException, NoSuchProviderException {
         Signature privateSignature = getSignature();
         privateSignature.initSign(this.privateKey);
         privateSignature.update(messageBytes);
@@ -180,7 +180,7 @@ public class RSA {
         return sign(messageBytes);
     }
 
-    private boolean verify(byte[] signatureBytes, byte[] messageBytes) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
+    private boolean verify(byte[] signatureBytes, byte[] messageBytes) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException, NoSuchProviderException {
         Signature publicSignature = getSignature();
         publicSignature.initVerify(this.publicKey);
         publicSignature.update(messageBytes);
@@ -188,7 +188,7 @@ public class RSA {
     }
 
     // b64 message
-    public boolean verify64(String signature, String message) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
+    public boolean verify64(String signature, String message) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException, NoSuchProviderException {
         Signature publicSignature = getSignature();
         publicSignature.initVerify(this.publicKey);
         byte[] messageBytes = Base64.decode(message, Base64.DEFAULT);
@@ -197,7 +197,7 @@ public class RSA {
     }
 
     // utf-8 message
-    public boolean verify(String signature, String message) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
+    public boolean verify(String signature, String message) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException, NoSuchProviderException {
         Signature publicSignature = getSignature();
         publicSignature.initVerify(this.publicKey);
         byte[] messageBytes = message.getBytes(UTF_8);
