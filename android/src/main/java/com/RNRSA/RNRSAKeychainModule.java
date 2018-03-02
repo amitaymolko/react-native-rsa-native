@@ -32,7 +32,7 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
 
     try {
         RSA rsa = new RSA();
-        rsa.generate(keyTag);
+        rsa.generate(keyTag, this.reactContext);
         keys.putString("public",  rsa.getPublicKey());
         promise.resolve(keys);
     } catch(NoSuchAlgorithmException e) {
