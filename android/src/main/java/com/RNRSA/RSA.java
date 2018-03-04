@@ -5,9 +5,14 @@ import android.annotation.TargetApi;
 import android.os.Build;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
+import android.security.KeyPairGeneratorSpec;
+
 import android.util.Base64;
 import android.util.Log;
+import android.content.Context;
 
+import java.util.Calendar;
+import java.math.BigInteger;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -37,6 +42,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.BadPaddingException;
 import javax.security.cert.X509Certificate;
+import javax.security.auth.x500.X500Principal;
 
 import java.io.IOException;
 
@@ -247,11 +253,8 @@ public class RSA {
         KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
         keyStore.load(null);
         KeyStore.PrivateKeyEntry privateKeyEntry = (KeyStore.PrivateKeyEntry) keyStore.getEntry(this.keyTag, null);
-
-        if (privateKeyEntry != null) {
-            this.privateKey = privateKeyEntry.getPrivateKey();
-            this.publicKey = privateKeyEntry.getCertificate().getPublicKey();
-        }
+        this.privateKey = privateKeyEntry.getPrivateKey();
+        this.publicKey = privateKeyEntry.getCertificate().getPublicKey();
     }
 
     public void deletePrivateKey() throws KeyStoreException, UnrecoverableEntryException, NoSuchAlgorithmException, IOException, CertificateException {
@@ -271,16 +274,35 @@ public class RSA {
         this.privateKey = keyPair.getPrivate();
     }
 
-    public void generate(String keyTag) throws IOException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, NoSuchProviderException {
+    public void generate(String keyTag, Context context) throws IOException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, NoSuchProviderException {
         KeyPairGenerator kpg = KeyPairGenerator.getInstance(ALGORITHM, "AndroidKeyStore");
-        kpg.initialize(new KeyGenParameterSpec.Builder(
-                keyTag,
-                PURPOSE_ENCRYPT | PURPOSE_DECRYPT | PURPOSE_SIGN | PURPOSE_VERIFY
-        )
+        if (android.os.Build.VERSION.SDK_INT >= 23) {
+            kpg.initialize(
+                new KeyGenParameterSpec.Builder(
+                    keyTag,
+                    PURPOSE_ENCRYPT | PURPOSE_DECRYPT | PURPOSE_SIGN | PURPOSE_VERIFY
+                )
                 .setDigests(KeyProperties.DIGEST_SHA512)
                 .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_RSA_PKCS1)
                 .setSignaturePaddings(KeyProperties.SIGNATURE_PADDING_RSA_PKCS1)
-                .build());
+                .build()
+            );
+        } else {
+            Calendar endDate = Calendar.getInstance();
+            endDate.add(Calendar.YEAR, 1);
+            KeyPairGeneratorSpec.Builder keyPairGeneratorSpec = new KeyPairGeneratorSpec.Builder(context)
+                .setAlias(keyTag)
+                .setSubject(new X500Principal(
+                    String.format("CN=%s, OU=%s", keyTag, context.getPackageName())
+                ))
+                .setSerialNumber(BigInteger.ONE)
+                .setStartDate(Calendar.getInstance().getTime())
+                .setEndDate(endDate.getTime());
+            if (android.os.Build.VERSION.SDK_INT >= 19) {
+                keyPairGeneratorSpec.setKeySize(2048).setKeyType(ALGORITHM);
+            }
+            kpg.initialize(keyPairGeneratorSpec.build());
+        }
 
         KeyPair keyPair = kpg.genKeyPair();
         this.publicKey = keyPair.getPublic();
