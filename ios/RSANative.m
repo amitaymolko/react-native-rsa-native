@@ -32,11 +32,10 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
         privateKeyAttributes[(id)kSecAttrApplicationTag] = tag;
     }
 
-    NSDictionary *attributes =
-    @{ (id)kSecAttrKeyType:       (id)kSecAttrKeyTypeRSA,
-       (id)kSecAttrKeySizeInBits: @2048,
-       (id)kSecPrivateKeyAttrs:   privateKeyAttributes
-       };
+	NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init]; 
+    [attributes setObject:(__bridge id)kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
+    [attributes setObject:[NSNumber numberWithInt:2048] forKey:(__bridge id)kSecAttrKeySizeInBits];
+	[attributes setObject:privateKeyAttributes forKey:(__bridge id)kSecPrivateKeyAttrs]; 
 
     CFErrorRef error = NULL;
     SecKeyRef privateKey = SecKeyCreateRandomKey((__bridge CFDictionaryRef)attributes, &error);
