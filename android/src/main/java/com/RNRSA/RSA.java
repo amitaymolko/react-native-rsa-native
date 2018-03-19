@@ -1,8 +1,5 @@
 package com.RNRSA;
 
-
-import android.annotation.TargetApi;
-import android.os.Build;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
 import android.util.Base64;
@@ -10,6 +7,8 @@ import android.util.Log;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.io.InputStream;
+import java.io.ByteArrayInputStream;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyPair;
 import java.security.KeyStore;
@@ -24,39 +23,42 @@ import java.security.InvalidKeyException;
 import java.security.Signature;
 import java.security.SignatureException;
 import java.security.UnrecoverableEntryException;
-import java.security.UnrecoverableKeyException;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateFactory;
 import java.security.cert.CertificateException;
 import java.security.spec.X509EncodedKeySpec;
-import java.security.spec.RSAPublicKeySpec;
-import java.security.spec.RSAPrivateKeySpec;
 import java.security.spec.InvalidKeySpecException;
 
-import java.security.Provider;
-import java.security.Security;
-import java.util.Enumeration;
+import java.util.Date;
+import java.math.BigInteger;
 
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.BadPaddingException;
-import javax.security.cert.X509Certificate;
 
 import java.io.IOException;
 
-import org.spongycastle.asn1.ASN1InputStream;
-import org.spongycastle.asn1.ASN1Encodable;
-import org.spongycastle.asn1.ASN1Primitive;
-import org.spongycastle.asn1.pkcs.PrivateKeyInfo;
-import org.spongycastle.asn1.pkcs.RSAPublicKey;
-import org.spongycastle.asn1.pkcs.RSAPrivateKey;
-import org.spongycastle.asn1.x509.SubjectPublicKeyInfo;
-import org.spongycastle.asn1.x509.RSAPublicKeyStructure;
-import org.spongycastle.util.io.pem.PemObject;
-import org.spongycastle.util.io.pem.PemWriter;
-import org.spongycastle.util.io.pem.PemReader;
-import org.spongycastle.asn1.pkcs.RSAPublicKey;
-import org.spongycastle.openssl.PEMParser;
-import org.spongycastle.util.io.pem.PemObject;
+import org.bouncycastle.asn1.ASN1Encodable;
+import org.bouncycastle.asn1.ASN1Primitive;
+import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
+import org.bouncycastle.asn1.x509.KeyUsage;
+import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
+import org.bouncycastle.asn1.x509.X509Extension;
+import org.bouncycastle.cert.X509v3CertificateBuilder;
+import org.bouncycastle.operator.ContentSigner;
+import org.bouncycastle.util.io.pem.PemObject;
+import org.bouncycastle.util.io.pem.PemWriter;
+import org.bouncycastle.util.io.pem.PemReader;
+import org.bouncycastle.openssl.PEMParser;
+import org.bouncycastle.openssl.PEMKeyPair;
+import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
+import org.bouncycastle.asn1.x500.X500Name;
+import org.bouncycastle.cert.X509CertificateHolder;
+import org.bouncycastle.cert.jcajce.JcaX509v3CertificateBuilder;
+import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
+import org.bouncycastle.operator.OperatorCreationException;
+import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 
 import static android.security.keystore.KeyProperties.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -79,18 +81,28 @@ public class RSA {
     public RSA(String keyTag) throws KeyStoreException, UnrecoverableEntryException, NoSuchAlgorithmException, IOException, CertificateException {
         this.keyTag = keyTag;
         this.loadFromKeystore();
+    }
 
+    public RSA(String keyTag, KeyPair pair) throws IOException, NoSuchAlgorithmException, NoSuchProviderException, OperatorCreationException, SignatureException, InvalidKeyException, InvalidKeySpecException, KeyStoreException, CertificateException, UnrecoverableEntryException {
+        this.keyTag = keyTag;
+        this.deletePrivateKey();
+        this.privateKey = pair.getPrivate();
+        this.publicKey = pair.getPublic();
+
+        KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
+        keyStore.load(null);
+        Certificate cert = genX509cert(pair);
+        Certificate[] chain = new Certificate[]{cert};
+        keyStore.setKeyEntry(this.keyTag, pair.getPrivate(), null, chain);
     }
 
     public String getPublicKey() throws IOException {
         byte[] pkcs1PublicKey = publicKeyToPkcs1(this.publicKey);
-
         return dataToPem(PUBLIC_HEADER, pkcs1PublicKey);
     }
 
     public String getPrivateKey() throws IOException {
         byte[] pkcs1PrivateKey = privateKeyToPkcs1(this.privateKey);
-
         return dataToPem(PRIVATE_HEADER, pkcs1PrivateKey);
     }
 
@@ -99,23 +111,40 @@ public class RSA {
     }
 
     public void setPrivateKey(String privateKey) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
-        byte[] pkcs1PrivateKey = pemToData(privateKey);
-        this.privateKey = pkcs1ToPrivateKey(pkcs1PrivateKey);
+        this.privateKey = pkcs1ToPrivateKey(privateKey);
+    }
+
+    private static Certificate genX509cert(KeyPair pair) throws InvalidKeyException, NoSuchProviderException, SignatureException, OperatorCreationException, IOException, CertificateException {
+
+        X500Name issuer = new X500Name("CN=Vida Self Signed Cert");
+        BigInteger serial = BigInteger.valueOf(System.currentTimeMillis());
+        Date notBefore = new Date(System.currentTimeMillis());
+        Date notAfter = new Date(System.currentTimeMillis() + Long.valueOf("788400000000"));
+        X500Name subject = new X500Name("CN=Vida Self Signed Cert");;
+        SubjectPublicKeyInfo publicKeyInfo = SubjectPublicKeyInfo.getInstance(pair.getPublic().getEncoded());
+
+        // Generate the certificate
+        X509v3CertificateBuilder certBuilder = new X509v3CertificateBuilder(
+                issuer, serial, notBefore, notAfter, subject, publicKeyInfo);
+
+        // Set certificate extensions
+        certBuilder.addExtension(X509Extension.keyUsage, true,
+                new KeyUsage(KeyUsage.digitalSignature | KeyUsage.keyEncipherment | KeyUsage.dataEncipherment | KeyUsage.keyAgreement));
+
+        // Sign the certificate
+        JcaContentSignerBuilder contentSignerBuilder = new JcaContentSignerBuilder("SHA1WithRSAEncryption");
+        ContentSigner contentSigner = contentSignerBuilder.build(pair.getPrivate());
+
+        X509CertificateHolder holder = certBuilder.build(contentSigner);
+
+        // Retrieve the certificate from holder
+        InputStream is1 = new ByteArrayInputStream(holder.getEncoded());
+        CertificateFactory cf = CertificateFactory.getInstance("X.509");
+        Certificate generatedCertificate = cf.generateCertificate(is1);
+        return generatedCertificate;
     }
 
     private final Cipher getCipher() throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, NoSuchProviderException {
-        // try {
-        //     Log.d("VIDA", "----------------");
-        //     Provider p[] = Security.getProviders();
-        //     for (int i = 0; i < p.length; i++) {
-        //         Log.d("VIDA", p[i].getName());
-        //         for (Enumeration e = p[i].keys(); e.hasMoreElements();)
-        //             Log.d("VIDA", "\t" + e.nextElement());
-        //     }
-        //     Log.d("VIDA", "----------------");
-        //   } catch (Exception e) {
-        //     Log.d("VIDA", e.getMessage());
-        //   }
 
         if(this.keyTag != null){
             return Cipher.getInstance("RSA/None/OAEPWithSHA-1AndMGF1Padding", "AndroidKeyStoreBCWorkaround");
@@ -125,11 +154,7 @@ public class RSA {
     }
 
     private final Signature getSignature() throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, NoSuchProviderException {
-        // if(this.keyTag != null){
-        //     return Signature.getInstance("SHA512withRSA", "AndroidKeyStore");
-        // }else{
-            return Signature.getInstance("SHA512withRSA");
-        // }
+        return Signature.getInstance("SHA512withRSA");
     }
 
     // This function will be called by encrypt and encrypt64
@@ -253,13 +278,24 @@ public class RSA {
         }
     }
 
-    private PrivateKey pkcs1ToPrivateKey(byte[] pkcs1PrivateKey) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
-        ASN1InputStream in = new ASN1InputStream(pkcs1PrivateKey);
-        ASN1Primitive obj = in.readObject();
-        RSAPrivateKey keyStruct = RSAPrivateKey.getInstance(obj);
-        RSAPrivateKeySpec keySpec = new RSAPrivateKeySpec(keyStruct.getModulus(), keyStruct.getPrivateExponent());
-        KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM);
-        return keyFactory.generatePrivate(keySpec);
+    private PrivateKey pkcs1ToPrivateKey(String pkcs1PrivateKey) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+        Reader reader = new StringReader(pkcs1PrivateKey);
+        PrivateKey res = null;
+        PEMParser parser = null;
+        try {
+            parser = new PEMParser(reader);
+            PEMKeyPair pair = (PEMKeyPair) parser.readObject();
+            KeyPair kp = new JcaPEMKeyConverter().getKeyPair(pair);
+            res = kp.getPrivate();
+        } finally {
+            if (parser != null) {
+                parser.close();
+            }
+            if (reader != null) {
+                reader.close();
+            }
+        }
+        return res;
     }
 
     private byte[] publicKeyToPkcs1(PublicKey publicKey) throws IOException {
@@ -300,7 +336,11 @@ public class RSA {
         this.privateKey = keyPair.getPrivate();
     }
 
-    public void generate(String keyTag) throws IOException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, NoSuchProviderException {
+    public void generate(String keyTag) throws IOException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, NoSuchProviderException, KeyStoreException, CertificateException {
+        KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
+        keyStore.load(null);
+        keyStore.deleteEntry(this.keyTag);
+
         KeyPairGenerator kpg = KeyPairGenerator.getInstance(ALGORITHM, "AndroidKeyStore");
         kpg.initialize(new KeyGenParameterSpec.Builder(
                 keyTag,
