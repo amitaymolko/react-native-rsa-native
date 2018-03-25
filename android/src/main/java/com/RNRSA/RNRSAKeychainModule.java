@@ -104,7 +104,7 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
       } catch(Exception e) {
           promise.reject("Error", e.getMessage());
       }
-  }
+    }
 
     @ReactMethod
     public void sign(String message, String keyTag, Promise promise)  {
@@ -166,14 +166,11 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
           RSA rsa = new RSA(keyTag);
           String publicKey = rsa.getPublicKey();
           if (publicKey != null) {
-            keys.putString("public",  publicKey);
+            promise.resolve(publicKey);
           }
-          promise.resolve(keys);
+        promise.reject("Error", "Missing public key for that keyTag");
       } catch(Exception e) {
         promise.reject("Error", e.getMessage());
       }
     }
-
-
-
 }

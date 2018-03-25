@@ -156,6 +156,12 @@ RSAKeychain.generate(keyTag)
       })
   })
   .then(() => {
+    return RSAKeychain.getPublicKey(keyTag)
+    .then(publicKey => {
+      console.log('publicKey', publicKey)
+    })
+  })
+  .then(() => {
     RSAKeychain.deletePrivateKey(keyTag)
     .then( success => {
       console.log('delete success', success)
