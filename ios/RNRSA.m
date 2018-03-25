@@ -142,4 +142,11 @@ RCT_EXPORT_METHOD(verify:(NSString *)signature withMessage:(NSString *)message a
     resolve(@(valid));
 }
 
+RCT_EXPORT_METHOD(getPublicKey:(NSString *)keyTag resolve:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject) {
+    RSANative *rsa = [[RSANative alloc] initWithKeyTag:keyTag];
+    NSString *key = [rsa encodedPublicKey];
+    resolve(key);
+}
+
 @end

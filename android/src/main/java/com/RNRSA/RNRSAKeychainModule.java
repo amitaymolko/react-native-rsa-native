@@ -158,6 +158,22 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
         }
     }
 
+    @ReactMethod
+    public void getPublicKey(String keyTag, Promise promise)  {
+      WritableNativeMap keys = new WritableNativeMap();
+
+      try {
+          RSA rsa = new RSA(keyTag);
+          String publicKey = rsa.getPublicKey();
+          if (publicKey != null) {
+            keys.putString("public",  publicKey);
+          }
+          promise.resolve(keys);
+      } catch(Exception e) {
+        promise.reject("Error", e.getMessage());
+      }
+    }
+
 
 
 }
