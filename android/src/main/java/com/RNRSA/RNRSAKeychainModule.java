@@ -9,6 +9,8 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableNativeMap;
 
+import java.security.KeyPair;
+
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
@@ -24,6 +26,24 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
     @Override
     public String getName() {
         return "RNRSAKeychain";
+    }
+
+    @ReactMethod
+    public void generateDeterministic(String keyTag, int bits, int eInt, String seed, Promise promise) {
+        WritableNativeMap keys = new WritableNativeMap();
+
+        try {
+            byte[] bseed = new byte[seed.length()];
+            for (int i=0; i<seed.length(); i++) bseed[i] = (byte) seed.charAt(i);
+
+            KeyPair pair = RNRSADeterministicGenerator.generateDeterministic(bits, eInt, bseed);
+            RSA rsa = new RSA(keyTag, pair);
+            keys.putString("public", rsa.getPublicKey());
+            keys.putString("private", rsa.getPrivateKey()); // TODO remove -- leaking key to shell is bad
+            promise.resolve(keys);
+        } catch (Exception e) {
+            promise.reject("Error", e.toString() + e.getMessage() + Log.getStackTraceString(e));
+        }
     }
 
     @ReactMethod
