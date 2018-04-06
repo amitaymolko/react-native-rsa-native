@@ -28,11 +28,11 @@ static NSString *privateRsaTag = @"RSA PRIVATE";
 }
 
 + (NSString *)pemFormat:(NSData *)encodedKey tag:(NSString *)tag {
-    return [NSString stringWithFormat:@"%@\n%@\n%@",
+    return [[NSString stringWithFormat:@"%@\n%@\n%@\n",
             [self headerForTag:tag],
             [encodedKey base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength],
             [self footerForTag:tag]
-            ];
+            ] stringByReplacingOccurrencesOfString:@"\r" withString:@""];
 }
 
 + (NSString *)headerForTag:(NSString *)tag {

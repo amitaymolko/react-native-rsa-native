@@ -1,5 +1,6 @@
 #import "RSANative.h"
 #import "RSAFormatter.h"
+#import "X509Der.h"
 
 // Code largely based on practices as defined by:
 // https://developer.apple.com/library/content/documentation/Security/Conceptual/CertKeyTrustProgGuide/KeyRead.html#//apple_ref/doc/uid/TP40001358-CH222-SW1
@@ -26,6 +27,7 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
     NSMutableDictionary *privateKeyAttributes = [NSMutableDictionary dictionary];
 
     if (self.keyTag) {
+        [self deletePrivateKey];
         NSData *tag = [self.keyTag dataUsingEncoding:NSUTF8StringEncoding];
 
         privateKeyAttributes[(id)kSecAttrIsPermanent] = @YES; // store in keychain
@@ -35,7 +37,7 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
     NSDictionary *attributes =
     @{ (id)kSecAttrKeyType:       (id)kSecAttrKeyTypeRSA,
        (id)kSecAttrKeySizeInBits: @2048,
-       (id)kSecPrivateKeyAttrs:   privateKeyAttributes
+       (id)kSecPrivateKeyAttrs:   privateKeyAttributes,
        };
 
     CFErrorRef error = NULL;
@@ -55,7 +57,7 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
 - (void)deletePrivateKey {
     if (self.keyTag) {
         NSDictionary *getquery = @{ (id)kSecClass: (id)kSecClassKey,
-                                    (id)kSecAttrApplicationTag: self.keyTag,
+                                    (id)kSecAttrApplicationTag: [self.keyTag dataUsingEncoding:NSUTF8StringEncoding],
                                     (id)kSecAttrKeyType: (id)kSecAttrKeyTypeRSA,
                                     };
         SecItemDelete((CFDictionaryRef)getquery);
@@ -92,6 +94,58 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
     return [self externalRepresentationForPublicKey:self.privateKeyRef];
 }
 
+-(NSString*)stripHeaderFromKeyString:(NSString*)keyString {
+    NSMutableArray *lines = [NSMutableArray arrayWithArray:[keyString componentsSeparatedByString:@"\n"]];
+    for (long i=lines.count-1; i >= 0; i--) {
+        NSString* line = [lines objectAtIndex:i];
+        if ([line hasPrefix:@"-----"]) {
+            [lines removeObjectAtIndex:i];
+        }
+    }
+    return [lines componentsJoinedByString:@""];
+}
+
+-(void)addKeysToKeychain:(NSDictionary*)keys {
+    assert(self.keyTag);
+    [self deletePrivateKey];
+    NSData *key = [self.keyTag dataUsingEncoding:NSUTF8StringEncoding];
+    NSString *privKeyStr = [self stripHeaderFromKeyString:[keys objectForKey:@"private"]];
+    NSString *pubKeyStr = [self stripHeaderFromKeyString:[keys objectForKey:@"public"]];
+    
+    NSData *privKeyData = [[NSData alloc] initWithBase64EncodedString:privKeyStr options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    
+    [self deletePrivateKey];
+    
+    CFTypeRef dataTypeRef = NULL;
+    OSStatus status;
+    CFDataRef privD = (__bridge CFDataRef)privKeyData;
+    NSDictionary *addDict = @{
+                              (id)kSecClass: (id)kSecClassKey,
+                              (id)kSecAttrApplicationTag: key,
+                              (id)kSecAttrKeyType: (id)kSecAttrKeyTypeRSA,
+                              (id)kSecValueData: (__bridge id)privD,
+                              (id)kSecAttrKeyClass: (id)kSecAttrKeyClassPrivate,
+                              (id)kSecReturnPersistentRef: @YES,
+                              (id)kSecAttrAccessible: (id)kSecAttrAccessibleWhenUnlocked,
+                              };
+    status = SecItemAdd((CFDictionaryRef) addDict, &dataTypeRef);
+    
+    NSMutableDictionary *options = [NSMutableDictionary dictionary];
+    options[(id)kSecClass] = (id)kSecClassIdentity;
+    options[(id)kSecAttrKeyClass] = (id)kSecAttrKeyClassPublic;
+    options[(id)kSecAttrApplicationTag] = self.keyTag;
+    
+    NSDictionary *opts = [NSDictionary dictionaryWithDictionary:options];
+
+    status = SecItemCopyMatching((__bridge CFDictionaryRef)opts, &dataTypeRef);
+    NSData *exPubKeyData = (__bridge NSData *)dataTypeRef;
+    options[(id)kSecAttrKeyClass] = (id)kSecAttrKeyClassPrivate;
+    opts = [NSDictionary dictionaryWithDictionary:options];
+    dataTypeRef = NULL;
+    status = SecItemCopyMatching((__bridge CFDictionaryRef)opts, &dataTypeRef);
+    NSData *exPrivKeyData = (__bridge NSData *)dataTypeRef;
+}
+
 - (void)setPublicKey:(NSString *)publicKey {
     publicKey = [RSAFormatter stripHeaders: publicKey];
     NSDictionary* options = @{(id)kSecAttrKeyType: (id)kSecAttrKeyTypeRSA,
@@ -120,6 +174,7 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
                               };
     CFErrorRef error = NULL;
     NSData *data = [[NSData alloc] initWithBase64EncodedString:privateKey options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    [self deletePrivateKey];
     SecKeyRef key = SecKeyCreateWithData((__bridge CFDataRef)data,
                                          (__bridge CFDictionaryRef)options,
                                          &error);
@@ -320,7 +375,7 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
                                           (CFTypeRef *)&key);
 
     if (status != errSecSuccess) {
-        NSLog(@"error accessing the key");
+        NSLog(@"error accessing the key: %d", status);
     } else {
         if (performBlock) { performBlock(key); }
         if (key) { CFRelease(key); }

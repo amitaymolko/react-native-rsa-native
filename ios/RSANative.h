@@ -18,6 +18,8 @@
 - (void)generate;
 - (void)deletePrivateKey;
 
+-(void)addKeysToKeychain:(NSDictionary*)keys;
+
 - (NSString *)encodedPublicKey;
 - (NSString *)encodedPrivateKey;
 
