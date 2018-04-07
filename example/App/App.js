@@ -158,7 +158,7 @@ RSAKeychain.generate(keyTag)
   .then(() => {
     return RSAKeychain.getPublicKey(keyTag)
     .then(publicKey => {
-      console.log('publicKey', publicKey)
+      console.log('getPublicKey', publicKey)
     })
   })
   .then(() => {

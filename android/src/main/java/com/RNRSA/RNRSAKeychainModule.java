@@ -167,8 +167,9 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
           String publicKey = rsa.getPublicKey();
           if (publicKey != null) {
             promise.resolve(publicKey);
+          } else {
+            promise.reject("Error", "Missing public key for that keyTag");
           }
-        promise.reject("Error", "Missing public key for that keyTag");
       } catch(Exception e) {
         promise.reject("Error", e.getMessage());
       }
