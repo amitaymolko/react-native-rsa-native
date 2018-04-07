@@ -62,9 +62,12 @@ import org.spongycastle.openssl.PEMParser;
 import org.spongycastle.util.io.pem.PemObject;
 
 import static android.security.keystore.KeyProperties.*;
+
 import static java.nio.charset.StandardCharsets.UTF_8;
+import java.nio.charset.Charset;
 
 public class RSA {
+    public static Charset CharsetUTF_8;
 
     public static final String ALGORITHM = "RSA";
 
@@ -77,11 +80,21 @@ public class RSA {
     private PrivateKey privateKey;
 
     public RSA() {
+        this.setupCharset();
     }
 
     public RSA(String keyTag) throws KeyStoreException, UnrecoverableEntryException, NoSuchAlgorithmException, IOException, CertificateException {
+        this.setupCharset();
         this.keyTag = keyTag;
         this.loadFromKeystore();
+    }
+
+    private void setupCharset() {
+        if (android.os.Build.VERSION.SDK_INT >= 19) {
+            CharsetUTF_8 = UTF_8;
+        } else {
+            CharsetUTF_8 = Charset.forName("UTF-8");
+        }
     }
 
     public String getPublicKey() throws IOException {
@@ -124,7 +137,7 @@ public class RSA {
 
     // UTF-8 input
     public String encrypt(String message) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException {
-        byte[] data = message.getBytes(UTF_8);
+        byte[] data = message.getBytes(CharsetUTF_8);
         byte[] cipherBytes = encrypt(data);
         return Base64.encodeToString(cipherBytes, Base64.DEFAULT);
     }
@@ -141,7 +154,7 @@ public class RSA {
     public String decrypt(String message) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException {
         byte[] cipherBytes = Base64.decode(message, Base64.DEFAULT);
         byte[] data = decrypt(cipherBytes);
-        return new String(data, UTF_8);
+        return new String(data, CharsetUTF_8);
     }
 
     // Base64 input
@@ -167,7 +180,7 @@ public class RSA {
 
     //utf-8 message
     public String sign(String message) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
-        byte[] messageBytes = message.getBytes(UTF_8);
+        byte[] messageBytes = message.getBytes(CharsetUTF_8);
         return sign(messageBytes);
     }
 
@@ -191,7 +204,7 @@ public class RSA {
     public boolean verify(String signature, String message) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
         Signature publicSignature = Signature.getInstance("SHA512withRSA");
         publicSignature.initVerify(this.publicKey);
-        byte[] messageBytes = message.getBytes(UTF_8);
+        byte[] messageBytes = message.getBytes(CharsetUTF_8);
         byte[] signatureBytes = Base64.decode(signature, Base64.DEFAULT);
         return verify(signatureBytes, messageBytes);
     }
