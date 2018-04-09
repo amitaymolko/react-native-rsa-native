@@ -8,11 +8,54 @@
 
 /* Begin PBXBuildFile section */
 		186F49E31F06836A00F71861 /* RSAFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 186F49E21F06836A00F71861 /* RSAFormatter.m */; };
+		84173A6A2073EB5700FFFF2A /* RSADeterministic_Test.m in Sources */ = {isa = PBXBuildFile; fileRef = 84173A692073EB5700FFFF2A /* RSADeterministic_Test.m */; };
+		842FD1DF2073F30800C46F8E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 842FD1DE2073F30700C46F8E /* Foundation.framework */; };
+		842FD1E92073F66200C46F8E /* tommath.c in Sources */ = {isa = PBXBuildFile; fileRef = 842FD1E72073F66100C46F8E /* tommath.c */; };
+		842FD1EA2073FE4B00C46F8E /* tommath.c in Sources */ = {isa = PBXBuildFile; fileRef = 842FD1E72073F66100C46F8E /* tommath.c */; };
+		842FD1EF2075241000C46F8E /* X509Der.m in Sources */ = {isa = PBXBuildFile; fileRef = 842FD1EE2075241000C46F8E /* X509Der.m */; };
+		842FD1F22075261600C46F8E /* X509Der_Test.m in Sources */ = {isa = PBXBuildFile; fileRef = 842FD1F12075261600C46F8E /* X509Der_Test.m */; };
+		8448947F2072814C0060F1F7 /* libRNRSA.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BF40FFBD1F05EC4000DC4E95 /* libRNRSA.a */; };
+		84489489207290640060F1F7 /* Pbkdf2Rng.m in Sources */ = {isa = PBXBuildFile; fileRef = 84489488207290640060F1F7 /* Pbkdf2Rng.m */; };
+		8448948C2072A94C0060F1F7 /* Pbkdf2Rng_Test.m in Sources */ = {isa = PBXBuildFile; fileRef = 8448948B2072A94C0060F1F7 /* Pbkdf2Rng_Test.m */; };
+		8448948E2072C9D10060F1F7 /* RSADeterministic.m in Sources */ = {isa = PBXBuildFile; fileRef = 8448948D2072C9D10060F1F7 /* RSADeterministic.m */; };
+		844EB7EA2076C27800BF4E9C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 844EB7E92076C27800BF4E9C /* AppDelegate.m */; };
+		844EB7ED2076C27800BF4E9C /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 844EB7EC2076C27800BF4E9C /* ViewController.m */; };
+		844EB7F02076C27800BF4E9C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 844EB7EE2076C27800BF4E9C /* Main.storyboard */; };
+		844EB7F22076C27800BF4E9C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 844EB7F12076C27800BF4E9C /* Assets.xcassets */; };
+		844EB7F52076C27800BF4E9C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 844EB7F32076C27800BF4E9C /* LaunchScreen.storyboard */; };
+		844EB7F82076C27800BF4E9C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 844EB7F72076C27800BF4E9C /* main.m */; };
+		844EB8022076C27800BF4E9C /* Tests_For_IOS_KeychainTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 844EB8012076C27800BF4E9C /* Tests_For_IOS_KeychainTests.m */; };
+		844EB80D2076C2EB00BF4E9C /* RNRSA_Test.m in Sources */ = {isa = PBXBuildFile; fileRef = 844894742072807F0060F1F7 /* RNRSA_Test.m */; };
+		84B172F32073F12500A6B65E /* JKBigInteger.m in Sources */ = {isa = PBXBuildFile; fileRef = 84B172F12073F12500A6B65E /* JKBigInteger.m */; };
 		BF40FFDB1F05EC9000DC4E95 /* RNRSA.m in Sources */ = {isa = PBXBuildFile; fileRef = BF40FFD71F05EC9000DC4E95 /* RNRSA.m */; };
 		BF40FFDC1F05EC9000DC4E95 /* RSANative.m in Sources */ = {isa = PBXBuildFile; fileRef = BF40FFDA1F05EC9000DC4E95 /* RSANative.m */; };
 		BFCDFE2A1F694B870016F50C /* RSANative.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = BF40FFD91F05EC9000DC4E95 /* RSANative.h */; };
 		BFCDFE2B1F694B890016F50C /* RSAFormatter.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = 186F49E11F06836A00F71861 /* RSAFormatter.h */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		844894802072814C0060F1F7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BF40FFB51F05EC4000DC4E95 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BF40FFBC1F05EC4000DC4E95;
+			remoteInfo = RNRSA;
+		};
+		844EB7FE2076C27800BF4E9C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BF40FFB51F05EC4000DC4E95 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 844EB7E52076C27800BF4E9C;
+			remoteInfo = "Tests For IOS Keychain";
+		};
+		844EB83E2076C84200BF4E9C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BF40FFB51F05EC4000DC4E95 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 844EB7E52076C27800BF4E9C;
+			remoteInfo = "Tests For IOS Keychain";
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		BF40FFBB1F05EC4000DC4E95 /* Copy Headers */ = {
@@ -32,6 +75,41 @@
 /* Begin PBXFileReference section */
 		186F49E11F06836A00F71861 /* RSAFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSAFormatter.h; sourceTree = "<group>"; };
 		186F49E21F06836A00F71861 /* RSAFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSAFormatter.m; sourceTree = "<group>"; };
+		26603E12C7DD43FF3CD19FFF /* libPods-RNRSA.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RNRSA.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		84173A692073EB5700FFFF2A /* RSADeterministic_Test.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RSADeterministic_Test.m; sourceTree = "<group>"; };
+		842FD1DE2073F30700C46F8E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		842FD1E22073F36E00C46F8E /* libc.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libc.tbd; path = usr/lib/libc.tbd; sourceTree = SDKROOT; };
+		842FD1E52073F66100C46F8E /* tommath_class.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tommath_class.h; sourceTree = "<group>"; };
+		842FD1E62073F66100C46F8E /* tommath.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tommath.h; sourceTree = "<group>"; };
+		842FD1E72073F66100C46F8E /* tommath.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tommath.c; sourceTree = "<group>"; };
+		842FD1E82073F66200C46F8E /* tommath_superclass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tommath_superclass.h; sourceTree = "<group>"; };
+		842FD1EB2073FF9100C46F8E /* RNRSA.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = RNRSA.xcodeproj; sourceTree = "<group>"; };
+		842FD1EE2075241000C46F8E /* X509Der.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = X509Der.m; sourceTree = "<group>"; };
+		842FD1F02075241C00C46F8E /* X509Der.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = X509Der.h; sourceTree = "<group>"; };
+		842FD1F12075261600C46F8E /* X509Der_Test.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = X509Der_Test.m; sourceTree = "<group>"; };
+		844894742072807F0060F1F7 /* RNRSA_Test.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNRSA_Test.m; sourceTree = "<group>"; };
+		8448947A2072814C0060F1F7 /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		8448947E2072814C0060F1F7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		84489488207290640060F1F7 /* Pbkdf2Rng.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Pbkdf2Rng.m; sourceTree = "<group>"; };
+		8448948A2072908C0060F1F7 /* Pbkdf2Rng.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Pbkdf2Rng.h; sourceTree = "<group>"; };
+		8448948B2072A94C0060F1F7 /* Pbkdf2Rng_Test.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Pbkdf2Rng_Test.m; sourceTree = "<group>"; };
+		8448948D2072C9D10060F1F7 /* RSADeterministic.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RSADeterministic.m; sourceTree = "<group>"; };
+		8448948F2072C9EB0060F1F7 /* RSADeterministic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RSADeterministic.h; sourceTree = "<group>"; };
+		844EB7E62076C27800BF4E9C /* Tests For IOS Keychain.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Tests For IOS Keychain.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		844EB7E82076C27800BF4E9C /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		844EB7E92076C27800BF4E9C /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		844EB7EB2076C27800BF4E9C /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		844EB7EC2076C27800BF4E9C /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		844EB7EF2076C27800BF4E9C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		844EB7F12076C27800BF4E9C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		844EB7F42076C27800BF4E9C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		844EB7F62076C27800BF4E9C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		844EB7F72076C27800BF4E9C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		844EB7FD2076C27800BF4E9C /* Tests For IOS KeychainTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Tests For IOS KeychainTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		844EB8012076C27800BF4E9C /* Tests_For_IOS_KeychainTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tests_For_IOS_KeychainTests.m; sourceTree = "<group>"; };
+		844EB8032076C27800BF4E9C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		84B172F02073F12500A6B65E /* JKBigInteger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JKBigInteger.h; sourceTree = "<group>"; };
+		84B172F12073F12500A6B65E /* JKBigInteger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JKBigInteger.m; sourceTree = "<group>"; };
 		BF40FFBD1F05EC4000DC4E95 /* libRNRSA.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNRSA.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF40FFD71F05EC9000DC4E95 /* RNRSA.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNRSA.m; sourceTree = "<group>"; };
 		BF40FFD81F05EC9000DC4E95 /* RNRSA.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNRSA.h; sourceTree = "<group>"; };
@@ -40,26 +118,107 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		BF40FFBA1F05EC4000DC4E95 /* Frameworks */ = {
+		844894772072814C0060F1F7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8448947F2072814C0060F1F7 /* libRNRSA.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		844EB7E32076C27800BF4E9C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		844EB7FA2076C27800BF4E9C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BF40FFBA1F05EC4000DC4E95 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				842FD1DF2073F30800C46F8E /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		842FD1EC2073FF9100C46F8E /* Products */ = {
+			isa = PBXGroup;
+			name = Products;
+			sourceTree = "<group>";
+		};
+		8448947B2072814C0060F1F7 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				844894742072807F0060F1F7 /* RNRSA_Test.m */,
+				8448947E2072814C0060F1F7 /* Info.plist */,
+				8448948B2072A94C0060F1F7 /* Pbkdf2Rng_Test.m */,
+				84173A692073EB5700FFFF2A /* RSADeterministic_Test.m */,
+				842FD1F12075261600C46F8E /* X509Der_Test.m */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		844EB7E72076C27800BF4E9C /* Tests For IOS Keychain */ = {
+			isa = PBXGroup;
+			children = (
+				844EB7E82076C27800BF4E9C /* AppDelegate.h */,
+				844EB7E92076C27800BF4E9C /* AppDelegate.m */,
+				844EB7EB2076C27800BF4E9C /* ViewController.h */,
+				844EB7EC2076C27800BF4E9C /* ViewController.m */,
+				844EB7EE2076C27800BF4E9C /* Main.storyboard */,
+				844EB7F12076C27800BF4E9C /* Assets.xcassets */,
+				844EB7F32076C27800BF4E9C /* LaunchScreen.storyboard */,
+				844EB7F62076C27800BF4E9C /* Info.plist */,
+				844EB7F72076C27800BF4E9C /* main.m */,
+			);
+			path = "Tests For IOS Keychain";
+			sourceTree = "<group>";
+		};
+		844EB8002076C27800BF4E9C /* Tests For IOS KeychainTests */ = {
+			isa = PBXGroup;
+			children = (
+				844EB8012076C27800BF4E9C /* Tests_For_IOS_KeychainTests.m */,
+				844EB8032076C27800BF4E9C /* Info.plist */,
+			);
+			path = "Tests For IOS KeychainTests";
+			sourceTree = "<group>";
+		};
 		BF40FFB41F05EC4000DC4E95 = {
 			isa = PBXGroup;
 			children = (
+				842FD1F02075241C00C46F8E /* X509Der.h */,
+				842FD1EE2075241000C46F8E /* X509Der.m */,
+				842FD1E52073F66100C46F8E /* tommath_class.h */,
+				842FD1E82073F66200C46F8E /* tommath_superclass.h */,
+				842FD1E72073F66100C46F8E /* tommath.c */,
+				842FD1E62073F66100C46F8E /* tommath.h */,
+				84B172F02073F12500A6B65E /* JKBigInteger.h */,
+				84B172F12073F12500A6B65E /* JKBigInteger.m */,
+				8448948F2072C9EB0060F1F7 /* RSADeterministic.h */,
+				8448948D2072C9D10060F1F7 /* RSADeterministic.m */,
+				8448948A2072908C0060F1F7 /* Pbkdf2Rng.h */,
+				84489488207290640060F1F7 /* Pbkdf2Rng.m */,
 				186F49E11F06836A00F71861 /* RSAFormatter.h */,
 				186F49E21F06836A00F71861 /* RSAFormatter.m */,
 				BF40FFD81F05EC9000DC4E95 /* RNRSA.h */,
 				BF40FFD71F05EC9000DC4E95 /* RNRSA.m */,
 				BF40FFD91F05EC9000DC4E95 /* RSANative.h */,
 				BF40FFDA1F05EC9000DC4E95 /* RSANative.m */,
+				8448947B2072814C0060F1F7 /* Tests */,
+				844EB7E72076C27800BF4E9C /* Tests For IOS Keychain */,
+				844EB8002076C27800BF4E9C /* Tests For IOS KeychainTests */,
 				BF40FFBE1F05EC4000DC4E95 /* Products */,
+				C45F17859310F38E439551F9 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -67,13 +226,81 @@
 			isa = PBXGroup;
 			children = (
 				BF40FFBD1F05EC4000DC4E95 /* libRNRSA.a */,
+				8448947A2072814C0060F1F7 /* Tests.xctest */,
+				844EB7E62076C27800BF4E9C /* Tests For IOS Keychain.app */,
+				844EB7FD2076C27800BF4E9C /* Tests For IOS KeychainTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		C45F17859310F38E439551F9 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				842FD1EB2073FF9100C46F8E /* RNRSA.xcodeproj */,
+				842FD1E22073F36E00C46F8E /* libc.tbd */,
+				842FD1DE2073F30700C46F8E /* Foundation.framework */,
+				26603E12C7DD43FF3CD19FFF /* libPods-RNRSA.a */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		844894792072814C0060F1F7 /* Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 844894822072814C0060F1F7 /* Build configuration list for PBXNativeTarget "Tests" */;
+			buildPhases = (
+				844894762072814C0060F1F7 /* Sources */,
+				844894772072814C0060F1F7 /* Frameworks */,
+				844894782072814C0060F1F7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				844894812072814C0060F1F7 /* PBXTargetDependency */,
+				844EB83F2076C84200BF4E9C /* PBXTargetDependency */,
+			);
+			name = Tests;
+			productName = Tests;
+			productReference = 8448947A2072814C0060F1F7 /* Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		844EB7E52076C27800BF4E9C /* Tests For IOS Keychain */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 844EB8042076C27800BF4E9C /* Build configuration list for PBXNativeTarget "Tests For IOS Keychain" */;
+			buildPhases = (
+				844EB7E22076C27800BF4E9C /* Sources */,
+				844EB7E32076C27800BF4E9C /* Frameworks */,
+				844EB7E42076C27800BF4E9C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Tests For IOS Keychain";
+			productName = "Tests For IOS Keychain";
+			productReference = 844EB7E62076C27800BF4E9C /* Tests For IOS Keychain.app */;
+			productType = "com.apple.product-type.application";
+		};
+		844EB7FC2076C27800BF4E9C /* Tests For IOS KeychainTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 844EB8072076C27800BF4E9C /* Build configuration list for PBXNativeTarget "Tests For IOS KeychainTests" */;
+			buildPhases = (
+				844EB7F92076C27800BF4E9C /* Sources */,
+				844EB7FA2076C27800BF4E9C /* Frameworks */,
+				844EB7FB2076C27800BF4E9C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				844EB7FF2076C27800BF4E9C /* PBXTargetDependency */,
+			);
+			name = "Tests For IOS KeychainTests";
+			productName = "Tests For IOS KeychainTests";
+			productReference = 844EB7FD2076C27800BF4E9C /* Tests For IOS KeychainTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		BF40FFBC1F05EC4000DC4E95 /* RNRSA */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = BF40FFC61F05EC4000DC4E95 /* Build configuration list for PBXNativeTarget "RNRSA" */;
@@ -97,9 +324,23 @@
 		BF40FFB51F05EC4000DC4E95 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0900;
+				LastUpgradeCheck = 0920;
 				ORGANIZATIONNAME = RNRSA;
 				TargetAttributes = {
+					844894792072814C0060F1F7 = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 844EB7E52076C27800BF4E9C;
+					};
+					844EB7E52076C27800BF4E9C = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+					};
+					844EB7FC2076C27800BF4E9C = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 844EB7E52076C27800BF4E9C;
+					};
 					BF40FFBC1F05EC4000DC4E95 = {
 						CreatedOnToolsVersion = 9.0;
 					};
@@ -111,31 +352,240 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = BF40FFB41F05EC4000DC4E95;
 			productRefGroup = BF40FFBE1F05EC4000DC4E95 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 842FD1EC2073FF9100C46F8E /* Products */;
+					ProjectRef = 842FD1EB2073FF9100C46F8E /* RNRSA.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				BF40FFBC1F05EC4000DC4E95 /* RNRSA */,
+				844894792072814C0060F1F7 /* Tests */,
+				844EB7E52076C27800BF4E9C /* Tests For IOS Keychain */,
+				844EB7FC2076C27800BF4E9C /* Tests For IOS KeychainTests */,
 			);
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		844894782072814C0060F1F7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		844EB7E42076C27800BF4E9C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				844EB7F52076C27800BF4E9C /* LaunchScreen.storyboard in Resources */,
+				844EB7F22076C27800BF4E9C /* Assets.xcassets in Resources */,
+				844EB7F02076C27800BF4E9C /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		844EB7FB2076C27800BF4E9C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
+		844894762072814C0060F1F7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				842FD1EA2073FE4B00C46F8E /* tommath.c in Sources */,
+				84173A6A2073EB5700FFFF2A /* RSADeterministic_Test.m in Sources */,
+				8448948C2072A94C0060F1F7 /* Pbkdf2Rng_Test.m in Sources */,
+				842FD1F22075261600C46F8E /* X509Der_Test.m in Sources */,
+				844EB80D2076C2EB00BF4E9C /* RNRSA_Test.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		844EB7E22076C27800BF4E9C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				844EB7ED2076C27800BF4E9C /* ViewController.m in Sources */,
+				844EB7F82076C27800BF4E9C /* main.m in Sources */,
+				844EB7EA2076C27800BF4E9C /* AppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		844EB7F92076C27800BF4E9C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				844EB8022076C27800BF4E9C /* Tests_For_IOS_KeychainTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		BF40FFB91F05EC4000DC4E95 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				BF40FFDB1F05EC9000DC4E95 /* RNRSA.m in Sources */,
 				BF40FFDC1F05EC9000DC4E95 /* RSANative.m in Sources */,
+				84489489207290640060F1F7 /* Pbkdf2Rng.m in Sources */,
+				8448948E2072C9D10060F1F7 /* RSADeterministic.m in Sources */,
+				84B172F32073F12500A6B65E /* JKBigInteger.m in Sources */,
+				842FD1EF2075241000C46F8E /* X509Der.m in Sources */,
 				186F49E31F06836A00F71861 /* RSAFormatter.m in Sources */,
+				842FD1E92073F66200C46F8E /* tommath.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		844894812072814C0060F1F7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BF40FFBC1F05EC4000DC4E95 /* RNRSA */;
+			targetProxy = 844894802072814C0060F1F7 /* PBXContainerItemProxy */;
+		};
+		844EB7FF2076C27800BF4E9C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 844EB7E52076C27800BF4E9C /* Tests For IOS Keychain */;
+			targetProxy = 844EB7FE2076C27800BF4E9C /* PBXContainerItemProxy */;
+		};
+		844EB83F2076C84200BF4E9C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 844EB7E52076C27800BF4E9C /* Tests For IOS Keychain */;
+			targetProxy = 844EB83E2076C84200BF4E9C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		844EB7EE2076C27800BF4E9C /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				844EB7EF2076C27800BF4E9C /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		844EB7F32076C27800BF4E9C /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				844EB7F42076C27800BF4E9C /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
 /* Begin XCBuildConfiguration section */
+		844894832072814C0060F1F7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				HEADER_SEARCH_PATHS = (
+					"../node_modules/react-native/React/Base",
+					"$(PROJECT_DIR)",
+				);
+				INFOPLIST_FILE = Tests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/**";
+				PRODUCT_BUNDLE_IDENTIFIER = com.vidaidentity.rnrsa.Tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Tests For IOS Keychain.app/Tests For IOS Keychain";
+			};
+			name = Debug;
+		};
+		844894842072814C0060F1F7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CODE_SIGN_STYLE = Automatic;
+				HEADER_SEARCH_PATHS = (
+					"../node_modules/react-native/React/Base",
+					"$(PROJECT_DIR)",
+				);
+				INFOPLIST_FILE = Tests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/**";
+				PRODUCT_BUNDLE_IDENTIFIER = com.vidaidentity.rnrsa.Tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Tests For IOS Keychain.app/Tests For IOS Keychain";
+			};
+			name = Release;
+		};
+		844EB8052076C27800BF4E9C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = "Tests For IOS Keychain/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.vidaidentity.rnrsa.Tests-For-IOS-Keychain";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		844EB8062076C27800BF4E9C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = "Tests For IOS Keychain/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.vidaidentity.rnrsa.Tests-For-IOS-Keychain";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		844EB8082076C27800BF4E9C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = "Tests For IOS KeychainTests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.vidaidentity.rnrsa.Tests-For-IOS-KeychainTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Tests For IOS Keychain.app/Tests For IOS Keychain";
+			};
+			name = Debug;
+		};
+		844EB8092076C27800BF4E9C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = "Tests For IOS KeychainTests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.vidaidentity.rnrsa.Tests-For-IOS-KeychainTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Tests For IOS Keychain.app/Tests For IOS Keychain";
+			};
+			name = Release;
+		};
 		BF40FFC41F05EC4000DC4E95 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -156,6 +606,8 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
@@ -182,7 +634,9 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "../node_modules/react-native/React/Base";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LIBRARY_SEARCH_PATHS = "";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -209,6 +663,8 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
@@ -229,7 +685,9 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "../node_modules/react-native/React/Base";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LIBRARY_SEARCH_PATHS = "";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -239,6 +697,11 @@
 		BF40FFC71F05EC4000DC4E95 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					./LibTomMath,
+				);
+				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/**";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -249,6 +712,11 @@
 		BF40FFC81F05EC4000DC4E95 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					./LibTomMath,
+				);
+				LIBRARY_SEARCH_PATHS = "$(PROJECT_DIR)/**";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -259,6 +727,33 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		844894822072814C0060F1F7 /* Build configuration list for PBXNativeTarget "Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				844894832072814C0060F1F7 /* Debug */,
+				844894842072814C0060F1F7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		844EB8042076C27800BF4E9C /* Build configuration list for PBXNativeTarget "Tests For IOS Keychain" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				844EB8052076C27800BF4E9C /* Debug */,
+				844EB8062076C27800BF4E9C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		844EB8072076C27800BF4E9C /* Build configuration list for PBXNativeTarget "Tests For IOS KeychainTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				844EB8082076C27800BF4E9C /* Debug */,
+				844EB8092076C27800BF4E9C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		BF40FFB81F05EC4000DC4E95 /* Build configuration list for PBXProject "RNRSA" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

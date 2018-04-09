@@ -1,5 +1,6 @@
 #import "RNRSA.h"
 #import "RSANative.h"
+#import "RSADeterministic.h"
 
 @implementation RNRSA
 
@@ -98,6 +99,13 @@ RCT_EXPORT_METHOD(verify64:(NSString *)signature withMessage:(NSString *)message
 RCT_EXPORT_MODULE()
 
 // Keychain based API, provide a key chain tag with each call
+
+RCT_EXPORT_METHOD(generateDeterministic:(NSString *)keyTag bits:(int)bits eInt:(int)eInt seed:(NSString *)seed resolve:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+    RSANative *rsa = [[RSANative alloc] initWithKeyTag:keyTag];
+    [rsa addKeysToKeychain:[RSADeterministic generateDeterministic:bits eInt:eInt seed:seed]];
+    NSDictionary *keys = @{@"public" : [rsa encodedPublicKey]};
+    resolve(keys);
+}
 
 RCT_EXPORT_METHOD(generate:(NSString *)keyTag resolve:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject) {

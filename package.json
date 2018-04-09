@@ -19,5 +19,8 @@
   },
   "author": "Amitay Molko",
   "license": "MIT",
-  "homepage": "https://github.com/amitaymolko/react-native-rsa-native#readme"
+  "homepage": "https://github.com/amitaymolko/react-native-rsa-native#readme",
+  "devDependencies": {
+    "react-native": "^0.54.4"
+  }
 }
