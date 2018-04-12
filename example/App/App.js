@@ -5,10 +5,19 @@ import {RSA, RSAKeychain} from 'react-native-rsa-native';
 
 let secret = 'secret message';
 let keyTag = 'com.domain.mykey';
+
 RSA.generateKeys(4096)
   .then(keys => {
     console.log('4096 private:', keys.private) // the private key
     console.log('4096 public:', keys.public) // the public key
+    RSA.encrypt('4096', keys.public)
+      .then(encodedMessage => {
+        console.log('4096 encoded message:', encodedMessage)
+        RSA.decrypt(encodedMessage, keys.private)
+          .then(message => {
+            console.log('4096 decoded message:', message);
+          })
+      })
   })
 
 RSA.generate()

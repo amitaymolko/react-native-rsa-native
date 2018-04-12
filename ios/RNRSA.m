@@ -13,8 +13,13 @@ RCT_EXPORT_MODULE()
 
 RCT_EXPORT_METHOD(generate:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject) {
+    [self generateKeys:2048 resolve:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(generateKeys:(int)keySize resolve:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject) {
     RSANative *rsa = [[RSANative alloc] init];
-    [rsa generate];
+    [rsa generate:keySize];
     NSDictionary *keys = @{
                            @"private" : [rsa encodedPrivateKey],
                            @"public" : [rsa encodedPublicKey]
@@ -101,8 +106,13 @@ RCT_EXPORT_MODULE()
 
 RCT_EXPORT_METHOD(generate:(NSString *)keyTag resolve:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject) {
+    [self generateKeys:keyTag keySize:2048 resolve:resolve rejecter:reject];
+}
+
+RCT_EXPORT_METHOD(generateKeys:(NSString *)keyTag keySize:(int)keySize resolve:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject) {
     RSANative *rsa = [[RSANative alloc] initWithKeyTag:keyTag];
-    [rsa generate];
+    [rsa generate:keySize];
     NSDictionary *keys = @{@"public" : [rsa encodedPublicKey]};
     resolve(keys);
 }

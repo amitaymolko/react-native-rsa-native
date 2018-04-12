@@ -22,7 +22,7 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
     return self;
 }
 
-- (void)generate {
+- (void)generate:(int)keySize {
     NSMutableDictionary *privateKeyAttributes = [NSMutableDictionary dictionary];
 
     if (self.keyTag) {
@@ -34,7 +34,7 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
 
 	NSMutableDictionary *attributes = [[NSMutableDictionary alloc] init]; 
     [attributes setObject:(__bridge id)kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
-    [attributes setObject:[NSNumber numberWithInt:2048] forKey:(__bridge id)kSecAttrKeySizeInBits];
+    [attributes setObject:[NSNumber numberWithInt:keySize] forKey:(__bridge id)kSecAttrKeySizeInBits];
 	[attributes setObject:privateKeyAttributes forKey:(__bridge id)kSecPrivateKeyAttrs]; 
 
     CFErrorRef error = NULL;
@@ -95,7 +95,7 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
     publicKey = [RSAFormatter stripHeaders: publicKey];
     NSDictionary* options = @{(id)kSecAttrKeyType: (id)kSecAttrKeyTypeRSA,
                               (id)kSecAttrKeyClass: (id)kSecAttrKeyClassPublic,
-                              (id)kSecAttrKeySizeInBits: @2048,
+//                              (id)kSecAttrKeySizeInBits: @2048,
                               };
     CFErrorRef error = NULL;
     NSData *data = [[NSData alloc] initWithBase64EncodedString:publicKey options:NSDataBase64DecodingIgnoreUnknownCharacters];
@@ -115,7 +115,7 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
 
     NSDictionary* options = @{(id)kSecAttrKeyType: (id)kSecAttrKeyTypeRSA,
                               (id)kSecAttrKeyClass: (id)kSecAttrKeyClassPrivate,
-                              (id)kSecAttrKeySizeInBits: @2048,
+//                              (id)kSecAttrKeySizeInBits: @2048,
                               };
     CFErrorRef error = NULL;
     NSData *data = [[NSData alloc] initWithBase64EncodedString:privateKey options:NSDataBase64DecodingIgnoreUnknownCharacters];

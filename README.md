@@ -41,7 +41,13 @@ In your React Native Xcode project, right click on your project and go 'Add File
 
 import {RSA, RSAKeychain} from 'react-native-rsa-native';
 
-RSA.generate()
+RSA.generateKeys(4096) // set key size
+  .then(keys => {
+    console.log('4096 private:', keys.private) // the private key
+    console.log('4096 public:', keys.public) // the public key
+  })
+
+RSA.generate() 
   .then(keys => {
     console.log(keys.private) // the private key
     console.log(keys.public) // the public key
