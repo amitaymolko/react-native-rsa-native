@@ -5,6 +5,11 @@ import {RSA, RSAKeychain} from 'react-native-rsa-native';
 
 let secret = 'secret message';
 let keyTag = 'com.domain.mykey';
+RSA.generateKeys(4096)
+  .then(keys => {
+    console.log('4096 private:', keys.private) // the private key
+    console.log('4096 public:', keys.public) // the public key
+  })
 
 RSA.generate()
   .then(keys => {
@@ -127,7 +132,6 @@ RSA.generate()
 //   })
 
 // Example utilizing the keychain for private key secure storage
-
 
 RSAKeychain.generate(keyTag)
   .then(keys => {

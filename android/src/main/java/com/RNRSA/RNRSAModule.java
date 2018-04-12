@@ -28,11 +28,16 @@ public class RNRSAModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void generate(Promise promise)  {
+    this.generateKeys(2048, promise);
+  }
+
+  @ReactMethod
+  public void generateKeys(int keySize, Promise promise)  {
     WritableNativeMap keys = new WritableNativeMap();
 
     try {
         RSA rsa = new RSA();
-        rsa.generate();
+        rsa.generate(keySize);
         keys.putString("public",  rsa.getPublicKey());
         keys.putString("private",  rsa.getPrivateKey());
         promise.resolve(keys);

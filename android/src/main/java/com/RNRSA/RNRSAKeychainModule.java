@@ -28,11 +28,16 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void generate(String keyTag, Promise promise)  {
+    this.generateKeys(keyTag, 2048, promise);
+  }
+
+  @ReactMethod
+  public void generateKeys(String keyTag, int keySize, Promise promise)  {
     WritableNativeMap keys = new WritableNativeMap();
 
     try {
         RSA rsa = new RSA();
-        rsa.generate(keyTag, this.reactContext);
+        rsa.generate(keyTag, keySize, this.reactContext);
         keys.putString("public",  rsa.getPublicKey());
         promise.resolve(keys);
     } catch(NoSuchAlgorithmException e) {

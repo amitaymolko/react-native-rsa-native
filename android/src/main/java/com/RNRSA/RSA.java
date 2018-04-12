@@ -282,8 +282,12 @@ public class RSA {
     }
 
     public void generate() throws IOException, NoSuchAlgorithmException, InvalidAlgorithmParameterException {
+       this.generate(2048);
+    }
+
+    public void generate(int keySize) throws IOException, NoSuchAlgorithmException, InvalidAlgorithmParameterException {
         KeyPairGenerator kpg = KeyPairGenerator.getInstance(ALGORITHM);
-        kpg.initialize(2048);
+        kpg.initialize(keySize);
 
         KeyPair keyPair = kpg.genKeyPair();
         this.publicKey = keyPair.getPublic();
@@ -291,6 +295,10 @@ public class RSA {
     }
 
     public void generate(String keyTag, Context context) throws IOException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, NoSuchProviderException {
+        this.generate(keyTag, 2048, context);
+    }
+
+    public void generate(String keyTag, int keySize, Context context) throws IOException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, NoSuchProviderException {
         KeyPairGenerator kpg = KeyPairGenerator.getInstance(ALGORITHM, "AndroidKeyStore");
         if (android.os.Build.VERSION.SDK_INT >= 23) {
             kpg.initialize(
@@ -298,6 +306,7 @@ public class RSA {
                     keyTag,
                     PURPOSE_ENCRYPT | PURPOSE_DECRYPT | PURPOSE_SIGN | PURPOSE_VERIFY
                 )
+                .setKeySize(keySize)
                 .setDigests(KeyProperties.DIGEST_SHA512)
                 .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_RSA_PKCS1)
                 .setSignaturePaddings(KeyProperties.SIGNATURE_PADDING_RSA_PKCS1)
@@ -315,7 +324,7 @@ public class RSA {
                 .setStartDate(Calendar.getInstance().getTime())
                 .setEndDate(endDate.getTime());
             if (android.os.Build.VERSION.SDK_INT >= 19) {
-                keyPairGeneratorSpec.setKeySize(2048).setKeyType(ALGORITHM);
+                keyPairGeneratorSpec.setKeySize(keySize).setKeyType(ALGORITHM);
             }
             kpg.initialize(keyPairGeneratorSpec.build());
         }
