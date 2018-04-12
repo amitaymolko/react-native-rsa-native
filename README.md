@@ -115,3 +115,8 @@ Check out example App.js for a full example
 
 * Originally based on https://github.com/SamSaffron/react-native-key-pair
 * iOS implementation [reference](https://developer.apple.com/library/content/documentation/Security/Conceptual/CertKeyTrustProgGuide/KeyRead.html#//apple_ref/doc/uid/TP40001358-CH222-SW1)
+
+
+## Donate
+
+ETH: 0xDc2F8D78098749EB3ECdF79Fe32Efda86fEEFc3c
