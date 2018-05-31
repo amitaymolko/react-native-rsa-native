@@ -339,7 +339,12 @@ public class RSA {
     public void generate(String keyTag) throws IOException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, NoSuchProviderException, KeyStoreException, CertificateException {
         KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
         keyStore.load(null);
-        keyStore.deleteEntry(this.keyTag);
+        try {
+            keyStore.deleteEntry(this.keyTag);
+        }
+        catch (NullPointerException exc) {
+            // On older android versions, this can occurr when the keytag does not already exist
+        }
 
         KeyPairGenerator kpg = KeyPairGenerator.getInstance(ALGORITHM, "AndroidKeyStore");
         kpg.initialize(new KeyGenParameterSpec.Builder(
