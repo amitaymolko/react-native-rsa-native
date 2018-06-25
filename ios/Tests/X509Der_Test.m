@@ -32,7 +32,28 @@
     NSString *actual = [X509Der nsDataToHexString:data];
     XCTAssertEqualObjects(expected, actual);
 }
-
+- (void)testEncodeBigInt2 {
+    NSString *expected =
+    @"02 81 80 09 4D 15 65 C5 61 80 C7 93 2C 53 52 4E FB 87 "
+    @"25 BD 68 3C A8 0C 60 12 7E C9 AB 93 35 70 AD A0 "
+    @"EA 81 E1 4C 8B 2A 73 DA 78 8B C4 6A 9B 7D 91 03 "
+    @"62 2C 80 29 1C B1 38 B9 63 5C 96 2A 92 DF A8 14 "
+    @"00 BF 5B BB 39 D1 06 3A 44 F1 21 AE B0 65 21 D0 "
+    @"F0 E2 6F B5 C5 A7 3C 33 93 17 ED A8 BB 7D C3 CB "
+    @"F4 F8 1A 48 5E B3 C0 AD F9 C2 DE 46 72 1C 5D 5D "
+    @"A6 59 62 B9 95 E7 80 25 ED 3D D0 4C D6 58 67 E5 09 ";
+    NSString *raw =
+    @"094D1565C56180C7932C53524EFB8725BD683CA80C60127"
+    @"EC9AB933570ADA0EA81E14C8B2A73DA788BC46A9B7D91036"
+    @"22C80291CB138B9635C962A92DFA81400BF5BBB39D1063A4"
+    @"4F121AEB06521D0F0E26FB5C5A73C339317EDA8BB7DC3CBF"
+    @"4F81A485EB3C0ADF9C2DE46721C5D5DA65962B995E78025E"
+    @"D3DD04CD65867E509";
+    JKBigInteger *input = [[JKBigInteger alloc] initWithString:raw andRadix:16];
+    NSData *data = [X509Der derEncodeBigInt:input];
+    NSString *actual = [X509Der nsDataToHexString:data];
+    XCTAssertEqualObjects([expected lowercaseString], actual);
+}
 - (void)testEncodeBigInt {
     NSString *expected =
     @"02 82 01 01 00 EB 50 63 99 F5 C6 12 F5 A6 7A 09 C1 19 2B 92 FA "

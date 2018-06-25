@@ -33,7 +33,7 @@
 +(NSData*)derEncodeBigInt:(JKBigInteger*)item {
     bool pad;
     NSString *itemHex = [item stringValueWithRadix:16];
-    if (itemHex.length > 1) {
+    if (itemHex.length > 1 && itemHex.length % 2 == 0) {
         unsigned int firstbyte;
         NSScanner *scanner = [NSScanner scannerWithString:[itemHex substringToIndex:2]];
         [scanner scanHexInt:&firstbyte];
