@@ -38,6 +38,7 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
     @{ (id)kSecAttrKeyType:       (id)kSecAttrKeyTypeRSA,
        (id)kSecAttrKeySizeInBits: @2048,
        (id)kSecPrivateKeyAttrs:   privateKeyAttributes,
+       (id)kSecAttrAccessible:    (id)kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly,
        };
 
     CFErrorRef error = NULL;
@@ -126,7 +127,7 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
                               (id)kSecValueData: (__bridge id)privD,
                               (id)kSecAttrKeyClass: (id)kSecAttrKeyClassPrivate,
                               (id)kSecReturnPersistentRef: @YES,
-                              (id)kSecAttrAccessible: (id)kSecAttrAccessibleWhenUnlocked,
+                              (id)kSecAttrAccessible: (id)kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly,
                               };
     status = SecItemAdd((CFDictionaryRef) addDict, &dataTypeRef);
     
