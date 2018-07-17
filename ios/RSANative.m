@@ -38,7 +38,6 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
     @{ (id)kSecAttrKeyType:       (id)kSecAttrKeyTypeRSA,
        (id)kSecAttrKeySizeInBits: @2048,
        (id)kSecPrivateKeyAttrs:   privateKeyAttributes,
-       (id)kSecAttrAccessible:    (id)kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly,
        };
 
     CFErrorRef error = NULL;
