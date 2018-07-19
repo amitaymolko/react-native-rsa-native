@@ -28,6 +28,7 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.CertificateException;
 import java.security.spec.X509EncodedKeySpec;
 import java.security.spec.InvalidKeySpecException;
+import java.security.spec.ECGenParameterSpec;
 
 import java.util.Date;
 import java.math.BigInteger;
@@ -65,11 +66,12 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class RSA {
 
-    public static final String ALGORITHM = "RSA";
+    public static final String ALGORITHM = "EC";
 
     private static final String PUBLIC_HEADER = "RSA PUBLIC KEY";
     private static final String PRIVATE_HEADER = "RSA PRIVATE KEY";
 
+    private String keyStoreId;
     private String keyTag;
 
     private PublicKey publicKey;
@@ -78,18 +80,22 @@ public class RSA {
     public RSA() {
     }
 
-    public RSA(String keyTag) throws KeyStoreException, UnrecoverableEntryException, NoSuchAlgorithmException, IOException, CertificateException {
+    public RSA(String keyTag, String keyStoreId) throws KeyStoreException, UnrecoverableEntryException, NoSuchAlgorithmException, IOException, CertificateException, NoSuchProviderException, InvalidAlgorithmParameterException {
         this.keyTag = keyTag;
+        this.keyStoreId = keyStoreId;
+
         this.loadFromKeystore();
     }
 
-    public RSA(String keyTag, KeyPair pair) throws IOException, NoSuchAlgorithmException, NoSuchProviderException, OperatorCreationException, SignatureException, InvalidKeyException, InvalidKeySpecException, KeyStoreException, CertificateException, UnrecoverableEntryException {
+    public RSA(String keyTag, String keyStoreId, KeyPair pair) throws IOException, NoSuchAlgorithmException, NoSuchProviderException, OperatorCreationException, SignatureException, InvalidKeyException, InvalidKeySpecException, KeyStoreException, CertificateException, UnrecoverableEntryException {
         this.keyTag = keyTag;
+        this.keyStoreId = keyStoreId;
+
         this.deletePrivateKey();
         this.privateKey = pair.getPrivate();
         this.publicKey = pair.getPublic();
 
-        KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
+        KeyStore keyStore = this.getKeyStore();
         keyStore.load(null);
         Certificate cert = genX509cert(pair);
         Certificate[] chain = new Certificate[]{cert};
@@ -311,16 +317,23 @@ public class RSA {
         return primitive.getEncoded();
     }
 
-    public void loadFromKeystore() throws KeyStoreException, UnrecoverableEntryException, NoSuchAlgorithmException, IOException, CertificateException {
-        KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
+    private KeyStore getKeyStore() throws KeyStoreException {
+        return KeyStore.getInstance(this.keyStoreId);
+    }
+
+    public void loadFromKeystore() throws KeyStoreException, UnrecoverableEntryException, NoSuchAlgorithmException, IOException, CertificateException, NoSuchProviderException, InvalidAlgorithmParameterException {
+        KeyStore keyStore = this.getKeyStore();
         keyStore.load(null);
         KeyStore.PrivateKeyEntry privateKeyEntry = (KeyStore.PrivateKeyEntry) keyStore.getEntry(this.keyTag, null);
+        if ( privateKeyEntry == null ) {
+            this.generate(this.keyTag);
+        }
         this.privateKey = privateKeyEntry.getPrivateKey();
         this.publicKey = privateKeyEntry.getCertificate().getPublicKey();
     }
 
     public void deletePrivateKey() throws KeyStoreException, UnrecoverableEntryException, NoSuchAlgorithmException, IOException, CertificateException {
-        KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
+        KeyStore keyStore = this.getKeyStore();
         keyStore.load(null);
         keyStore.deleteEntry(this.keyTag);
         this.privateKey = null;
@@ -329,7 +342,10 @@ public class RSA {
 
     public void generate() throws IOException, NoSuchAlgorithmException, InvalidAlgorithmParameterException {
         KeyPairGenerator kpg = KeyPairGenerator.getInstance(ALGORITHM);
-        kpg.initialize(2048);
+
+        ECGenParameterSpec ecSpec = new ECGenParameterSpec("secp256k1");
+
+        kpg.initialize(ecSpec);
 
         KeyPair keyPair = kpg.genKeyPair();
         this.publicKey = keyPair.getPublic();
@@ -337,7 +353,7 @@ public class RSA {
     }
 
     public void generate(String keyTag) throws IOException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, NoSuchProviderException, KeyStoreException, CertificateException {
-        KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
+        KeyStore keyStore = KeyStore.getInstance(this.keyStoreId);
         keyStore.load(null);
         try {
             keyStore.deleteEntry(this.keyTag);
@@ -346,15 +362,17 @@ public class RSA {
             // On older android versions, this can occurr when the keytag does not already exist
         }
 
-        KeyPairGenerator kpg = KeyPairGenerator.getInstance(ALGORITHM, "AndroidKeyStore");
+        KeyPairGenerator kpg = KeyPairGenerator.getInstance(ALGORITHM);
+
+        ECGenParameterSpec ecSpec = new ECGenParameterSpec("secp256k1");
+
         kpg.initialize(new KeyGenParameterSpec.Builder(
                 keyTag,
                 PURPOSE_ENCRYPT | PURPOSE_DECRYPT | PURPOSE_SIGN | PURPOSE_VERIFY
         )
-                .setDigests(KeyProperties.DIGEST_SHA512, KeyProperties.DIGEST_SHA1)
-                .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_RSA_OAEP)
-                .setSignaturePaddings(KeyProperties.SIGNATURE_PADDING_RSA_PKCS1)
-                .setKeySize(2048)
+                .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
+                .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_PKCS7)
+                .setAlgorithmParameterSpec(ecSpec)
                 .build());
 
         KeyPair keyPair = kpg.genKeyPair();
