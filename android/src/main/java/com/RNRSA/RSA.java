@@ -4,6 +4,9 @@ import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
 import android.util.Base64;
 import android.util.Log;
+
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -16,6 +19,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchProviderException;
 import java.security.PublicKey;
 import java.security.PrivateKey;
+import java.security.Key;
 import java.security.KeyFactory;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
@@ -26,6 +30,7 @@ import java.security.UnrecoverableEntryException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
 import java.security.cert.CertificateException;
+import java.security.interfaces.ECPublicKey;
 import java.security.spec.X509EncodedKeySpec;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.ECGenParameterSpec;
@@ -35,10 +40,12 @@ import java.math.BigInteger;
 
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.KeyAgreement;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.BadPaddingException;
 
 import java.io.IOException;
+import java.lang.System;
 
 import org.bouncycastle.asn1.ASN1Encodable;
 import org.bouncycastle.asn1.ASN1Primitive;
@@ -60,6 +67,7 @@ import org.bouncycastle.cert.jcajce.JcaX509v3CertificateBuilder;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
+import org.bouncycastle.openssl.jcajce.JcaPEMWriter;
 
 import static android.security.keystore.KeyProperties.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -68,8 +76,8 @@ public class RSA {
 
     public static final String ALGORITHM = "EC";
 
-    private static final String PUBLIC_HEADER = "RSA PUBLIC KEY";
-    private static final String PRIVATE_HEADER = "RSA PRIVATE KEY";
+    private static final String PUBLIC_HEADER = "EC PUBLIC KEY";
+    private static final String PRIVATE_HEADER = "EC PRIVATE KEY";
 
     private String keyStoreId;
     private String keyTag;
@@ -102,14 +110,20 @@ public class RSA {
         keyStore.setKeyEntry(this.keyTag, pair.getPrivate(), null, chain);
     }
 
+    public String toPem(Key key) throws IOException {
+        StringWriter sw = new StringWriter();
+        JcaPEMWriter pemWriter = new JcaPEMWriter(sw);
+        pemWriter.writeObject(key);
+        pemWriter.close();
+        return sw.toString();
+    }
+
     public String getPublicKey() throws IOException {
-        byte[] pkcs1PublicKey = publicKeyToPkcs1(this.publicKey);
-        return dataToPem(PUBLIC_HEADER, pkcs1PublicKey);
+        return toPem(this.publicKey);
     }
 
     public String getPrivateKey() throws IOException {
-        byte[] pkcs1PrivateKey = privateKeyToPkcs1(this.privateKey);
-        return dataToPem(PRIVATE_HEADER, pkcs1PrivateKey);
+        return toPem(this.privateKey);
     }
 
     public void setPublicKey(String publicKey) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
@@ -117,7 +131,9 @@ public class RSA {
     }
 
     public void setPrivateKey(String privateKey) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
-        this.privateKey = pkcs1ToPrivateKey(privateKey);
+        KeyPair kp = pkcs1ToPrivateKey(privateKey);
+        this.privateKey = kp.getPrivate();
+        this.publicKey = kp.getPublic();
     }
 
     private static Certificate genX509cert(KeyPair pair) throws InvalidKeyException, NoSuchProviderException, SignatureException, OperatorCreationException, IOException, CertificateException {
@@ -253,22 +269,6 @@ public class RSA {
         return verify(signatureBytes, messageBytes);
     }
 
-    private String dataToPem(String header, byte[] keyData) throws IOException {
-        PemObject pemObject = new PemObject(header, keyData);
-        StringWriter stringWriter = new StringWriter();
-        PemWriter pemWriter = new PemWriter(stringWriter);
-        pemWriter.writeObject(pemObject);
-        pemWriter.close();
-        return stringWriter.toString();
-    }
-
-    private byte[] pemToData(String pemKey) throws IOException {
-        Reader keyReader = new StringReader(pemKey);
-        PemReader pemReader = new PemReader(keyReader);
-        PemObject pemObject = pemReader.readPemObject();
-        return pemObject.getContent();
-    }
-
     private PublicKey pkcs1ToPublicKey(String publicKey) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         Reader keyReader = null;
         try {
@@ -276,7 +276,7 @@ public class RSA {
             PEMParser pemParser = new PEMParser(keyReader);
             SubjectPublicKeyInfo subjectPublicKeyInfo = (SubjectPublicKeyInfo) pemParser.readObject();
             X509EncodedKeySpec spec = new X509EncodedKeySpec(subjectPublicKeyInfo.getEncoded());
-            return KeyFactory.getInstance("RSA").generatePublic(spec);
+            return KeyFactory.getInstance("EC").generatePublic(spec);
         } finally {
             if (keyReader != null) {
                 keyReader.close();
@@ -284,15 +284,15 @@ public class RSA {
         }
     }
 
-    private PrivateKey pkcs1ToPrivateKey(String pkcs1PrivateKey) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+    private KeyPair pkcs1ToPrivateKey(String pkcs1PrivateKey) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         Reader reader = new StringReader(pkcs1PrivateKey);
-        PrivateKey res = null;
+        KeyPair res = null;
         PEMParser parser = null;
         try {
             parser = new PEMParser(reader);
             PEMKeyPair pair = (PEMKeyPair) parser.readObject();
             KeyPair kp = new JcaPEMKeyConverter().getKeyPair(pair);
-            res = kp.getPrivate();
+            res = kp;
         } finally {
             if (parser != null) {
                 parser.close();
@@ -306,14 +306,8 @@ public class RSA {
 
     private byte[] publicKeyToPkcs1(PublicKey publicKey) throws IOException {
         SubjectPublicKeyInfo spkInfo = SubjectPublicKeyInfo.getInstance(publicKey.getEncoded());
+        System.out.print(spkInfo);
         ASN1Primitive primitive = spkInfo.parsePublicKey();
-        return primitive.getEncoded();
-    }
-
-    private byte[] privateKeyToPkcs1(PrivateKey privateKey) throws IOException {
-        PrivateKeyInfo pkInfo = PrivateKeyInfo.getInstance(privateKey.getEncoded());
-        ASN1Encodable encodeable = pkInfo.parsePrivateKey();
-        ASN1Primitive primitive = encodeable.toASN1Primitive();
         return primitive.getEncoded();
     }
 
@@ -379,4 +373,12 @@ public class RSA {
         this.publicKey = keyPair.getPublic();
     }
 
+    public byte[] ecdh(RSA pubKey) throws NoSuchProviderException, NoSuchAlgorithmException, InvalidKeyException, InvalidKeySpecException {
+        KeyAgreement ka = KeyAgreement.getInstance("ECDH", "BC");
+        ka.init(this.privateKey);
+
+        Key ret = ka.doPhase(pubKey.publicKey, true);
+
+        return ret.getEncoded();
+    }
 }
