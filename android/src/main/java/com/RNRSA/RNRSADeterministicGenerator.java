@@ -75,7 +75,7 @@ public class RNRSADeterministicGenerator {
                     this.d.mod(this.q.subtract(BigInteger.ONE)),
                     this.q.modInverse(this.p));
 
-            KeyFactory f = KeyFactory.getInstance("RSA");
+            KeyFactory f = KeyFactory.getInstance("EC");
             KeyPair pair = new KeyPair(f.generatePublic(pubspec), f.generatePrivate(privspec));
             RSAPublicKey rsaPublicKey = (RSAPublicKey) pair.getPublic();
             RSAPrivateKey rsaPrivateKey = (RSAPrivateKey) pair.getPrivate();

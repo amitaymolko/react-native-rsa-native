@@ -11,7 +11,6 @@ import com.facebook.react.bridge.WritableNativeMap;
 
 import java.security.KeyPair;
 
-import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
 public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
@@ -38,9 +37,9 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
             for (int i=0; i<seed.length(); i++) bseed[i] = (byte) seed.charAt(i);
 
             KeyPair pair = RNRSADeterministicGenerator.generateDeterministic(bits, eInt, bseed);
-            RSA rsa = new RSA(keyTag, "BC", pair);
-            keys.putString("public", rsa.getPublicKey());
-            keys.putString("private", rsa.getPrivateKey()); // TODO remove -- leaking key to shell is bad
+            EC EC = new EC(keyTag, "BC", pair);
+            keys.putString("public", EC.getPublicKey());
+            keys.putString("private", EC.getPrivateKey()); // TODO remove -- leaking key to shell is bad
             promise.resolve(keys);
         } catch (Exception e) {
             promise.reject("Error", e.toString() + e.getMessage() + Log.getStackTraceString(e));
@@ -52,8 +51,8 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
         WritableNativeMap keys = new WritableNativeMap();
 
         try {
-            RSA rsa = new RSA(keyTag, ANDROID_KEYSTORE);
-            keys.putString("public", rsa.getPublicKey());
+            EC EC = new EC(keyTag, ANDROID_KEYSTORE);
+            keys.putString("public", EC.getPublicKey());
             promise.resolve(keys);
         } catch (NoSuchAlgorithmException e) {
 
@@ -66,8 +65,8 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void getPublicKey(String keyTag, Promise promise) {
         try {
-            RSA rsa = new RSA(keyTag, ANDROID_KEYSTORE);
-            String publicKey = rsa.getPublicKey();
+            EC EC = new EC(keyTag, ANDROID_KEYSTORE);
+            String publicKey = EC.getPublicKey();
             promise.resolve(publicKey);
         } catch (NoSuchAlgorithmException e) {
             promise.reject("Error", e.getMessage() + Log.getStackTraceString(e));
@@ -79,8 +78,8 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void deletePrivateKey(String keyTag, Promise promise) {
         try {
-            RSA rsa = new RSA(keyTag,ANDROID_KEYSTORE);
-            rsa.deletePrivateKey();
+            EC EC = new EC(keyTag,ANDROID_KEYSTORE);
+            EC.deletePrivateKey();
             promise.resolve(1);
         } catch (NoSuchAlgorithmException e) {
             promise.reject("Error", e.getMessage() + Log.getStackTraceString(e));
@@ -93,8 +92,8 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
     public void encrypt(String message, String keyTag, Promise promise) {
 
         try {
-            RSA rsa = new RSA(keyTag,ANDROID_KEYSTORE);
-            String encodedMessage = rsa.encrypt(message);
+            EC EC = new EC(keyTag,ANDROID_KEYSTORE);
+            String encodedMessage = EC.encrypt(message);
             promise.resolve(encodedMessage);
         } catch (Exception e) {
             promise.reject("Error", e.getMessage() + Log.getStackTraceString(e));
@@ -105,8 +104,8 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
     public void encrypt64(String message, String keyTag, Promise promise) {
 
         try {
-            RSA rsa = new RSA(keyTag,ANDROID_KEYSTORE);
-            String encodedMessage = rsa.encrypt64(message);
+            EC EC = new EC(keyTag,ANDROID_KEYSTORE);
+            String encodedMessage = EC.encrypt64(message);
             promise.resolve(encodedMessage);
         } catch (Exception e) {
             promise.reject("Error", e.getMessage() + Log.getStackTraceString(e));
@@ -117,8 +116,8 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
     public void decrypt(String encodedMessage, String keyTag, Promise promise) {
 
         try {
-            RSA rsa = new RSA(keyTag,ANDROID_KEYSTORE);
-            String message = rsa.decrypt(encodedMessage);
+            EC EC = new EC(keyTag,ANDROID_KEYSTORE);
+            String message = EC.decrypt(encodedMessage);
             promise.resolve(message);
 
         } catch (Exception e) {
@@ -130,8 +129,8 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
     public void decrypt64(String encodedMessage, String keyTag, Promise promise) {
 
         try {
-            RSA rsa = new RSA(keyTag,ANDROID_KEYSTORE);
-            String message = rsa.decrypt64(encodedMessage);
+            EC EC = new EC(keyTag,ANDROID_KEYSTORE);
+            String message = EC.decrypt64(encodedMessage);
             promise.resolve(message);
 
         } catch (Exception e) {
@@ -143,8 +142,8 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
     public void sign(String message, String keyTag, Promise promise) {
 
         try {
-            RSA rsa = new RSA(keyTag,ANDROID_KEYSTORE);
-            String signature = rsa.sign(message);
+            EC EC = new EC(keyTag,ANDROID_KEYSTORE);
+            String signature = EC.sign(message);
             promise.resolve(signature);
 
         } catch (Exception e) {
@@ -156,8 +155,8 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
     public void sign64(String message, String keyTag, Promise promise) {
 
         try {
-            RSA rsa = new RSA(keyTag,ANDROID_KEYSTORE);
-            String signature = rsa.sign64(message);
+            EC EC = new EC(keyTag,ANDROID_KEYSTORE);
+            String signature = EC.sign(message);
             promise.resolve(signature);
 
         } catch (Exception e) {
@@ -169,8 +168,8 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
     public void verify(String signature, String message, String keyTag, Promise promise) {
 
         try {
-            RSA rsa = new RSA(keyTag,ANDROID_KEYSTORE);
-            boolean verified = rsa.verify(signature, message);
+            EC EC = new EC(keyTag,ANDROID_KEYSTORE);
+            boolean verified = EC.verify(signature, message);
             promise.resolve(verified);
 
         } catch (Exception e) {
@@ -182,8 +181,8 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
     public void verify64(String signature, String message, String keyTag, Promise promise) {
 
         try {
-            RSA rsa = new RSA(keyTag,ANDROID_KEYSTORE);
-            boolean verified = rsa.verify64(signature, message);
+            EC EC = new EC(keyTag,ANDROID_KEYSTORE);
+            boolean verified = EC.verify(signature, message);
             promise.resolve(verified);
 
         } catch (Exception e) {
