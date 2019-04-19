@@ -65,6 +65,7 @@ Decrypt a given encrypted message using the private key.
 
 #### sign
 `static sign(message: string, privateKey : string) : Promise<string>`
+
 Sign a given message with the private key, so that any user with the message, the returned signature, and the matching public key can verify it was signed under this key.
 
 #### verify
@@ -83,6 +84,49 @@ the private key is stored in the underlying operating system's keychain
 using a tag which the app can use to access it.
 Methods then take this tag instead of the private key.
 
+#### generateKeys
+`static generateKeys(keySize : number, keyTag : string) : Promise<PublicKey>`
+
+Generate a public/private key pair of the given key size,
+and store the private key in the operating system keychain.
+
+#### generate
+`static generate(keyTag : string) : Promise<KeyPair>`
+
+Equivalent to `generateKeys(2048, keyTag)`
+
+#### encrypt
+`static encrypt(message : string, keyTag : string) : Promise<string>`
+
+Retrieve the public key associated with the key tag,
+and encrypt a given message with that key,
+so it is decryptable with the matching private key.
+
+#### decrypt
+`static decrypt(encodedMessage : string, keyTag : string) : Promise<string>`
+
+Decrypt a given encrypted message using the private key
+associated with the given key tag.
+
+#### sign
+`static sign(message: string, keyTag : string) : Promise<string>`
+
+Sign a given message with the private key associated with the given key tag,
+so that any user with
+the message, the returned signature, and the matching public key
+can verify it was signed under this key.
+
+#### verify
+`static verify(signature : string, message : string, keyTag : string) : Promise<boolean>`
+
+Verify whether or not a provided signature was produced by signing the given message with private key associated with the given key tag.
+
+#### deletePrivateKey
+`static deletePrivateKey(keyTag : string) : Promise<boolean>`
+
+Delete the private key from the operating system's keychain.
+Returns true if the key was removed successfully.
+
 ### KeyPair Type
 
 Note: The `KeyPair` type does not strictly exist.
@@ -92,6 +136,16 @@ of other methods.
 Property | Description
 --|--
 `private : string` | The RSA private key.
+`public : string` | The RSA public key.
+
+### PublicKey Type
+
+Note: The `PublicKey` type does not strictly exist.
+Documentation provided here for convenience of understanding the return types
+of other methods.
+
+Property | Description
+--|--
 `public : string` | The RSA public key.
 
 ## Usage
