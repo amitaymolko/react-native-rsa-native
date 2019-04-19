@@ -11,12 +11,12 @@ android 4.1+ (API 16)
 
 ## Status
 
-Features: 
-Generation, 
-Encryption, 
-Decryption, 
-Sign, 
-Verify, 
+Features:
+Generation,
+Encryption,
+Decryption,
+Sign,
+Verify,
 Keychain support
 
 ## Getting started
@@ -35,6 +35,32 @@ or:
 
 In your React Native Xcode project, right click on your project and go 'Add Files to ...', then navigate to <your-project-root>/node_modules/react-native-rsa-native/ios and select the RNRSA.xcodeproj file. Then in the build settings for your target under 'Link Binary With Libraries', add libRNRSA.a.
 
+## Documentation
+
+### RSA Class
+
+Method signature | Description
+--|--|--
+`static generateKeys(keySize : number) : Promise<KeyPair>` | Generate a public/private key pair of the given key size.
+`static generate() : Promise<KeyPair>` | Equivalent to `generateKeys(2048)`
+`static encrypt(message : string, publicKey : string) : Promise<string>` | Encrypt a given message with the provided public key, so it is decryptable with the matching private key.
+`static decrypt(encodedMessage : string, privateKey : string) : Promise<string>` | Decrypt a given encrypted message using the private key.
+`static sign(message: string, privateKey : string) : Promise<string>` | Sign a given message with the private key, so that any user with the message, the returned signature, and the matching public key can verify it was signed under this key.
+`static verify(signature : string, message : string, publicKey : string) : Promise<boolean>` | Verify whether or not a provided signature was produced by signing the given message with the private key paired to the provided public key.
+
+### RSAKeychain Class
+
+### KeyPair Type
+
+Note: The `KeyPair` type does not strictly exist.
+Documentation provided here for convenience of understanding the return types
+of other methods.
+
+Property | Description
+--|--
+`private : string` | The RSA private key.
+`public : string` | The RSA public key.
+
 ## Usage
 
 ```
@@ -47,7 +73,7 @@ RSA.generateKeys(4096) // set key size
     console.log('4096 public:', keys.public) // the public key
   })
 
-RSA.generate() 
+RSA.generate()
   .then(keys => {
     console.log(keys.private) // the private key
     console.log(keys.public) // the public key
