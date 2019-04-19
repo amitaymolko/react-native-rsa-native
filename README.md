@@ -37,6 +37,12 @@ In your React Native Xcode project, right click on your project and go 'Add File
 
 ## Documentation
 ### RSA Class
+
+A class that performs RSA cryptographic primitives
+in a simple and straightforward manner.
+If you would prefer to use the underlying operating system's built-in
+security keychain, use [the RSAKeychain Class](#rsakeychain-class) instead.
+
 #### generateKeys
 `static generateKeys(keySize : number) : Promise<KeyPair>`
 
@@ -67,6 +73,15 @@ Sign a given message with the private key, so that any user with the message, th
 Verify whether or not a provided signature was produced by signing the given message with the private key paired to the provided public key.
 
 ### RSAKeychain Class
+
+Like [the RSA Class](#rsa-class),
+but when its methods are called, instead of directly accessing the private key,
+the private key is stored in the underlying operating system's keychain
+(see documentation
+[for iOS](https://developer.apple.com/documentation/security/keychain_services) and
+[for Android](https://developer.android.com/reference/android/security/KeyChain))
+using a tag which the app can use to access it.
+Methods then take this tag instead of the private key.
 
 ### KeyPair Type
 
