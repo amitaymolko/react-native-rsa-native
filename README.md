@@ -35,6 +35,72 @@ or:
 
 In your React Native Xcode project, right click on your project and go 'Add Files to ...', then navigate to <your-project-root>/node_modules/react-native-rsa-native/ios and select the RNRSA.xcodeproj file. Then in the build settings for your target under 'Link Binary With Libraries', add libRNRSA.a.
 
+## Example Usage
+
+These basic examples show a typical use case using both promise chains
+and async/await.
+See [the full API documentation below](#documentation)
+for more detail on the methods available.
+
+### Encrypt a message
+
+Encrypt a message and subsequently decrypt it,
+using the RSA class in a promise chain structure.
+
+```js
+import { RSA } from 'react-native-rsa-native';
+
+let message = "my secret message";
+
+RSA.generateKeys(4096) // set key size
+.then(keys => {
+    console.log('4096 private:', keys.private); // the private key
+    console.log('4096 public:', keys.public); // the public key
+    RSA.encrypt(message, keys.public)
+    .then(encodedMessage => {
+        console.log(`the encoded message is ${encodedMessage}`);
+        RSA.decrypt(encodedMessage, keys.private)
+        .then(decryptedMessage => {
+            console.log(`The original message was ${decryptedMessage}`);
+        });
+    });
+});
+```
+
+### Sign a message
+
+Sign a message and subsequently verify it,
+using the RSAKeychain class in an async/await structure.
+
+```typescript
+import { RSAKeychain } from 'react-native-rsa-native';
+
+async main() {
+    let keyTag = 'com.domain.mykey';
+    let message = "message to be verified";
+
+    let publicKey = await generateKeyPair(keyTag);
+    // Share the generated public key with third parties as desired.
+
+    let messageSignature = await RSAKeychain.sign(message, keyTag);
+
+    if (await RSAKeychain.verify(messageSignature, message, keyTag)) {
+        // The signature matches: trust this message.
+    } else {
+        // The signature does not match.
+    }
+
+    await RSAKeychain.deletePrivateKey(keyTag);
+}
+
+async generateKeyPair(keyTag : string) {
+    let keys = await RSAKeychain.generate(keyTag);
+    return keys.public;
+}
+```
+
+Check out example App.js for a full example
+
 ## Documentation
 ### RSA Class
 
@@ -147,82 +213,6 @@ of other methods.
 Property | Description
 --|--
 `public : string` | The RSA public key.
-
-## Usage
-
-```
-
-import {RSA, RSAKeychain} from 'react-native-rsa-native';
-
-RSA.generateKeys(4096) // set key size
-  .then(keys => {
-    console.log('4096 private:', keys.private) // the private key
-    console.log('4096 public:', keys.public) // the public key
-  })
-
-RSA.generate()
-  .then(keys => {
-    console.log(keys.private) // the private key
-    console.log(keys.public) // the public key
-    RSA.encrypt('1234', keys.public)
-      .then(encodedMessage => {
-        RSA.decrypt(encodedMessage, keys.private)
-          .then(message => {
-            console.log(message);
-          })
-        })
-
-    RSA.sign(secret, keys.private)
-      .then(signature => {
-        console.log(signature);
-
-        RSA.verify(signature, secret, keys.public)
-          .then(valid => {
-            console.log(valid);
-          })
-        })
-  })
-
-// Example utilizing the keychain for private key secure storage
-
-let keyTag = 'com.domain.mykey';
-let secret = "secret message";
-
-RSAKeychain.generate(keyTag)
-  .then(keys => {
-    console.log(keys.public);
-    console.log(secret);
-
-    return RSAKeychain.encrypt(secret, keyTag)
-      .then(encodedMessage => {
-        console.log(encodedMessage);
-
-        RSAKeychain.decrypt(encodedMessage, keyTag)
-          .then(message => {
-            console.log(message);
-          })
-        })
-  })
-  .then(() => {
-  return RSAKeychain.sign(secret, keyTag)
-    .then(signature => {
-      console.log('signature', signature);
-
-      RSAKeychain.verify(signature, secret, keyTag)
-        .then(valid => {
-          console.log('verified', valid);
-        })
-      })
-  })
-  .then(() => {
-    RSAKeychain.deletePrivateKey(keyTag)
-    .then( success => {
-      console.log('delete success', success)
-    })
-  });
-```
-Check out example App.js for a full example
-
 
 ## Credit
 
