@@ -36,17 +36,35 @@ or:
 In your React Native Xcode project, right click on your project and go 'Add Files to ...', then navigate to <your-project-root>/node_modules/react-native-rsa-native/ios and select the RNRSA.xcodeproj file. Then in the build settings for your target under 'Link Binary With Libraries', add libRNRSA.a.
 
 ## Documentation
-
 ### RSA Class
+#### generateKeys
+`static generateKeys(keySize : number) : Promise<KeyPair>`
 
-Method signature | Description
---|--|--
-`static generateKeys(keySize : number) : Promise<KeyPair>` | Generate a public/private key pair of the given key size.
-`static generate() : Promise<KeyPair>` | Equivalent to `generateKeys(2048)`
-`static encrypt(message : string, publicKey : string) : Promise<string>` | Encrypt a given message with the provided public key, so it is decryptable with the matching private key.
-`static decrypt(encodedMessage : string, privateKey : string) : Promise<string>` | Decrypt a given encrypted message using the private key.
-`static sign(message: string, privateKey : string) : Promise<string>` | Sign a given message with the private key, so that any user with the message, the returned signature, and the matching public key can verify it was signed under this key.
-`static verify(signature : string, message : string, publicKey : string) : Promise<boolean>` | Verify whether or not a provided signature was produced by signing the given message with the private key paired to the provided public key.
+Generate a public/private key pair of the given key size.
+
+#### generate
+`static generate() : Promise<KeyPair>`
+
+Equivalent to `generateKeys(2048)`
+
+#### encrypt
+`static encrypt(message : string, publicKey : string) : Promise<string>`
+
+Encrypt a given message with the provided public key, so it is decryptable with the matching private key.
+
+#### decrypt
+`static decrypt(encodedMessage : string, privateKey : string) : Promise<string>`
+
+Decrypt a given encrypted message using the private key.
+
+#### sign
+`static sign(message: string, privateKey : string) : Promise<string>`
+Sign a given message with the private key, so that any user with the message, the returned signature, and the matching public key can verify it was signed under this key.
+
+#### verify
+`static verify(signature : string, message : string, publicKey : string) : Promise<boolean>`
+
+Verify whether or not a provided signature was produced by signing the given message with the private key paired to the provided public key.
 
 ### RSAKeychain Class
 
