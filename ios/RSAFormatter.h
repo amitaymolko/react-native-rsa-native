@@ -13,5 +13,6 @@
 + (NSString *)PEMFormattedPublicKey:(NSData *)publicKeyData;
 + (NSString *)PEMFormattedPrivateKey:(NSData *)privateKeyData;
 + (NSString *)stripHeaders:(NSString *)pemString;
++ (NSString *)ASN1FormattedPublicKey:(NSData*)keyBits;
 
 @end

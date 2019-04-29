@@ -91,6 +91,21 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
     return [self externalRepresentationForPrivateKey:self.privateKeyRef];
 }
 
+- (NSString *)encodedASN1PublicKey {
+    if (self.keyTag) {
+        __block NSString *encodedPublicKey = nil;
+        
+        [self performWithPublicKeyTag:self.keyTag block:^(SecKeyRef publicKey) {
+            encodedPublicKey = [self externalASN1Representation:publicKey];
+        }];
+        
+        return encodedPublicKey;
+    }
+    
+    return [self externalASN1Representation:self.publicKeyRef];
+}
+
+
 - (void)setPublicKey:(NSString *)publicKey {
     publicKey = [RSAFormatter stripHeaders: publicKey];
     NSDictionary* options = @{(id)kSecAttrKeyType: (id)kSecAttrKeyTypeRSA,
@@ -343,6 +358,11 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
 - (NSString *) externalRepresentationForPrivateKey:(SecKeyRef)key {
     NSData *keyData = [self dataForKey:key];
     return [RSAFormatter PEMFormattedPrivateKey:keyData];
+}
+
+- (NSString *) externalASN1Representation:(SecKeyRef)key {
+    NSData *keyData = [self dataForKey:key];
+    return [RSAFormatter ASN1FormattedPublicKey:keyData];
 }
 
 

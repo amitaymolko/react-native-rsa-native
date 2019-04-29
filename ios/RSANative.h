@@ -20,6 +20,7 @@
 
 - (NSString *)encodedPublicKey;
 - (NSString *)encodedPrivateKey;
+- (NSString *)encodedASN1PublicKey;
 
 - (NSString *)encrypt:(NSString *)message;
 - (NSString *)decrypt:(NSString *)encodedMessage;
