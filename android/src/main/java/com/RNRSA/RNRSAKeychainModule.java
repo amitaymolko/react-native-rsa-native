@@ -15,6 +15,9 @@ import java.security.NoSuchAlgorithmException;
 
 public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
 
+  private static final String SHA256WITHRSA = "SHA256withRSA";
+  private static final String SHA512WITHRSA = "SHA512withRSA";
+
   private final ReactApplicationContext reactContext;
 
   public RNRSAKeychainModule(ReactApplicationContext reactContext) {
@@ -25,6 +28,14 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
   @Override
   public String getName() {
     return "RNRSAKeychain";
+  }
+
+  @Override
+  public Map<String, Object> getConstants() {
+    final Map<String, Object> constants = new HashMap<>();
+    constants.put(SHA256WITHRSA, SHA256WITHRSA);
+    constants.put(SHA512WITHRSA, SHA512WITHRSA);
+    return constants;
   }
 
   @ReactMethod
@@ -146,7 +157,24 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
       public void run() {
         try {
           RSA rsa = new RSA(keyTag);
-          String signature = rsa.sign(message);
+          String signature = rsa.sign(message, SHA512WITHRSA);
+          promise.resolve(signature);
+
+        } catch (Exception e) {
+          promise.reject("Error", e.getMessage());
+        }
+      }
+    });
+  }
+
+  @ReactMethod
+  public void sign(final String message, final String keyTag, final String signature, final Promise promise) {
+    AsyncTask.execute(new Runnable() {
+      @Override
+      public void run() {
+        try {
+          RSA rsa = new RSA(keyTag);
+          String signature = rsa.sign(message, signature);
           promise.resolve(signature);
 
         } catch (Exception e) {
