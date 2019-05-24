@@ -170,7 +170,7 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void sign(final String message, final String keyTag, final String algorithm, final Promise promise) {
+  public void signWithAlgorithm(final String message, final String keyTag, final String algorithm, final Promise promise) {
     AsyncTask.execute(new Runnable() {
       @Override
       public void run() {

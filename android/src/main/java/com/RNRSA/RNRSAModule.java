@@ -13,8 +13,13 @@ import com.facebook.react.bridge.Promise;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RNRSAModule extends ReactContextBaseJavaModule {
+
+  private static final String SHA256WITHRSA = "SHA256withRSA";
+  private static final String SHA512WITHRSA = "SHA512withRSA";
 
   private final ReactApplicationContext reactContext;
 
@@ -26,6 +31,14 @@ public class RNRSAModule extends ReactContextBaseJavaModule {
   @Override
   public String getName() {
     return "RNRSA";
+  }
+
+  @Override
+  public Map<String, Object> getConstants() {
+    final Map<String, Object> constants = new HashMap<>();
+    constants.put(SHA256WITHRSA, SHA256WITHRSA);
+    constants.put(SHA512WITHRSA, SHA512WITHRSA);
+    return constants;
   }
 
   @ReactMethod
@@ -133,7 +146,7 @@ public class RNRSAModule extends ReactContextBaseJavaModule {
         try {
           RSA rsa = new RSA();
           rsa.setPrivateKey(privateKeyString);
-          String signature = rsa.sign(message);
+          String signature = rsa.sign(message, SHA512WITHRSA);
           promise.resolve(signature);
 
         } catch (Exception e) {
