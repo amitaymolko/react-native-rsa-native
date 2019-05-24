@@ -12,6 +12,8 @@ import com.facebook.react.bridge.WritableNativeMap;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
 
