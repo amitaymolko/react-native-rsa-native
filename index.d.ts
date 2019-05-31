@@ -23,11 +23,11 @@ declare module 'react-native-rsa-native' {
 		export function encrypt(data: string, keyTag: string): Promise<string>;
 		export function decrypt(data: string, keyTag: string): Promise<string>;
 		export function sign(data: string, keyTag: string): Promise<string>;
-		export function sign(data: string, keyTag: string, signature?: 'SHA256WithRSA' | 'SHA512WithRSA'): Promise<string>;
+		export function sign(data: string, keyTag: string, signature?: 'SHA256withRSA' | 'SHA512withRSA'): Promise<string>;
 		export function verify(data: string, secretToVerify: string, keyTag: string): Promise<boolean>;
 		export function getPublicKey(keyTag: string): Promise<string | undefined>;
-		export const SHA256WithRSA: string;
-		export const SHA512WithRSA: string;
+		export const SHA256withRSA: string;
+		export const SHA512withRSA: string;
 		export const Digest_SHA256: string;
 		export const Digest_SHA512: string;
 	}
