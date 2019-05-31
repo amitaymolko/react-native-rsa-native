@@ -27,7 +27,7 @@ RCT_EXPORT_METHOD(generateKeys:(int)keySize resolve:(RCTPromiseResolveBlock)reso
                   rejecter:(RCTPromiseRejectBlock)reject) {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         RSANative *rsa = [[RSANative alloc] init];
-        [rsa generate:keySize];
+        [rsa generate:keySize withDigest: @"Digest_SHA512"];
         NSDictionary *keys = @{
                             @"private" : [rsa encodedPrivateKey],
                             @"public" : [rsa encodedPublicKey]
@@ -142,7 +142,7 @@ RCT_EXPORT_METHOD(generateWithDigest:(NSString *)keyTag digest:(NSString *)diges
                   rejecter:(RCTPromiseRejectBlock)reject) {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         RSANative *rsa = [[RSANative alloc] initWithKeyTag:keyTag];
-        [rsa generate:keySize withDigest: digest];
+        [rsa generate:2048 withDigest: digest];
         NSDictionary *keys = @{@"public" : [rsa encodedPublicKey]};
         resolve(keys);
     });
@@ -157,7 +157,7 @@ RCT_EXPORT_METHOD(generateKeys:(NSString *)keyTag keySize:(int)keySize resolve:(
                   rejecter:(RCTPromiseRejectBlock)reject) {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         RSANative *rsa = [[RSANative alloc] initWithKeyTag:keyTag];
-        [rsa generate:keySize];
+        [rsa generate:keySize withDigest: @"Digest_SHA512"];
         NSDictionary *keys = @{@"public" : [rsa encodedPublicKey]};
         resolve(keys);
     });
