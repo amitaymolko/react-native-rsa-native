@@ -186,7 +186,7 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
       public void run() {
         try {
           RSA rsa = new RSA(keyTag);
-          String signature = rsa.sign(message, SHA512WITHRSA);
+          String signature = rsa.sign(message, SHA512WithRSA);
           promise.resolve(signature);
 
         } catch (Exception e) {

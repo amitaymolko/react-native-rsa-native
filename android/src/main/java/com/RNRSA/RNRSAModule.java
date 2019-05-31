@@ -18,8 +18,8 @@ import java.util.Map;
 
 public class RNRSAModule extends ReactContextBaseJavaModule {
 
-  private static final String SHA256WITHRSA = "SHA256withRSA";
-  private static final String SHA512WITHRSA = "SHA512withRSA";
+  private static final String SHA256WithRSA = "SHA256withRSA";
+  private static final String SHA512WithRSA = "SHA512withRSA";
 
   private final ReactApplicationContext reactContext;
 
@@ -36,8 +36,8 @@ public class RNRSAModule extends ReactContextBaseJavaModule {
   @Override
   public Map<String, Object> getConstants() {
     final Map<String, Object> constants = new HashMap<>();
-    constants.put(SHA256WITHRSA, SHA256WITHRSA);
-    constants.put(SHA512WITHRSA, SHA512WITHRSA);
+    constants.put(SHA256WithRSA, SHA256WithRSA);
+    constants.put(SHA512WithRSA, SHA512WithRSA);
     return constants;
   }
 
@@ -146,7 +146,7 @@ public class RNRSAModule extends ReactContextBaseJavaModule {
         try {
           RSA rsa = new RSA();
           rsa.setPrivateKey(privateKeyString);
-          String signature = rsa.sign(message, SHA512WITHRSA);
+          String signature = rsa.sign(message, SHA512WithRSA);
           promise.resolve(signature);
 
         } catch (Exception e) {
