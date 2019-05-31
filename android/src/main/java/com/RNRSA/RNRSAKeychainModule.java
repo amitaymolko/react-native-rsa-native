@@ -17,8 +17,10 @@ import java.util.Map;
 
 public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
 
-  private static final String SHA256WITHRSA = "SHA256withRSA";
-  private static final String SHA512WITHRSA = "SHA512withRSA";
+  private static final String SHA256WithRSA = "SHA256withRSA";
+  private static final String SHA512WithRSA = "SHA512withRSA";
+  private static final String Digest_SHA256 = "SHA-256";
+  private static final String Digest_SHA512 = "SHA-512";
 
   private final ReactApplicationContext reactContext;
 
@@ -35,9 +37,34 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
   @Override
   public Map<String, Object> getConstants() {
     final Map<String, Object> constants = new HashMap<>();
-    constants.put(SHA256WITHRSA, SHA256WITHRSA);
-    constants.put(SHA512WITHRSA, SHA512WITHRSA);
+    constants.put(SHA256WithRSA, SHA256WithRSA);
+    constants.put(SHA512WithRSA, SHA512WithRSA);
+    constants.put(Digest_SHA256, Digest_SHA256);
+    constants.put(Digest_SHA512, Digest_SHA512);
     return constants;
+  }
+
+  @ReactMethod
+  public void generateWithDigest(final String keyTag, final String digest, final Promise promise) {
+    final ReactApplicationContext reactContext = this.reactContext;
+
+    AsyncTask.execute(new Runnable() {
+      @Override
+      public void run() {
+        WritableNativeMap keys = new WritableNativeMap();
+
+        try {
+          RSA rsa = new RSA();
+          rsa.generate(keyTag, 2048, digest, reactContext);
+          keys.putString("public", rsa.getPublicKey());
+          promise.resolve(keys);
+        } catch (NoSuchAlgorithmException e) {
+          promise.reject("Error", e.getMessage());
+        } catch (Exception e) {
+          promise.reject("Error", e.getMessage());
+        }
+      }
+    });
   }
 
   @ReactMethod
@@ -56,7 +83,7 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
 
         try {
           RSA rsa = new RSA();
-          rsa.generate(keyTag, keySize, reactContext);
+          rsa.generate(keyTag, keySize, Digest_SHA512, reactContext);
           keys.putString("public", rsa.getPublicKey());
           promise.resolve(keys);
         } catch (NoSuchAlgorithmException e) {

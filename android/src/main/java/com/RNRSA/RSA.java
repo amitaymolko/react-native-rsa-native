@@ -1,14 +1,11 @@
 package com.RNRSA;
 
 
-import android.annotation.TargetApi;
-import android.os.Build;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
 import android.security.KeyPairGeneratorSpec;
 
 import android.util.Base64;
-import android.util.Log;
 import android.content.Context;
 
 import java.util.Calendar;
@@ -30,10 +27,8 @@ import java.security.InvalidKeyException;
 import java.security.Signature;
 import java.security.SignatureException;
 import java.security.UnrecoverableEntryException;
-import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.spec.X509EncodedKeySpec;
-import java.security.spec.RSAPublicKeySpec;
 import java.security.spec.RSAPrivateKeySpec;
 import java.security.spec.InvalidKeySpecException;
 
@@ -295,10 +290,13 @@ public class RSA {
     }
 
     public void generate(String keyTag, Context context) throws IOException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, NoSuchProviderException {
-        this.generate(keyTag, 2048, context);
+        this.generate(keyTag, 2048, null, context);
     }
 
-    public void generate(String keyTag, int keySize, Context context) throws IOException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, NoSuchProviderException {
+    public void generate(String keyTag, int keySize, String digest, Context context) throws IOException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, NoSuchProviderException {
+        if (digest == null || digest.isEmpty()) {
+            digest = DIGEST_SHA512;
+        }
         KeyPairGenerator kpg = KeyPairGenerator.getInstance(ALGORITHM, "AndroidKeyStore");
         if (android.os.Build.VERSION.SDK_INT >= 23) {
             kpg.initialize(
@@ -307,7 +305,7 @@ public class RSA {
                     PURPOSE_ENCRYPT | PURPOSE_DECRYPT | PURPOSE_SIGN | PURPOSE_VERIFY
                 )
                 .setKeySize(keySize)
-                .setDigests(DIGEST_SHA256, DIGEST_SHA512)
+                .setDigests(digest)
                 .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_RSA_PKCS1)
                 .setSignaturePaddings(KeyProperties.SIGNATURE_PADDING_RSA_PKCS1)
                 .build()
