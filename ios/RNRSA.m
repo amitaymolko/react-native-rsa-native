@@ -9,6 +9,13 @@
 
 RCT_EXPORT_MODULE()
 
+- (NSDictionary *)constantsToExport
+{
+    return @{
+             @"SHA256WithRSA": @"SHA256WithRSA",
+             @"SHA512WithRSA": @"SHA512WithRSA"
+             };
+}
 // Key based API, provide the public or private key with each call - pending discussions with @amitaymolko
 
 RCT_EXPORT_METHOD(generate:(RCTPromiseResolveBlock)resolve
@@ -75,7 +82,7 @@ RCT_EXPORT_METHOD(sign:(NSString *)message withKey:(NSString *)key resolve:(RCTP
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         RSANative *rsa = [[RSANative alloc] init];
         rsa.privateKey = key;
-        NSString *signature = [rsa sign:message];
+        NSString *signature = [rsa sign:message withAlgorithm: @"SHA512WithRSA"];
         resolve(signature);
     });
 }
@@ -120,7 +127,26 @@ RCT_EXPORT_METHOD(verify64:(NSString *)signature withMessage:(NSString *)message
 
 RCT_EXPORT_MODULE()
 
+- (NSDictionary *)constantsToExport
+{
+    return @{
+             @"SHA256WithRSA": @"SHA256WithRSA",
+             @"SHA512WithRSA": @"SHA512WithRSA",
+             @"Digest_SHA256": @"SHA-256",
+             @"Digest_SHA512": @"SHA-512"
+            };
+}
 // Keychain based API, provide a key chain tag with each call
+
+RCT_EXPORT_METHOD(generateWithDigest:(NSString *)keyTag digest:(NSString *)digest resolve:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject) {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        RSANative *rsa = [[RSANative alloc] initWithKeyTag:keyTag];
+        [rsa generate:keySize withDigest: digest];
+        NSDictionary *keys = @{@"public" : [rsa encodedPublicKey]};
+        resolve(keys);
+    });
+}
 
 RCT_EXPORT_METHOD(generate:(NSString *)keyTag resolve:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject) {
@@ -162,11 +188,20 @@ RCT_EXPORT_METHOD(decrypt:(NSString *)encodedMessage withKeyTag:(NSString *)keyT
     });
 }
 
+RCT_EXPORT_METHOD(signWithAlgorithm:(NSString *)message withKeyTag:(NSString *)keyTag withAlgorithm:(NSString *)algorithm resolve:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject) {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        RSANative *rsa = [[RSANative alloc] initWithKeyTag:keyTag];
+        NSString *signature = [rsa sign:message withAlgorithm: algorithm];
+        resolve(signature);
+    });
+}
+
 RCT_EXPORT_METHOD(sign:(NSString *)message withKeyTag:(NSString *)keyTag resolve:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject) {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         RSANative *rsa = [[RSANative alloc] initWithKeyTag:keyTag];
-        NSString *signature = [rsa sign:message];
+        NSString *signature = [rsa sign:message withAlgorithm: @"SHA512WithRSA"];
         resolve(signature);
     });
 }
