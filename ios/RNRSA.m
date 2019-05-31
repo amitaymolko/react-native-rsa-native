@@ -7,6 +7,11 @@
     return dispatch_get_main_queue();
 }
 
++ (BOOL)requiresMainQueueSetup
+{
+    return YES;
+}
+
 RCT_EXPORT_MODULE()
 
 - (NSDictionary *)constantsToExport
@@ -123,6 +128,11 @@ RCT_EXPORT_METHOD(verify64:(NSString *)signature withMessage:(NSString *)message
 
 - (dispatch_queue_t)methodQueue {
     return dispatch_get_main_queue();
+}
+
++ (BOOL)requiresMainQueueSetup
+{
+    return YES;
 }
 
 RCT_EXPORT_MODULE()
