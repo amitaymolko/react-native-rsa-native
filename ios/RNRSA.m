@@ -9,7 +9,7 @@
 
 + (BOOL)requiresMainQueueSetup
 {
-    return YES;
+    return NO;
 }
 
 RCT_EXPORT_MODULE()
@@ -132,7 +132,7 @@ RCT_EXPORT_METHOD(verify64:(NSString *)signature withMessage:(NSString *)message
 
 + (BOOL)requiresMainQueueSetup
 {
-    return YES;
+    return NO;
 }
 
 RCT_EXPORT_MODULE()
