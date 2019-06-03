@@ -87,7 +87,7 @@ RCT_EXPORT_METHOD(sign:(NSString *)message withKey:(NSString *)key resolve:(RCTP
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         RSANative *rsa = [[RSANative alloc] init];
         rsa.privateKey = key;
-        NSString *signature = [rsa sign:message withAlgorithm: @"SHA512withRSA"];
+        NSString *signature = [rsa sign:message withAlgorithm: @"SHA512withRSA" withEncodeOption: NSDataBase64Encoding64CharacterLineLength];
         resolve(signature);
     });
 }
@@ -202,7 +202,7 @@ RCT_EXPORT_METHOD(signWithAlgorithm:(NSString *)message withKeyTag:(NSString *)k
                   rejecter:(RCTPromiseRejectBlock)reject) {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         RSANative *rsa = [[RSANative alloc] initWithKeyTag:keyTag];
-        NSString *signature = [rsa sign:message withAlgorithm: algorithm];
+        NSString *signature = [rsa sign:message withAlgorithm: algorithm withEncodeOption: 0];
         resolve(signature);
     });
 }
@@ -211,7 +211,7 @@ RCT_EXPORT_METHOD(sign:(NSString *)message withKeyTag:(NSString *)keyTag resolve
                   rejecter:(RCTPromiseRejectBlock)reject) {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         RSANative *rsa = [[RSANative alloc] initWithKeyTag:keyTag];
-        NSString *signature = [rsa sign:message withAlgorithm: @"SHA512withRSA"];
+        NSString *signature = [rsa sign:message withAlgorithm: @"SHA512withRSA" withEncodeOption: NSDataBase64Encoding64CharacterLineLength];
         resolve(signature);
     });
 }
