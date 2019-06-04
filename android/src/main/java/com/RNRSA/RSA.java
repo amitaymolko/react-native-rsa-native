@@ -290,13 +290,11 @@ public class RSA {
     }
 
     public void generate(String keyTag, Context context) throws IOException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, NoSuchProviderException {
-        this.generate(keyTag, 2048, null, context);
+        this.generate(keyTag, 2048, context);
     }
 
-    public void generate(String keyTag, int keySize, String digest, Context context) throws IOException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, NoSuchProviderException {
-        if (digest == null || digest.isEmpty()) {
-            digest = DIGEST_SHA512;
-        }
+    public void generate(String keyTag, int keySize, Context context) throws IOException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, NoSuchProviderException {
+
         KeyPairGenerator kpg = KeyPairGenerator.getInstance(ALGORITHM, "AndroidKeyStore");
         if (android.os.Build.VERSION.SDK_INT >= 23) {
             kpg.initialize(
@@ -305,7 +303,7 @@ public class RSA {
                     PURPOSE_ENCRYPT | PURPOSE_DECRYPT | PURPOSE_SIGN | PURPOSE_VERIFY
                 )
                 .setKeySize(keySize)
-                .setDigests(digest)
+                .setDigests(DIGEST_SHA256, DIGEST_SHA512)
                 .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_RSA_PKCS1)
                 .setSignaturePaddings(KeyProperties.SIGNATURE_PADDING_RSA_PKCS1)
                 .build()

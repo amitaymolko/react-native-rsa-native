@@ -15,7 +15,7 @@
 
 - (instancetype)initWithKeyTag:(NSString *)keyTag;
 
-- (void)generate:(int)keySize withDigest:(NSString *)digest;
+- (void)generate:(int)keySize;
 - (void)deletePrivateKey;
 
 - (NSString *)encodedPublicKey;

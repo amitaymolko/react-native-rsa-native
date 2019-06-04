@@ -32,7 +32,7 @@ RCT_EXPORT_METHOD(generateKeys:(int)keySize resolve:(RCTPromiseResolveBlock)reso
                   rejecter:(RCTPromiseRejectBlock)reject) {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         RSANative *rsa = [[RSANative alloc] init];
-        [rsa generate:keySize withDigest: @"Digest_SHA512"];
+        [rsa generate:keySize];
         NSDictionary *keys = @{
                             @"private" : [rsa encodedPrivateKey],
                             @"public" : [rsa encodedPublicKey]
@@ -141,22 +141,10 @@ RCT_EXPORT_MODULE()
 {
     return @{
              @"SHA256withRSA": @"SHA256withRSA",
-             @"SHA512withRSA": @"SHA512withRSA",
-             @"Digest_SHA256": @"SHA-256",
-             @"Digest_SHA512": @"SHA-512"
+             @"SHA512withRSA": @"SHA512withRSA"
             };
 }
 // Keychain based API, provide a key chain tag with each call
-
-RCT_EXPORT_METHOD(generateWithDigest:(NSString *)keyTag digest:(NSString *)digest resolve:(RCTPromiseResolveBlock)resolve
-                  rejecter:(RCTPromiseRejectBlock)reject) {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        RSANative *rsa = [[RSANative alloc] initWithKeyTag:keyTag];
-        [rsa generate:2048 withDigest: digest];
-        NSDictionary *keys = @{@"public" : [rsa encodedPublicKey]};
-        resolve(keys);
-    });
-}
 
 RCT_EXPORT_METHOD(generate:(NSString *)keyTag resolve:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject) {
@@ -167,7 +155,7 @@ RCT_EXPORT_METHOD(generateKeys:(NSString *)keyTag keySize:(int)keySize resolve:(
                   rejecter:(RCTPromiseRejectBlock)reject) {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         RSANative *rsa = [[RSANative alloc] initWithKeyTag:keyTag];
-        [rsa generate:keySize withDigest: @"Digest_SHA512"];
+        [rsa generate:keySize];
         NSDictionary *keys = @{@"public" : [rsa encodedPublicKey]};
         resolve(keys);
     });

@@ -22,7 +22,7 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
     return self;
 }
 
-- (void)generate:(int)keySize withDigest:(NSString *)digest {
+- (void)generate:(int)keySize {
     NSMutableDictionary *privateKeyAttributes = [NSMutableDictionary dictionary];
 
     if (self.keyTag) {

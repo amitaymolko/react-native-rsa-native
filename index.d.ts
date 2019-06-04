@@ -18,7 +18,6 @@ declare module 'react-native-rsa-native' {
 	namespace RSAKeychain {
 		export function generate(keyTag: string, keySize: number): Promise<PublicKey>;
 		export function generateKeys(keyTag: string, keySize: number): Promise<PublicKey>;
-		export function generateWithDigest(keyTag: string, digest: string): Promise<PublicKey>;
 		export function deletePrivateKey(keyTag: string): Promise<boolean>;
 		export function encrypt(data: string, keyTag: string): Promise<string>;
 		export function decrypt(data: string, keyTag: string): Promise<string>;
@@ -28,8 +27,6 @@ declare module 'react-native-rsa-native' {
 		export function getPublicKey(keyTag: string): Promise<string | undefined>;
 		export const SHA256withRSA: string;
 		export const SHA512withRSA: string;
-		export const Digest_SHA256: string;
-		export const Digest_SHA512: string;
 	}
 
 	export { RSA, RSAKeychain };
