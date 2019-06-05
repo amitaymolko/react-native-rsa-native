@@ -157,6 +157,23 @@ public class RNRSAModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
+  public void signWithAlgorithm(final String message, final String keyTag, final String algorithm, final Promise promise) {
+    AsyncTask.execute(new Runnable() {
+      @Override
+      public void run() {
+        try {
+          RSA rsa = new RSA(keyTag);
+          String signature = rsa.sign(message, algorithm);
+          promise.resolve(signature);
+
+        } catch (Exception e) {
+          promise.reject("Error", e.getMessage());
+        }
+      }
+    });
+  }
+
+  @ReactMethod
   public void sign64(final String message, final String privateKeyString, final Promise promise) {
     AsyncTask.execute(new Runnable() {
       @Override
