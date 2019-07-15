@@ -1,6 +1,6 @@
 {
   "name": "react-native-rsa-native",
-  "version": "1.0.25",
+  "version": "1.0.26",
   "description": "A native implementation of RSA key generation and encryption/decryption.",
   "main": "index.js",
   "types": "index.d.ts",
@@ -18,7 +18,9 @@
   "bugs": {
     "url": "https://github.com/amitaymolko/react-native-rsa-native/issues"
   },
-  "author": "Amitay Molko",
+  "author": {
+    "name": "Amitay Molko"
+  },
   "license": "MIT",
-  "homepage": "https://github.com/amitaymolko/react-native-rsa-native#readme"
+  "homepage": "https://github.com/amitaymolko/react-native-rsa-native.git"
 }
