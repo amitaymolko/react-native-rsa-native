@@ -13,7 +13,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/amitaymolko/react-native-rsa-native.git"
+    "url": "https://github.com/amitaymolko/react-native-rsa-native.git"
   },
   "bugs": {
     "url": "https://github.com/amitaymolko/react-native-rsa-native/issues"
@@ -22,5 +22,5 @@
     "name": "Amitay Molko"
   },
   "license": "MIT",
-  "homepage": "https://github.com/amitaymolko/react-native-rsa-native.git"
+  "homepage": "https://github.com/amitaymolko/react-native-rsa-native#readme"
 }
