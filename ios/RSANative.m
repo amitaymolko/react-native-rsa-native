@@ -215,21 +215,21 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
 
 - (NSString *)sign64:(NSString *)b64message {
     NSData *data = [[NSData alloc] initWithBase64EncodedString:b64message options:NSDataBase64DecodingIgnoreUnknownCharacters];
-    NSString *encodedSignature = [self _sign: data];
+    NSString *encodedSignature = [self _sign: data withAlgorithm: @"SHA512withRSA" withEncodeOption: NSDataBase64Encoding64CharacterLineLength];
     return encodedSignature;
 }
 
-- (NSString *)sign:(NSString *)message {
+- (NSString *)sign:(NSString *)message withAlgorithm:(NSString *)algorithm withEncodeOption: (NSDataBase64EncodingOptions)encodeOption{
     NSData* data = [message dataUsingEncoding:NSUTF8StringEncoding];
-    NSString *encodedSignature = [self _sign: data];
+    NSString *encodedSignature = [self _sign: data withAlgorithm:algorithm withEncodeOption: encodeOption];
     return encodedSignature;
 }
 
-- (NSString *)_sign:(NSData *)messageBytes {
+- (NSString *)_sign:(NSData *)messageBytes withAlgorithm:(NSString *)signAlgorithm withEncodeOption: (NSDataBase64EncodingOptions)encodeOption {
     __block NSString *encodedSignature = nil;
 
     void(^signer)(SecKeyRef) = ^(SecKeyRef privateKey) {
-        SecKeyAlgorithm algorithm = kSecKeyAlgorithmRSASignatureMessagePKCS1v15SHA512;
+        SecKeyAlgorithm algorithm = [signAlgorithm isEqualToString: @"SHA256withRSA"] ? kSecKeyAlgorithmRSASignatureMessagePKCS1v15SHA256 : kSecKeyAlgorithmRSASignatureMessagePKCS1v15SHA512;
 
         BOOL canSign = SecKeyIsAlgorithmSupported(privateKey,
                                                 kSecKeyOperationTypeSign,
@@ -248,8 +248,8 @@ typedef void (^SecKeyPerformBlock)(SecKeyRef key);
               NSLog(@"error: %@", err);
             }
         }
-
-        encodedSignature = [signature base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
+        
+        encodedSignature = [signature base64EncodedStringWithOptions: encodeOption];
     };
 
     if (self.keyTag) {

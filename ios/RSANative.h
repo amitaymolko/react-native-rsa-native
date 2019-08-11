@@ -30,7 +30,7 @@
 - (NSData *)_encrypt:(NSData *)message;
 - (NSData *)_decrypt:(NSData *)encodedMessage;
 
-- (NSString *)sign:(NSString *)message;
+- (NSString *)sign:(NSString *)message withAlgorithm:(NSString *)algorithm withEncodeOption: (NSDataBase64EncodingOptions)encodeOption;
 - (BOOL)verify:(NSString *)signature withMessage:(NSString *)message;
 
 - (NSString *)sign64:(NSString *)b64message;

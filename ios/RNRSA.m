@@ -7,8 +7,20 @@
     return dispatch_get_main_queue();
 }
 
++ (BOOL)requiresMainQueueSetup
+{
+    return NO;
+}
+
 RCT_EXPORT_MODULE()
 
+- (NSDictionary *)constantsToExport
+{
+    return @{
+             @"SHA256withRSA": @"SHA256withRSA",
+             @"SHA512withRSA": @"SHA512withRSA"
+             };
+}
 // Key based API, provide the public or private key with each call - pending discussions with @amitaymolko
 
 RCT_EXPORT_METHOD(generate:(RCTPromiseResolveBlock)resolve
@@ -69,13 +81,22 @@ RCT_EXPORT_METHOD(decrypt64:(NSString *)encodedMessage withKey:(NSString *)key r
     });
 }
 
+RCT_EXPORT_METHOD(signWithAlgorithm:(NSString *)message withKey:(NSString *)key withAlgorithm:(NSString *)algorithm resolve:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject) {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        RSANative *rsa = [[RSANative alloc] init];
+        rsa.privateKey = key;
+        NSString *signature = [rsa sign:message withAlgorithm: algorithm withEncodeOption: NSDataBase64Encoding64CharacterLineLength];
+        resolve(signature);
+    });
+}
 
 RCT_EXPORT_METHOD(sign:(NSString *)message withKey:(NSString *)key resolve:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject) {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         RSANative *rsa = [[RSANative alloc] init];
         rsa.privateKey = key;
-        NSString *signature = [rsa sign:message];
+        NSString *signature = [rsa sign:message withAlgorithm: @"SHA512withRSA" withEncodeOption: NSDataBase64Encoding64CharacterLineLength];
         resolve(signature);
     });
 }
@@ -118,8 +139,20 @@ RCT_EXPORT_METHOD(verify64:(NSString *)signature withMessage:(NSString *)message
     return dispatch_get_main_queue();
 }
 
++ (BOOL)requiresMainQueueSetup
+{
+    return NO;
+}
+
 RCT_EXPORT_MODULE()
 
+- (NSDictionary *)constantsToExport
+{
+    return @{
+             @"SHA256withRSA": @"SHA256withRSA",
+             @"SHA512withRSA": @"SHA512withRSA"
+            };
+}
 // Keychain based API, provide a key chain tag with each call
 
 RCT_EXPORT_METHOD(generate:(NSString *)keyTag resolve:(RCTPromiseResolveBlock)resolve
@@ -162,11 +195,20 @@ RCT_EXPORT_METHOD(decrypt:(NSString *)encodedMessage withKeyTag:(NSString *)keyT
     });
 }
 
+RCT_EXPORT_METHOD(signWithAlgorithm:(NSString *)message withKeyTag:(NSString *)keyTag withAlgorithm:(NSString *)algorithm resolve:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject) {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        RSANative *rsa = [[RSANative alloc] initWithKeyTag:keyTag];
+        NSString *signature = [rsa sign:message withAlgorithm: algorithm withEncodeOption: 0];
+        resolve(signature);
+    });
+}
+
 RCT_EXPORT_METHOD(sign:(NSString *)message withKeyTag:(NSString *)keyTag resolve:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject) {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         RSANative *rsa = [[RSANative alloc] initWithKeyTag:keyTag];
-        NSString *signature = [rsa sign:message];
+        NSString *signature = [rsa sign:message withAlgorithm: @"SHA512withRSA" withEncodeOption: NSDataBase64Encoding64CharacterLineLength];
         resolve(signature);
     });
 }
