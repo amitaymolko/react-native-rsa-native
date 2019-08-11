@@ -183,17 +183,22 @@ the message, the returned signature, and the matching public key
 can verify it was signed under this key.
 
 #### signWithAlgorithm
-`static sign(message: string, keyTag : string, signature?: 'SHA256withRSA' | 'SHA512withRSA') : Promise<string>`
+`static sign(message: string, keyTag : string, algorithm?: 'SHA256withRSA' | 'SHA512withRSA') : Promise<string>`
 
 Sign a given message with the private key associated with the given key tag,
 so that any user with
 the message, the returned signature, and the matching public key
 can verify it was signed under this key. The user can use __SHA256withRSA__ or __SHA512withRSA__ algorithm for signing. 
-__SHA256withRSA__ algorithm is not backward compatible on android and the user needs to generate new keypair for this to work. (available from ^2.0.0). The default is __SHA512withRSA__ and if one wishes to use __SHA512withRSA__ for signing without new keypair, then use the above sign method.
+__SHA256withRSA__ algorithm is not backward compatible on android and the user needs to generate new keypair for this to work. (available from ^1.1.0). The default is __SHA512withRSA__ and if one wishes to use __SHA512withRSA__ for signing without new keypair, then use the above sign method.
 
 
 #### verify
 `static verify(signature : string, message : string, keyTag : string) : Promise<boolean>`
+
+Verify whether or not a provided signature was produced by signing the given message with private key associated with the given key tag.
+
+#### verifyWithAlgorithm
+`static verify(signature : string, message : string, keyTag : string, algorithm?: 'SHA256withRSA' | 'SHA512withRSA') : Promise<boolean>`
 
 Verify whether or not a provided signature was produced by signing the given message with private key associated with the given key tag.
 
