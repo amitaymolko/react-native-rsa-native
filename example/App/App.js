@@ -6,44 +6,47 @@ import {RSA, RSAKeychain} from 'react-native-rsa-native';
 let secret = 'secret message';
 let keyTag = 'com.domain.mykey';
 
-RSA.generateKeys(4096)
-  .then(keys => {
-    console.log('4096 private:', keys.private) // the private key
-    console.log('4096 public:', keys.public) // the public key
-    RSA.encrypt('4096', keys.public)
-      .then(encodedMessage => {
-        console.log('4096 encoded message:', encodedMessage)
-        RSA.decrypt(encodedMessage, keys.private)
-          .then(message => {
-            console.log('4096 decoded message:', message);
-          })
-      })
-  })
+const generateKeys4096Demo = async () => {
+  console.log('generateKeys4096Demo')
+  const keys = await RSA.generateKeys(4096)
+  console.log('4096 private:', keys.private) // the private key
+  console.log('4096 public:', keys.public) // the public key
+  const encodedMessage = await RSA.encrypt('4096', keys.public)
+  console.log('4096 encoded message:', encodedMessage)
+  const message = await RSA.decrypt(encodedMessage, keys.private)
+  console.log('4096 decoded message:', message);
+}
 
-RSA.generate()
-  .then(keys => {
-    console.log('private:', keys.private) // the private key
-    console.log('public:', keys.public) // the public key
-    RSA.encrypt('1234', keys.public)
-      .then(encodedMessage => {
-        console.log('encoded message:', encodedMessage)
-        RSA.decrypt(encodedMessage, keys.private)
-          .then(message => {
-            console.log('decoded message:', message);
-          })
-        })
+const generateDemo = async () => {
+  console.log('generateDemo')
+  const keys = await RSA.generate()
+  console.log('private:', keys.private) // the private key
+  console.log('public:', keys.public) // the public key
+  const encodedMessage = await RSA.encrypt('1234', keys.public)
+  console.log('encoded message:', encodedMessage)
+  const message = await RSA.decrypt(encodedMessage, keys.private)
+  console.log('decoded message:', message);
+}
 
-    RSA.sign(secret, keys.private)
-      .then(signature => {
-        console.log('signature', signature);
+const signDemo = async () => {
+  console.log('signDemo')
+  const keys = await RSA.generate()
+  const signature = await RSA.sign(secret, keys.private)
+  console.log('signature', signature);
+  const valid = await RSA.verify(signature, secret, keys.public)
+  console.log('verified', valid);
+}
 
-        RSA.verify(signature, secret, keys.public)
-          .then(valid => {
-            console.log('verified', valid);
-          })
-        })
-  })
+const signAlgoDemo = async () => {
+  console.log('signAlgoDemo')
+  const keys = await RSA.generate()
+  const signature = await RSA.signWithAlgorithm(secret, keys.private, RSA.SHA256withRSA)
+  console.log('signature', signature);
+  const valid = await RSA.verifyWithAlgorithm(signature, secret, keys.public, RSA.SHA256withRSA)
+  console.log('verified', valid);
+}
 
+const iosDemo = async () => {
   const iosPkcs1PrivateKey = `-----BEGIN RSA PRIVATE KEY-----
   MIIEpAIBAAKCAQEA9nH5sqTOfSns7op8NHD2nHuXt/j1rodcbb7MXVSeK+0jx6np
   o2Oidc6J1fxSi5xBpIhEo6eGQD+b0SQFQMe6k33kqfRk4vzNi5n4lzFWWoyVgHKi
@@ -79,11 +82,11 @@ RSA.generate()
   LA8kC70ZvNWYL+cIU2ZKts9HYtTbIAonL91uP6Bf+M0uUkqc2zxEL9EpFmwGx3Q0
   JQUqPQPB+wHb7DlDFJdQ6A==`
 
-  RSA.decrypt(iosEncodedMessage, iosPkcs1PrivateKey)
-  .then(message => {
-    console.log('ios decoded message:', message);
-  })
+  const message = await RSA.decrypt(iosEncodedMessage, iosPkcs1PrivateKey)
+  console.log('ios decoded message:', message);
+}
 
+const androidDemo = async () => {
   const androidPkcs1PrivateKey = `-----BEGIN RSA PRIVATE KEY-----
   MIIEpAIBAAKCAQEAx+Wc5/pZQFLxisjb5TbkVKzm1y/q/JbVZ4kq9D8isFI6GimQ
   yF7y8gdmq4YPblCfnUIlFFbdWsbUX8dW6nLEmWQhqHheLOybHfrv/YaSUZzlmUav
@@ -118,68 +121,41 @@ RSA.generate()
   m0SibGo5B446iH57hTHf3Sv6GYcThk5+BqP/08VVQ2YXy+oMPng2nVnvzGONdJzfq+9GAKWMx6CE
   yiSiGz7AYGDb04FmekL8KqEKy6nTlVERlbwWRg==`
 
-  RSA.decrypt(androidEncodedMessage, androidPkcs1PrivateKey)
-  .then(message => {
-    console.log('android decoded message:', message);
-  })
-// const pkcs1PublicKey = `-----BEGIN PUBLIC KEY-----
-// MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAx9Van+tCkoPDTs/U8KAl
-// k5LDUZ7f643MPz50lKT1CJbhosefAFrI7CP+joy61ROCx2JYeRo6BrA98oanPm5m
-// 0fcqLDV8gpT/LYSbsafU9e7t8mkTd052QimI8UmZGbhcg5L2cbOE9PSNFSqGR+vN
-// FFgRYYMBu4uN3HCSrW8N6ObqlQCz57EGrpRbfAdqLKjXxtXOhL4UxV06geUUFzjf
-// QU0Iko6xshRJvCV4+SIF9MRPTXnUsMWcNCsRKGQXx6dMQEsh/PV6cXIoIdVuPqZg
-// CWXOeyTIZI/Hmpv+7OkaBtDREa3rvDFXOE17pjXRXd1QIUQfcpytlP8scLIFrO8M
-// 2wIDAQAB
-// -----END PUBLIC KEY-----`;
+  const message = await RSA.decrypt(androidEncodedMessage, androidPkcs1PrivateKey)
+  console.log('android decoded message:', message);
+}
 
-// RSA.encrypt('1234', pkcs1PublicKey)
-//   .then(encryptedMessage => {
-//     console.log('pkcs1PublicKey', encryptedMessage)
-//   })
-//   .catch(err => {
-//     console.log('err', err)
-//   })
+const keychainDemo = async () => {
 
-// Example utilizing the keychain for private key secure storage
+  const keys = await RSAKeychain.generate(keyTag)
+  console.log(keys.public);
+  console.log(secret);
 
-RSAKeychain.generate(keyTag)
-  .then(keys => {
-    console.log(keys.public);
-    console.log(secret);
+  const encodedMessage = await RSAKeychain.encrypt(secret, keyTag)
+  console.log(encodedMessage);
+  const message = await RSAKeychain.decrypt(encodedMessage, keyTag)
+  console.log(message);
+  const signature = await RSAKeychain.sign(secret, keyTag)
+  console.log('signature', signature);
+  const valid = await RSAKeychain.verify(signature, secret, keyTag)
+  console.log('verified', valid);
+  const publicKey = await RSAKeychain.getPublicKey(keyTag)
+  console.log('getPublicKey', publicKey)
+  const success = await RSAKeychain.deletePrivateKey(keyTag)
+  console.log('delete success', success)
+}
 
-    return RSAKeychain.encrypt(secret, keyTag)
-      .then(encodedMessage => {
-        console.log(encodedMessage);
+const runDemos = async () => {
+  await generateKeys4096Demo()
+  await generateDemo()
+  await signDemo()
+  await signAlgoDemo()
+  await iosDemo()
+  await androidDemo()
+  await keychainDemo()
+}
 
-        RSAKeychain.decrypt(encodedMessage, keyTag)
-          .then(message => {
-            console.log(message);
-          })
-        })
-  })
-  .then(() => {
-  return RSAKeychain.sign(secret, keyTag)
-    .then(signature => {
-      console.log('signature', signature);
-
-      RSAKeychain.verify(signature, secret, keyTag)
-        .then(valid => {
-          console.log('verified', valid);
-        })
-      })
-  })
-  .then(() => {
-    return RSAKeychain.getPublicKey(keyTag)
-    .then(publicKey => {
-      console.log('getPublicKey', publicKey)
-    })
-  })
-  .then(() => {
-    RSAKeychain.deletePrivateKey(keyTag)
-    .then( success => {
-      console.log('delete success', success)
-    })
-  });
+runDemos().then()
 
 class App extends Component {
   componentWillMount () {

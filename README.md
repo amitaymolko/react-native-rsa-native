@@ -7,7 +7,7 @@ Implementation is in PKCS1
 ## Support
 
 iOS 10+
-android 4.1+ (API 16)
+android 4.3+ (API 18)
 
 ## Status
 

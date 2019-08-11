@@ -64,7 +64,7 @@ import java.nio.charset.Charset;
 public class RSA {
     public static Charset CharsetUTF_8;
 
-    public static final String ALGORITHM = "RSA";
+    public static final String ALGORITHM = KeyProperties.KEY_ALGORITHM_RSA;
 
     private static final String PUBLIC_HEADER = "RSA PUBLIC KEY";
     private static final String PRIVATE_HEADER = "RSA PRIVATE KEY";
@@ -168,9 +168,9 @@ public class RSA {
     }
 
     // b64 message
-    public String sign64(String b64message) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
+    public String sign64(String b64message, String algorithm) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
         byte[] messageBytes = Base64.decode(b64message, Base64.DEFAULT);
-        return sign(messageBytes, "SHA512WithRSA");
+        return sign(messageBytes, algorithm);
     }
 
     //utf-8 message
@@ -179,29 +179,29 @@ public class RSA {
         return sign(messageBytes, signature);
     }
 
-    private boolean verify(byte[] signatureBytes, byte[] messageBytes) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
-        Signature publicSignature = Signature.getInstance("SHA512withRSA");
+    private boolean verify(byte[] signatureBytes, byte[] messageBytes, String algorithm) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
+        Signature publicSignature = Signature.getInstance(algorithm);
         publicSignature.initVerify(this.publicKey);
         publicSignature.update(messageBytes);
         return publicSignature.verify(signatureBytes);
     }
 
     // b64 message
-    public boolean verify64(String signature, String message) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
-        Signature publicSignature = Signature.getInstance("SHA512withRSA");
+    public boolean verify64(String signature, String message, String algorithm) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
+        Signature publicSignature = Signature.getInstance(algorithm);
         publicSignature.initVerify(this.publicKey);
         byte[] messageBytes = Base64.decode(message, Base64.DEFAULT);
         byte[] signatureBytes = Base64.decode(signature, Base64.DEFAULT);
-        return verify(signatureBytes, messageBytes);
+        return verify(signatureBytes, messageBytes, algorithm);
     }
 
     // utf-8 message
-    public boolean verify(String signature, String message) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
-        Signature publicSignature = Signature.getInstance("SHA512withRSA");
+    public boolean verify(String signature, String message, String algorithm) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
+        Signature publicSignature = Signature.getInstance(algorithm);
         publicSignature.initVerify(this.publicKey);
         byte[] messageBytes = message.getBytes(CharsetUTF_8);
         byte[] signatureBytes = Base64.decode(signature, Base64.DEFAULT);
-        return verify(signatureBytes, messageBytes);
+        return verify(signatureBytes, messageBytes, algorithm);
     }
 
     private String dataToPem(String header, byte[] keyData) throws IOException {

@@ -2994,8 +2994,8 @@ react-devtools-core@^2.1.8:
     shell-quote "^1.6.1"
     ws "^2.0.3"
 
-"react-native-rsa-native@file:../":
-  version "1.0.1"
+"react-native-rsa-native@file:..":
+  version "1.0.26"
 
 react-native@0.45.1:
   version "0.45.1"
