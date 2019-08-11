@@ -226,7 +226,7 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
       public void run() {
         try {
           RSA rsa = new RSA(keyTag);
-          boolean verified = rsa.verify(signature, message, SHA256withRSA);
+          boolean verified = rsa.verify(signature, message, SHA512withRSA);
           promise.resolve(verified);
 
         } catch (Exception e) {
@@ -260,7 +260,7 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
       public void run() {
         try {
           RSA rsa = new RSA(keyTag);
-          boolean verified = rsa.verify64(signature, message, SHA256withRSA);
+          boolean verified = rsa.verify64(signature, message, SHA512withRSA);
           promise.resolve(verified);
 
         } catch (Exception e) {
