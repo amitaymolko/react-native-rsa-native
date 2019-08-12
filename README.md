@@ -7,7 +7,7 @@ Implementation is in PKCS1
 ## Support
 
 iOS 10+
-android 4.3+ (API 18)
+android 4.1+ (API 16)
 
 ## Status
 
@@ -140,6 +140,7 @@ Sign a given message with the private key, so that any user with the message, th
 Verify whether or not a provided signature was produced by signing the given message with the private key paired to the provided public key.
 
 ### RSAKeychain Class
+Support: android 4.3+ (API 18)
 
 Like [the RSA Class](#rsa-class),
 but when its methods are called, instead of directly accessing the private key,

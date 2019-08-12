@@ -37,3 +37,5 @@ android/build
 .gradle
 local.properties
 *.iml
+bin
+android/bin

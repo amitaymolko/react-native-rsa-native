@@ -1,6 +1,7 @@
 package com.RNRSA;
 
 
+import android.annotation.TargetApi;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
 import android.security.KeyPairGeneratorSpec;
@@ -292,7 +293,7 @@ public class RSA {
     public void generate(String keyTag, Context context) throws IOException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, NoSuchProviderException {
         this.generate(keyTag, 2048, context);
     }
-
+    @TargetApi(18)
     public void generate(String keyTag, int keySize, Context context) throws IOException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, NoSuchProviderException {
 
         KeyPairGenerator kpg = KeyPairGenerator.getInstance(ALGORITHM, "AndroidKeyStore");
