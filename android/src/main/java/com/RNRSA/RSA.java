@@ -9,6 +9,9 @@ import android.security.KeyPairGeneratorSpec;
 import android.util.Base64;
 import android.content.Context;
 
+
+import java.security.SecureRandom;
+import java.security.spec.ECGenParameterSpec;
 import java.util.Calendar;
 import java.math.BigInteger;
 import java.io.Reader;
@@ -37,19 +40,23 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.BadPaddingException;
-import javax.security.cert.X509Certificate;
 import javax.security.auth.x500.X500Principal;
 
 import java.io.IOException;
 
+
+
 import org.spongycastle.asn1.ASN1InputStream;
 import org.spongycastle.asn1.ASN1Encodable;
+import org.spongycastle.asn1.ASN1ObjectIdentifier;
 import org.spongycastle.asn1.ASN1Primitive;
+import org.spongycastle.asn1.pkcs.PKCSObjectIdentifiers;
 import org.spongycastle.asn1.pkcs.PrivateKeyInfo;
 import org.spongycastle.asn1.pkcs.RSAPublicKey;
 import org.spongycastle.asn1.pkcs.RSAPrivateKey;
 import org.spongycastle.asn1.x509.SubjectPublicKeyInfo;
-import org.spongycastle.asn1.x509.RSAPublicKeyStructure;
+import org.spongycastle.operator.OperatorCreationException;
+import org.spongycastle.pkcs.PKCS10CertificationRequest;
 import org.spongycastle.util.io.pem.PemObject;
 import org.spongycastle.util.io.pem.PemWriter;
 import org.spongycastle.util.io.pem.PemReader;
@@ -57,10 +64,12 @@ import org.spongycastle.asn1.pkcs.RSAPublicKey;
 import org.spongycastle.openssl.PEMParser;
 import org.spongycastle.util.io.pem.PemObject;
 
+
 import static android.security.keystore.KeyProperties.*;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import java.nio.charset.Charset;
+
 
 public class RSA {
     public static Charset CharsetUTF_8;
@@ -69,11 +78,13 @@ public class RSA {
 
     private static final String PUBLIC_HEADER = "RSA PUBLIC KEY";
     private static final String PRIVATE_HEADER = "RSA PRIVATE KEY";
+    private static final String CSR_HEADER = "CERTIFICATE REQUEST";
 
     private String keyTag;
 
     private PublicKey publicKey;
     private PrivateKey privateKey;
+    private PKCS10CertificationRequest csr;
 
     public RSA() {
         this.setupCharset();
@@ -328,6 +339,56 @@ public class RSA {
 
         KeyPair keyPair = kpg.genKeyPair();
         this.publicKey = keyPair.getPublic();
+
+    }
+
+    @TargetApi(18)
+    public void generateCSR(String cn,String keyTag, int keySize, Context context) throws IOException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, NoSuchProviderException {
+
+        KeyPairGenerator kpg = KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_EC, "AndroidKeyStore");
+        if (android.os.Build.VERSION.SDK_INT >= 23) {
+
+            kpg.initialize(new KeyGenParameterSpec.Builder(
+                    keyTag,
+                    KeyProperties.PURPOSE_SIGN | KeyProperties.PURPOSE_VERIFY)
+                    .setDigests(KeyProperties.DIGEST_SHA256,
+                            KeyProperties.DIGEST_SHA512,
+                            KeyProperties.DIGEST_NONE)
+                    .setKeySize(keySize)
+                    .build());
+        } else {
+            Calendar endDate = Calendar.getInstance();
+            endDate.add(Calendar.YEAR, 1);
+            KeyPairGeneratorSpec.Builder keyPairGeneratorSpec = new KeyPairGeneratorSpec.Builder(context)
+                .setAlias(keyTag)
+                .setSubject(new X500Principal(
+                    String.format("CN=%s", keyTag, context.getPackageName())
+                ))
+                .setSerialNumber(BigInteger.ONE)
+                .setStartDate(Calendar.getInstance().getTime())
+                .setEndDate(endDate.getTime());
+            if (android.os.Build.VERSION.SDK_INT >= 19) {
+                keyPairGeneratorSpec.setKeySize(keySize).setKeyType(KeyProperties.KEY_ALGORITHM_EC);
+            }
+            kpg.initialize(keyPairGeneratorSpec.build());
+        }
+
+
+        KeyPair keyPair = kpg.genKeyPair();
+        this.publicKey = keyPair.getPublic();
+
+        try {
+            this.csr = CsrHelper.generateCSR(this.publicKey, cn, keyTag);
+        } catch (OperatorCreationException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public String getCSR() throws IOException {
+        byte  CSRder[] = this.csr.getEncoded();
+        return dataToPem(CSR_HEADER, CSRder);
     }
 
 }
+
