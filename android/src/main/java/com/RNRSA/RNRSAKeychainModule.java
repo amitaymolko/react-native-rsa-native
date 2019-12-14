@@ -19,6 +19,7 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
 
   private static final String SHA256withRSA = "SHA256withRSA";
   private static final String SHA512withRSA = "SHA512withRSA";
+  private static final String SHA1withRSA = "SHA1withRSA";
 
   private final ReactApplicationContext reactContext;
 
@@ -37,6 +38,7 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
     final Map<String, Object> constants = new HashMap<>();
     constants.put(SHA256withRSA, SHA256withRSA);
     constants.put(SHA512withRSA, SHA512withRSA);
+    constants.put(SHA1withRSA, SHA1withRSA);
     return constants;
   }
 

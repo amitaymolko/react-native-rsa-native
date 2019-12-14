@@ -315,7 +315,7 @@ public class RSA {
                     PURPOSE_ENCRYPT | PURPOSE_DECRYPT | PURPOSE_SIGN | PURPOSE_VERIFY
                 )
                 .setKeySize(keySize)
-                .setDigests(DIGEST_SHA256, DIGEST_SHA512)
+                .setDigests(DIGEST_SHA256, DIGEST_SHA512, DIGEST_SHA1)
                 .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_RSA_PKCS1)
                 .setSignaturePaddings(KeyProperties.SIGNATURE_PADDING_RSA_PKCS1)
                 .build()
