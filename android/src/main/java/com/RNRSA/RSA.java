@@ -105,14 +105,13 @@ public class RSA {
     }
 
     public String getPublicKey() throws IOException {
-        byte[] pkcs1PublicKey = publicKeyToPkcs1(this.publicKey);
-
-        return dataToPem(PUBLIC_HEADER, pkcs1PublicKey);
+//        byte[] pkcs1PublicKey = publicKeyToPkcs1(this.publicKey);
+//        return dataToPem(PUBLIC_HEADER, pkcs1PublicKey);
+        return Base64.encodeToString(this.publicKey.getEncoded(), Base64.DEFAULT);
     }
 
     public String getPrivateKey() throws IOException {
         byte[] pkcs1PrivateKey = privateKeyToPkcs1(this.privateKey);
-
         return dataToPem(PRIVATE_HEADER, pkcs1PrivateKey);
     }
 
@@ -343,8 +342,8 @@ public class RSA {
     }
 
     @TargetApi(18)
-    public void generateCSR(String cn,String keyTag, int keySize, Context context) throws IOException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, NoSuchProviderException {
-
+    public void generateCSR(String cn,String keyTag, int keySize, Context context) throws IOException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, NoSuchProviderException, UnrecoverableEntryException, KeyStoreException, CertificateException {
+        this.deletePrivateKey();
         KeyPairGenerator kpg = KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_EC, "AndroidKeyStore");
         if (android.os.Build.VERSION.SDK_INT >= 23) {
 
@@ -355,6 +354,7 @@ public class RSA {
                             KeyProperties.DIGEST_SHA512,
                             KeyProperties.DIGEST_NONE)
                     .setKeySize(keySize)
+                    .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_PKCS7)
                     .build());
         } else {
             Calendar endDate = Calendar.getInstance();
