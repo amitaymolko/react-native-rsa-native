@@ -10,6 +10,7 @@ import android.util.Base64;
 import android.content.Context;
 
 
+import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.security.spec.ECGenParameterSpec;
 import java.util.Calendar;
@@ -171,6 +172,7 @@ public class RSA {
     }
 
     private String sign(byte[] messageBytes, String algorithm) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
+
         Signature privateSignature = Signature.getInstance(algorithm);
         privateSignature.initSign(this.privateKey);
         privateSignature.update(messageBytes);
@@ -183,6 +185,7 @@ public class RSA {
         byte[] messageBytes = Base64.decode(b64message, Base64.DEFAULT);
         return sign(messageBytes, algorithm);
     }
+
 
     //utf-8 message
     public String sign(String message, String signature) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
@@ -352,8 +355,10 @@ public class RSA {
                     KeyProperties.PURPOSE_SIGN | KeyProperties.PURPOSE_VERIFY)
                     .setDigests(KeyProperties.DIGEST_SHA256,
                             KeyProperties.DIGEST_SHA512,
+                            DIGEST_SHA384,
                             KeyProperties.DIGEST_NONE)
                     .setKeySize(keySize)
+                    .setAlgorithmParameterSpec(new ECGenParameterSpec("secp256r1"))
                     .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_PKCS7)
                     .build());
         } else {

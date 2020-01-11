@@ -31,8 +31,8 @@ declare module 'react-native-rsa-native' {
 		export function encrypt(data: string, keyTag: string): Promise<string>;
 		export function decrypt(data: string, keyTag: string): Promise<string>;
 		export function sign(data: string, keyTag: string): Promise<string>;
-		export function signWithAlgorithm(data: string, keyTag: string, signature?: 'SHA256withRSA' | 'SHA512withRSA' | 'SHA1withRSA'): Promise<string>;
-		export function sign64WithAlgorithm(data: string, keyTag: string, signature?: 'SHA256withRSA' | 'SHA512withRSA' | 'SHA1withRSA'): Promise<string>;
+		export function signWithAlgorithm(data: string, keyTag: string, signature?: 'SHA256withRSA' | 'SHA512withRSA' | 'SHA1withRSA' | 'SHA256withECDSA'): Promise<string>;
+		export function sign64WithAlgorithm(data: string, keyTag: string, signature?: 'SHA256withRSA' | 'SHA512withRSA' | 'SHA1withRSA' | 'SHA256withECDSA'): Promise<string>;
 		export function verify(data: string, secretToVerify: string, keyTag: string): Promise<boolean>;
 		export function verifyWithAlgorithm(data: string, secretToVerify: string, keyTag: string, signature?: 'SHA256withRSA' | 'SHA512withRSA' | 'SHA1withRSA'): Promise<boolean>;
 		export function verify64WithAlgorithm(data: string, secretToVerify: string, keyTag: string, signature?: 'SHA256withRSA' | 'SHA512withRSA' | 'SHA1withRSA'): Promise<boolean>;

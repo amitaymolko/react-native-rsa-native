@@ -36,10 +36,10 @@ public class CsrHelper {
         static {
             ALGOS.put("SHA256withECDSA".toLowerCase(), new AlgorithmIdentifier(
                     new ASN1ObjectIdentifier("1.2.840.10045.4.3.2")));
-//            ALGOS.put("SHA256withRSA".toLowerCase(), new AlgorithmIdentifier(
-//                    new ASN1ObjectIdentifier("1.2.840.113549.1.1.11")));
-//            ALGOS.put("SHA1withRSA".toLowerCase(), new AlgorithmIdentifier(
-//                    new ASN1ObjectIdentifier("1.2.840.113549.1.1.5")));
+            ALGOS.put("SHA256withRSA".toLowerCase(), new AlgorithmIdentifier(
+                    new ASN1ObjectIdentifier("1.2.840.113549.1.1.11")));
+            ALGOS.put("SHA1withRSA".toLowerCase(), new AlgorithmIdentifier(
+                    new ASN1ObjectIdentifier("1.2.840.113549.1.1.5")));
 
         }
 
