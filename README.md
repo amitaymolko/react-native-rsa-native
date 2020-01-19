@@ -230,6 +230,14 @@ Property | Description
 --|--
 `public : string` | The RSA public key.
 
+### Do you have a Java Backened ?
+It might require OID padding in the keys encoding to get it interfacing with iOS.
+An accessor for public key for java servers with OID in keys
+
+```typescript
+RSAKeychain.getASN1FormattedPublicKey(keyTag);
+```
+
 ## Credit
 
 * Originally based on https://github.com/SamSaffron/react-native-key-pair

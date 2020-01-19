@@ -272,4 +272,11 @@ RCT_EXPORT_METHOD(getPublicKey:(NSString *)keyTag resolve:(RCTPromiseResolveBloc
     resolve(key);
 }
 
+RCT_EXPORT_METHOD(getASN1FormattedPublicKey:(NSString *)keyTag resolve:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject) {
+    RSANative *rsa = [[RSANative alloc] initWithKeyTag:keyTag];
+    NSString *key = [rsa encodedASN1PublicKey];
+    resolve(key);
+}
+
 @end
