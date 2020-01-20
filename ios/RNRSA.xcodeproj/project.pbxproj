@@ -7,11 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		186F49E31F06836A00F71861 /* RSAFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 186F49E21F06836A00F71861 /* RSAFormatter.m */; };
-		BF40FFDB1F05EC9000DC4E95 /* RNRSA.m in Sources */ = {isa = PBXBuildFile; fileRef = BF40FFD71F05EC9000DC4E95 /* RNRSA.m */; };
-		BF40FFDC1F05EC9000DC4E95 /* RSANative.m in Sources */ = {isa = PBXBuildFile; fileRef = BF40FFDA1F05EC9000DC4E95 /* RSANative.m */; };
-		BFCDFE2A1F694B870016F50C /* RSANative.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = BF40FFD91F05EC9000DC4E95 /* RSANative.h */; };
-		BFCDFE2B1F694B890016F50C /* RSAFormatter.h in Copy Headers */ = {isa = PBXBuildFile; fileRef = 186F49E11F06836A00F71861 /* RSAFormatter.h */; };
+		A055BADE23D5D02A00E2A830 /* RNRSA.m in Sources */ = {isa = PBXBuildFile; fileRef = A055BADD23D5D02A00E2A830 /* RNRSA.m */; };
+		A055BAE123D5D04D00E2A830 /* RNRSA.swift in Sources */ = {isa = PBXBuildFile; fileRef = A055BAE023D5D04D00E2A830 /* RNRSA.swift */; };
+		A055BAE323D5D08700E2A830 /* RNRSAKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = A055BAE223D5D08700E2A830 /* RNRSAKeychain.m */; };
+		A055BAE523D5D09F00E2A830 /* RNRSAKeychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = A055BAE423D5D09F00E2A830 /* RNRSAKeychain.swift */; };
+		A055BAE723D5D0BC00E2A830 /* RSAECFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A055BAE623D5D0BC00E2A830 /* RSAECFormatter.swift */; };
+		A055BAE923D5D0EF00E2A830 /* RSAECNative.swift in Sources */ = {isa = PBXBuildFile; fileRef = A055BAE823D5D0EF00E2A830 /* RSAECNative.swift */; };
+		A055BAEB23D5D10C00E2A830 /* RSAKeyEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = A055BAEA23D5D10C00E2A830 /* RSAKeyEncoding.swift */; };
+		A055BAED23D5D12800E2A830 /* CSRSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = A055BAEC23D5D12800E2A830 /* CSRSwift.swift */; };
+		A055BAEF23D5D14000E2A830 /* CSRSwiftConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = A055BAEE23D5D14000E2A830 /* CSRSwiftConstants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -21,8 +25,6 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
-				BFCDFE2B1F694B890016F50C /* RSAFormatter.h in Copy Headers */,
-				BFCDFE2A1F694B870016F50C /* RSANative.h in Copy Headers */,
 			);
 			name = "Copy Headers";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -30,13 +32,17 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		186F49E11F06836A00F71861 /* RSAFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSAFormatter.h; sourceTree = "<group>"; };
-		186F49E21F06836A00F71861 /* RSAFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSAFormatter.m; sourceTree = "<group>"; };
+		A055BADD23D5D02A00E2A830 /* RNRSA.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNRSA.m; sourceTree = "<group>"; };
+		A055BADF23D5D04C00E2A830 /* RNRSA-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RNRSA-Bridging-Header.h"; sourceTree = "<group>"; };
+		A055BAE023D5D04D00E2A830 /* RNRSA.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNRSA.swift; sourceTree = "<group>"; };
+		A055BAE223D5D08700E2A830 /* RNRSAKeychain.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RNRSAKeychain.m; sourceTree = "<group>"; };
+		A055BAE423D5D09F00E2A830 /* RNRSAKeychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RNRSAKeychain.swift; sourceTree = "<group>"; };
+		A055BAE623D5D0BC00E2A830 /* RSAECFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSAECFormatter.swift; sourceTree = "<group>"; };
+		A055BAE823D5D0EF00E2A830 /* RSAECNative.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSAECNative.swift; sourceTree = "<group>"; };
+		A055BAEA23D5D10C00E2A830 /* RSAKeyEncoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSAKeyEncoding.swift; sourceTree = "<group>"; };
+		A055BAEC23D5D12800E2A830 /* CSRSwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRSwift.swift; sourceTree = "<group>"; };
+		A055BAEE23D5D14000E2A830 /* CSRSwiftConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSRSwiftConstants.swift; sourceTree = "<group>"; };
 		BF40FFBD1F05EC4000DC4E95 /* libRNRSA.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNRSA.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		BF40FFD71F05EC9000DC4E95 /* RNRSA.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNRSA.m; sourceTree = "<group>"; };
-		BF40FFD81F05EC9000DC4E95 /* RNRSA.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNRSA.h; sourceTree = "<group>"; };
-		BF40FFD91F05EC9000DC4E95 /* RSANative.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSANative.h; sourceTree = "<group>"; };
-		BF40FFDA1F05EC9000DC4E95 /* RSANative.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSANative.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,13 +59,17 @@
 		BF40FFB41F05EC4000DC4E95 = {
 			isa = PBXGroup;
 			children = (
-				186F49E11F06836A00F71861 /* RSAFormatter.h */,
-				186F49E21F06836A00F71861 /* RSAFormatter.m */,
-				BF40FFD81F05EC9000DC4E95 /* RNRSA.h */,
-				BF40FFD71F05EC9000DC4E95 /* RNRSA.m */,
-				BF40FFD91F05EC9000DC4E95 /* RSANative.h */,
-				BF40FFDA1F05EC9000DC4E95 /* RSANative.m */,
+				A055BAEE23D5D14000E2A830 /* CSRSwiftConstants.swift */,
+				A055BAEC23D5D12800E2A830 /* CSRSwift.swift */,
+				A055BAEA23D5D10C00E2A830 /* RSAKeyEncoding.swift */,
+				A055BAE823D5D0EF00E2A830 /* RSAECNative.swift */,
+				A055BAE623D5D0BC00E2A830 /* RSAECFormatter.swift */,
+				A055BAE423D5D09F00E2A830 /* RNRSAKeychain.swift */,
+				A055BAE223D5D08700E2A830 /* RNRSAKeychain.m */,
+				A055BAE023D5D04D00E2A830 /* RNRSA.swift */,
+				A055BADD23D5D02A00E2A830 /* RNRSA.m */,
 				BF40FFBE1F05EC4000DC4E95 /* Products */,
+				A055BADF23D5D04C00E2A830 /* RNRSA-Bridging-Header.h */,
 			);
 			sourceTree = "<group>";
 		};
@@ -102,6 +112,7 @@
 				TargetAttributes = {
 					BF40FFBC1F05EC4000DC4E95 = {
 						CreatedOnToolsVersion = 9.0;
+						LastSwiftMigration = 1020;
 					};
 				};
 			};
@@ -128,9 +139,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BF40FFDB1F05EC9000DC4E95 /* RNRSA.m in Sources */,
-				BF40FFDC1F05EC9000DC4E95 /* RSANative.m in Sources */,
-				186F49E31F06836A00F71861 /* RSAFormatter.m in Sources */,
+				A055BAE723D5D0BC00E2A830 /* RSAECFormatter.swift in Sources */,
+				A055BAE923D5D0EF00E2A830 /* RSAECNative.swift in Sources */,
+				A055BAEB23D5D10C00E2A830 /* RSAKeyEncoding.swift in Sources */,
+				A055BAE523D5D09F00E2A830 /* RNRSAKeychain.swift in Sources */,
+				A055BAE123D5D04D00E2A830 /* RNRSA.swift in Sources */,
+				A055BAE323D5D08700E2A830 /* RNRSAKeychain.m in Sources */,
+				A055BAED23D5D12800E2A830 /* CSRSwift.swift in Sources */,
+				A055BADE23D5D02A00E2A830 /* RNRSA.m in Sources */,
+				A055BAEF23D5D14000E2A830 /* CSRSwiftConstants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -248,9 +265,14 @@
 		BF40FFC71F05EC4000DC4E95 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "RNRSA-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -258,9 +280,13 @@
 		BF40FFC81F05EC4000DC4E95 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "RNRSA-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
