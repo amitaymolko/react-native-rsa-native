@@ -491,13 +491,13 @@ class RSAECNative: NSObject {
     public func verify64(encodedSignature: String, withMessage: String, withAlgorithm: String) -> Bool? {
         guard let messageBytes =  Data(base64Encoded: encodedSignature, options: .ignoreUnknownCharacters) else { return nil }
         guard let signatureBytes = Data(base64Encoded: withMessage, options: .ignoreUnknownCharacters) else { return nil }
-        return self._verify(signatureBytes: messageBytes, withMessage: signatureBytes, withAlgorithm: withAlgorithm)
+        return self._verify(signatureBytes: signatureBytes, withMessage: messageBytes, withAlgorithm: withAlgorithm)
     }
     
     public func verify(encodedSignature: String, withMessage: String, withAlgorithm: String) -> Bool? {
-        guard let messageBytes =  encodedSignature.data(using: .utf8) else { return nil }
-        guard let signatureBytes = Data(base64Encoded: withMessage, options: .ignoreUnknownCharacters) else { return nil }
-        return self._verify(signatureBytes: messageBytes, withMessage: signatureBytes, withAlgorithm: withAlgorithm)
+        guard let messageBytes =  withMessage.data(using: .utf8) else { return nil }
+        guard let signatureBytes = Data(base64Encoded: encodedSignature, options: .ignoreUnknownCharacters) else { return nil }
+        return self._verify(signatureBytes:signatureBytes , withMessage: messageBytes, withAlgorithm: withAlgorithm)
     }
     
     private func _verify(signatureBytes: Data, withMessage: Data, withAlgorithm: String) -> Bool? {
