@@ -14,9 +14,9 @@ declare module 'react-native-rsa-native' {
 		'SHA256withRSA'|
 		'SHA512withRSA'|
 		'SHA1withRSA'|
-		'SHA256withEC'|
-		'SHA512withEC'|
-		'SHA1withEC'
+		'SHA256withECDSA'|
+		'SHA512withECDSA'|
+		'SHA1withECDSA'
 	
 
 	namespace RSA {
@@ -66,7 +66,7 @@ declare module 'react-native-rsa-native' {
 		export const SHA256withRSA: string;
 		export const SHA512withRSA: string;
 		export const SHA1withRSA: string;
-		export const SHA256withECDSa: string;
+		export const SHA256withECDSA: string;
 		export const SHA512withECDSA: string;
 		export const SHA1withECDSA: string;
 	}
