@@ -96,6 +96,21 @@ class RNRSA: NSObject {
     }
     
     @objc
+    func verify(_ signature: String, withMessage: String ,withKey: String, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
+        let rsa_ec = RSAECNative()
+        guard let _ = rsa_ec.setPublicKey(publicKey: withKey) else {
+            resolve(false)
+            return
+        }
+        let signature = rsa_ec.verify(encodedSignature: signature, withMessage: withMessage, withAlgorithm: "SHA512withRSA")
+        if(signature == nil){
+            reject("not sign it", "error", nil)
+        }else {
+            resolve(true)
+        }
+    }
+    
+    @objc
     func verifyWithAlgorithm(_ signature: String, withMessage: String ,withKey: String, withAlgorithm: String, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
         let rsa_ec = RSAECNative()
         guard let _ = rsa_ec.setPublicKey(publicKey: withKey) else {
@@ -103,6 +118,22 @@ class RNRSA: NSObject {
             return
         }
         let signature = rsa_ec.verify(encodedSignature: signature, withMessage: withMessage, withAlgorithm: withAlgorithm)
+        if(signature == nil){
+            reject("not sign it", "error", nil)
+        }else {
+            resolve(true)
+        }
+    }
+    
+    
+    @objc
+    func verify64(_ signature: String, withMessage: String ,withKey: String, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
+        let rsa_ec = RSAECNative()
+        guard let _ = rsa_ec.setPublicKey(publicKey: withKey) else {
+            resolve(false)
+            return
+        }
+        let signature = rsa_ec.verify64(encodedSignature: signature, withMessage: withMessage, withAlgorithm: "SHA512withRSA")
         if(signature == nil){
             reject("not sign it", "error", nil)
         }else {
@@ -125,6 +156,22 @@ class RNRSA: NSObject {
         }
     }
     
+    
+    @objc
+    func sign(_ message: String, withKey: String, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
+        let rsa_ec = RSAECNative()
+        guard let _ = rsa_ec.setPrivateKey(privateKey: withKey) else {
+            resolve(false)
+            return
+        }
+        let signature = rsa_ec.sign(message: message, withAlgorithm: "SHA512withRSA", withEncodeOption: NSData.Base64EncodingOptions(rawValue: 0))
+        if(signature == nil){
+            reject("not sign it", "error", nil)
+        }else {
+            resolve(signature)
+        }
+    }
+    
     @objc
     func signWithAlgorithm(_ message: String, withKey: String, withAlgorithm: String, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
         let rsa_ec = RSAECNative()
@@ -133,6 +180,21 @@ class RNRSA: NSObject {
             return
         }
         let signature = rsa_ec.sign(message: message, withAlgorithm: withAlgorithm, withEncodeOption: NSData.Base64EncodingOptions(rawValue: 0))
+        if(signature == nil){
+            reject("not sign it", "error", nil)
+        }else {
+            resolve(signature)
+        }
+    }
+    
+    @objc
+    func sign64(_ message: String, withKey: String, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
+        let rsa_ec = RSAECNative()
+        guard let _ = rsa_ec.setPrivateKey(privateKey: withKey) else {
+            resolve(false)
+            return
+        }
+        let signature = rsa_ec.sign64(b64message: message, withAlgorithm: "SHA512withRSA")
         if(signature == nil){
             reject("not sign it", "error", nil)
         }else {
