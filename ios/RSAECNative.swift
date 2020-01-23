@@ -21,7 +21,7 @@ class RSAECNative: NSObject {
     let publicKeyTag: String?
     let privateKeyTag: String?
     var publicKeyBits: Data?
-    var keyAlgorithm = KeyAlgorithm.rsa(signatureType: .sha1)
+    var keyAlgorithm = KeyAlgorithm.rsa(signatureType: .sha512)
     
     public init(keyTag: String?){
         self.publicKeyTag = "\(keyTag ?? "").public"
