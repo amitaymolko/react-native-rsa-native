@@ -19,6 +19,7 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
 
   private static final String SHA256withRSA = "SHA256withRSA";
   private static final String SHA512withRSA = "SHA512withRSA";
+  private static final String SHA1withRSA = "SHA1withRSA";
 
   private final ReactApplicationContext reactContext;
 
@@ -37,6 +38,7 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
     final Map<String, Object> constants = new HashMap<>();
     constants.put(SHA256withRSA, SHA256withRSA);
     constants.put(SHA512withRSA, SHA512withRSA);
+    constants.put(SHA1withRSA, SHA1withRSA);
     return constants;
   }
 
@@ -58,6 +60,29 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
           RSA rsa = new RSA();
           rsa.generate(keyTag, keySize, reactContext);
           keys.putString("public", rsa.getPublicKey());
+          promise.resolve(keys);
+        } catch (NoSuchAlgorithmException e) {
+          promise.reject("Error", e.getMessage());
+        } catch (Exception e) {
+          promise.reject("Error", e.getMessage());
+        }
+      }
+    });
+  }
+
+  @ReactMethod
+  public void generateCSRWithEC(final String cn,final String keyTag, final int keySize, final Promise promise) {
+    final ReactApplicationContext reactContext = this.reactContext;
+
+    AsyncTask.execute(new Runnable() {
+      @Override
+      public void run() {
+        WritableNativeMap keys = new WritableNativeMap();
+
+        try {
+          RSA rsa = new RSA();
+          rsa.generateCSR(cn,keyTag, keySize, reactContext);
+          keys.putString("csr", rsa.getCSR());
           promise.resolve(keys);
         } catch (NoSuchAlgorithmException e) {
           promise.reject("Error", e.getMessage());
