@@ -2,9 +2,6 @@
 //  RNRSASwift.swift
 //  test
 //
-//  Created by saeed kargosha.
-//  Copyright © 1398 saeed kargosha. All rights reserved.
-//
 
 //#if canImport(React)
 //import React

@@ -2,9 +2,6 @@
 //  RNECRSASwift.m
 //  RNECRSA
 //
-//  Created by saeed kargosha on 10/21/1398 AP.
-//  Copyright © 1398 saeed kargosha. All rights reserved.
-//
 
 #import <React/RCTBridgeModule.h>
 
@@ -34,11 +31,11 @@ RCT_EXTERN_METHOD(getPublicKeyRSA:(NSString *)keyTag resolver:(RCTPromiseResolve
 
 RCT_EXTERN_METHOD(getPublicKey:(NSString *)keyTag resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(verify:(NSString *)signature withMessage:(NSString *)withMessage withKey:(NSString *)withKey resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(verify:(NSString *)signature withMessage:(NSString *)withMessage keyTag:(NSString *)keyTag resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(verifyWithAlgorithm:(NSString *)signature withMessage:(NSString *)withMessage keyTag:(NSString *)keyTag withAlgorithm:(NSString *)withAlgorithm resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(verify64:(NSString *)signature withMessage:(NSString *)withMessage withKey:(NSString *)withKey resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(verify64:(NSString *)signature withMessage:(NSString *)withMessage keyTag:(NSString *)keyTag resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(verify64WithAlgorithm:(NSString *)signature withMessage:(NSString *)withMessage keyTag:(NSString *)keyTag withAlgorithm:(NSString *)withAlgorithm resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 

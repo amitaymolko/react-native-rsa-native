@@ -2,9 +2,6 @@
 //  RNRSASwift.swift
 //  test
 //
-//  Created by saeed kargosha.
-//  Copyright © 1398 saeed kargosha. All rights reserved.
-//
 
 //#if canImport(React)
 //import React
@@ -186,7 +183,7 @@ class RNRSAKeychain: NSObject {
     }
     
     @objc
-    func verify(_ signature: String, withMessage: String ,keyTag: String, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
+    func verify(_ signature: String, withMessage: String, keyTag: String, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
         let rsa_ec = RSAECNative(keyTag: keyTag)
         let signature = rsa_ec.verify(encodedSignature: signature, withMessage: withMessage, withAlgorithm: "SHA512withRSA")
         if(signature == nil){

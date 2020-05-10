@@ -3,9 +3,7 @@
 //  RNECRSASwift.m
 //  RNECRSA
 //
-//  Created by saeed kargosha .
-//  Copyright © 1398 saeed kargosha. All rights reserved.
-//
+
 
 #import <React/RCTBridgeModule.h>
 

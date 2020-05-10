@@ -3,9 +3,6 @@
 //
 //  RSANative.swift
 //  BVLinearGradient
-//
-//  Created by saeed kargosha.
-//
 
 import Foundation
 import CommonCrypto

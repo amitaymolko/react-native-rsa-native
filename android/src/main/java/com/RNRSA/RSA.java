@@ -106,9 +106,9 @@ public class RSA {
     }
 
     public String getPublicKey() throws IOException {
-//        byte[] pkcs1PublicKey = publicKeyToPkcs1(this.publicKey);
-//        return dataToPem(PUBLIC_HEADER, pkcs1PublicKey);
-        return Base64.encodeToString(this.publicKey.getEncoded(), Base64.DEFAULT);
+       byte[] pkcs1PublicKey = publicKeyToPkcs1(this.publicKey);
+       return dataToPem(PUBLIC_HEADER, pkcs1PublicKey);
+        // return Base64.encodeToString(this.publicKey.getEncoded(), Base64.DEFAULT);
     }
 
     public String getPrivateKey() throws IOException {
