@@ -27,13 +27,8 @@ or:
 
 `$ npm install react-native-rsa-native --save`
 
-### Mostly automatic installation:
-
-`$ react-native link react-native-rsa-native`
-
-## iOS
-
-In your React Native Xcode project, right click on your project and go 'Add Files to ...', then navigate to <your-project-root>/node_modules/react-native-rsa-native/ios and select the RNRSA.xcodeproj file. Then in the build settings for your target under 'Link Binary With Libraries', add libRNRSA.a.
+## Older React-Native versions
+If you are using an older version of React Native and are having issues try using v1.1.14
 
 ## Example Usage
 
