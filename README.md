@@ -152,7 +152,7 @@ using a tag which the app can use to access it.
 Methods then take this tag instead of the private key.
 
 #### generateKeys
-`static generateKeys(keySize : number, keyTag : string) : Promise<PublicKey>`
+`static generateKeys(keyTag : string, keySize : number) : Promise<PublicKey>`
 
 Generate a public/private key pair of the given key size,
 and store the private key in the operating system keychain.
@@ -160,7 +160,7 @@ and store the private key in the operating system keychain.
 #### generate
 `static generate(keyTag : string) : Promise<KeyPair>`
 
-Equivalent to `generateKeys(2048, keyTag)`
+Equivalent to `generateKeys(keyTag, 2048)`
 
 #### encrypt
 `static encrypt(message : string, keyTag : string) : Promise<string>`
