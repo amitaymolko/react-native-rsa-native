@@ -10,6 +10,7 @@ declare module 'react-native-rsa-native' {
 	interface KeyPair extends PublicKey {
 		private: string;
 	}
+
 	type TypeCrypto  = 
 		'SHA256withRSA'|
 		'SHA512withRSA'|
