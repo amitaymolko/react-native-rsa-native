@@ -72,5 +72,5 @@ declare module 'react-native-rsa-native' {
 		export const SHA1withECDSA: string;
 	}
 
-	export { RSA, RSAKeychain };
+	export { RSA, RSAKeychain, KeyPair, CSRKey };
 }
