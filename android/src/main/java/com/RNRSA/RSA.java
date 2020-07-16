@@ -71,6 +71,7 @@ import static android.security.keystore.KeyProperties.*;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import java.nio.charset.Charset;
 
+import java.io.ByteArrayOutputStream;
 
 public class RSA {
     public static Charset CharsetUTF_8;
