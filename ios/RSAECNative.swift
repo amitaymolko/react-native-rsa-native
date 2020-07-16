@@ -328,8 +328,21 @@ class RSAECNative: NSObject {
     
     public func encrypt(message: String) -> String? {
         guard let data =  message.data(using: .utf8) else { return nil }
-        let encrypted = self._encrypt(data: data)
-        return encrypted?.base64EncodedString(options: .lineLength64Characters)
+        var limit = (2048 / 8) - 11
+        var limitTmp = limit
+        var position = 0
+        var finalString : Data? = nil
+        while (position < data.count) {
+            if (data.count - position < limit) {
+                limitTmp = data.count
+            }
+            let encrypted = self._encrypt(data: data[position..<limitTmp])
+            finalString = finalString == nil ? encrypted! : finalString! + encrypted!
+            position += limit
+            limitTmp += limit
+        }
+        
+        return finalString!.base64EncodedString(options: .lineLength64Characters)
     }
     
     public func _encrypt(data: Data) -> Data? {
@@ -366,8 +379,21 @@ class RSAECNative: NSObject {
     
     public func decrypt(message: String) -> String? {
         guard let data =  Data(base64Encoded: message, options: .ignoreUnknownCharacters) else { return nil }
-        let decrypted = self._decrypt(data: data)
-        return String(data: decrypted!, encoding: String.Encoding.utf8)
+        var limit = 2048 / 8
+        var limitTmp = limit
+        var position = 0
+        var finalString = ""
+        while (position < data.count) {
+            if (data.count - position < limit) {
+                limitTmp = data.count - position
+            }
+            let decrypted = self._decrypt(data: data[position..<limitTmp])
+            let descryptedString = String(data: decrypted!, encoding: String.Encoding.utf8)
+            finalString += descryptedString ?? ""
+            position += limit
+            limitTmp += limit
+        }
+        return finalString
     }
     
     private func _decrypt(data: Data) -> Data? {

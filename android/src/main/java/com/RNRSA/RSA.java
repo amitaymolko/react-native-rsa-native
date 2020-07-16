@@ -131,8 +131,27 @@ public class RSA {
         String encodedMessage = null;
         final Cipher cipher = Cipher.getInstance("RSA/NONE/PKCS1Padding");
         cipher.init(Cipher.ENCRYPT_MODE, this.publicKey);
-        byte[] cipherBytes = cipher.doFinal(data);
+        byte[] cipherBytes = encryptWithBuffer(cipher, data, 2048);
         return cipherBytes;
+    }
+
+    private byte[] encryptWithBuffer(Cipher cipher ,byte[] plainData ,int keySize ) {
+        try {
+            int limit = (keySize / 8) - 11;
+            int position = 0;
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            while (position < plainData.length) {
+                if (plainData.length - position < limit) limit = plainData.length - position;
+                byte[] data = cipher.doFinal(plainData, position, limit);
+                byteArrayOutputStream.write(data);
+                position += limit;
+            }
+            return byteArrayOutputStream.toByteArray();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     // Base64 input
@@ -153,8 +172,27 @@ public class RSA {
         String message = null;
         final Cipher cipher = Cipher.getInstance("RSA/NONE/PKCS1Padding");
         cipher.init(Cipher.DECRYPT_MODE, this.privateKey);
-        byte[] data = cipher.doFinal(cipherBytes);
+        byte[] data = decryptWithBuffer(cipher, cipherBytes, 2048);
         return data;
+    }
+
+    private byte[] decryptWithBuffer(Cipher cipher ,byte[] plainData ,int keySize ) {
+        try {
+            int limit = keySize / 8;
+            int position = 0;
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            while (position < plainData.length) {
+                if (plainData.length - position < limit) limit = plainData.length - position;
+                byte[] data = cipher.doFinal(plainData, position, limit);
+                byteArrayOutputStream.write(data);
+                position += limit;
+            }
+            return byteArrayOutputStream.toByteArray();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     // UTF-8 input
