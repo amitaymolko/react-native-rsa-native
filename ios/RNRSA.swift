@@ -168,7 +168,20 @@ class RNRSA: NSObject {
             resolve(signature)
         }
     }
-    
+       @objc
+    func signHash(_ message: String, withKey: String, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
+        let rsa_ec = RSAECNative()
+        guard let _ = rsa_ec.setPrivateKey(privateKey: withKey) else {
+            resolve(false)
+            return
+        }
+        let signature = rsa_ec.signHash(message: message, withAlgorithm: "SHA512withRSA", withEncodeOption: NSData.Base64EncodingOptions(rawValue: 0))
+        if(signature == nil){
+            reject("not sign it", "error", nil)
+        }else {
+            resolve(signature)
+        }
+    }
     @objc
     func signWithAlgorithm(_ message: String, withKey: String, withAlgorithm: String, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
         let rsa_ec = RSAECNative()

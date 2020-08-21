@@ -20,6 +20,7 @@ public class RNRSAModule extends ReactContextBaseJavaModule {
 
   private static final String SHA256withRSA = "SHA256withRSA";
   private static final String SHA512withRSA = "SHA512withRSA";
+  private static final String PKCS1SHA256 = "PKCS1SHA256";
 
   private final ReactApplicationContext reactContext;
 
@@ -38,6 +39,7 @@ public class RNRSAModule extends ReactContextBaseJavaModule {
     final Map<String, Object> constants = new HashMap<>();
     constants.put(SHA256withRSA, SHA256withRSA);
     constants.put(SHA512withRSA, SHA512withRSA);
+    constants.put(PKCS1SHA256, PKCS1SHA256);
     return constants;
   }
 
@@ -147,6 +149,24 @@ public class RNRSAModule extends ReactContextBaseJavaModule {
           RSA rsa = new RSA();
           rsa.setPrivateKey(privateKeyString);
           String signature = rsa.sign(message, SHA512withRSA);
+          promise.resolve(signature);
+
+        } catch (Exception e) {
+          promise.reject("Error", e.getMessage());
+        }
+      }
+    });
+  }
+
+  @ReactMethod
+  public void signHash(final String message, final String privateKeyString, final Promise promise) {
+    AsyncTask.execute(new Runnable() {
+      @Override
+      public void run() {
+        try {
+          RSA rsa = new RSA();
+          rsa.setPrivateKey(privateKeyString);
+          String signature = rsa.signHash(message, PKCS1SHA256);
           promise.resolve(signature);
 
         } catch (Exception e) {

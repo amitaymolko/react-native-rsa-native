@@ -16,6 +16,7 @@ RCT_EXTERN_METHOD(generateKeys:(int)keySize resolver:(RCTPromiseResolveBlock)res
 
 RCT_EXTERN_METHOD(sign:(NSString *)message withKey:(NSString *)withKey resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(signHash:(NSString *)message withKey:(NSString *)withKey resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(signWithAlgorithm:(NSString *)message withKey:(NSString *)withKey withAlgorithm:(NSString *)withAlgorithm resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 

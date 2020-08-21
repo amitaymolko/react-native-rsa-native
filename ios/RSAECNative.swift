@@ -18,8 +18,8 @@ class RSAECNative: NSObject {
     let publicKeyTag: String?
     let privateKeyTag: String?
     var publicKeyBits: Data?
-    var keyAlgorithm = KeyAlgorithm.rsa(signatureType: .sha512)
-    
+    // var keyAlgorithm = KeyAlgorithm.rsa(signatureType: .sha512)
+    var keyAlgorithm = KeyAlgorithm.rsa(signatureType: .sha256)
     public init(keyTag: String?){
         self.publicKeyTag = "\(keyTag ?? "").public"
         self.privateKeyTag = "\(keyTag ?? "").private"
@@ -404,7 +404,7 @@ class RSAECNative: NSObject {
         let encodedSignature = self._sign(messageBytes: data, withAlgorithm: withAlgorithm, withEncodeOption: withEncodeOption)
         return encodedSignature
     }
-    
+
     private func _sign(messageBytes: Data, withAlgorithm: String, withEncodeOption: NSData.Base64EncodingOptions) -> String? {
         self.setAlgorithm(algorithm: withAlgorithm)
         var encodedSignature: String?
@@ -474,6 +474,45 @@ class RSAECNative: NSObject {
                 signData.append(signature, count: signatureLen)
                 encodedSignature = signData.base64EncodedString(options: withEncodeOption)
             }
+        }
+        
+        if ((self.keyTag) != nil) {
+            self.performWithPrivateKeyTag(keyTag: self.privateKeyTag!, block: signer)
+        } else {
+            signer(self.privateKey!);
+        }
+        
+        return encodedSignature
+    }
+      public func signHash(message: String, withAlgorithm: String, withEncodeOption: NSData.Base64EncodingOptions) -> String? {
+        if let nsdata = Data(base64Encoded: message, options: NSData.Base64DecodingOptions.ignoreUnknownCharacters) {
+            let messageData = nsdata.withUnsafeBytes {
+               Array(UnsafeBufferPointer<UInt8>(start: $0, count: nsdata.count/MemoryLayout<UInt8>.size))
+            }
+            let encodedSignature = self._signHash(messageBytes: messageData, withAlgorithm: withAlgorithm, withEncodeOption: withEncodeOption)
+            return encodedSignature
+        }
+        return nil;
+    }
+     private func _signHash(messageBytes: [UInt8], withAlgorithm: String, withEncodeOption: NSData.Base64EncodingOptions) -> String? {
+        print(messageBytes);
+        self.setAlgorithm(algorithm: withAlgorithm)
+        var encodedSignature: String?
+        let signer: SecKeyPerformBlock = { privateKey in
+                var signature = [UInt8](repeating: 0, count: self.keyAlgorithm.availableKeySizes.last!)
+                var signatureLen:Int = signature.count
+            let result = SecKeyRawSign(privateKey, SecPadding.PKCS1SHA256, messageBytes, messageBytes.count, &signature, &signatureLen);
+            print(signature)
+            print(signatureLen)
+                if result != errSecSuccess{
+                    print("Error signing: \(result)")
+                    return
+                }
+                var signData = Data()
+  
+                signData.append(signature, count: signatureLen)
+                encodedSignature = signData.base64EncodedString(options: withEncodeOption)
+        
         }
         
         if ((self.keyTag) != nil) {
