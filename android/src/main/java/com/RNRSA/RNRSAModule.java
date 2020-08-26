@@ -2,6 +2,7 @@
 package com.RNRSA;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.facebook.react.bridge.NoSuchKeyException;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -20,7 +21,8 @@ public class RNRSAModule extends ReactContextBaseJavaModule {
 
   private static final String SHA256withRSA = "SHA256withRSA";
   private static final String SHA512withRSA = "SHA512withRSA";
-  private static final String PKCS1SHA256 = "PKCS1SHA256";
+  private static final String NonewithRSA = "NonewithRSA";
+
 
   private final ReactApplicationContext reactContext;
 
@@ -39,7 +41,6 @@ public class RNRSAModule extends ReactContextBaseJavaModule {
     final Map<String, Object> constants = new HashMap<>();
     constants.put(SHA256withRSA, SHA256withRSA);
     constants.put(SHA512withRSA, SHA512withRSA);
-    constants.put(PKCS1SHA256, PKCS1SHA256);
     return constants;
   }
 
@@ -142,13 +143,15 @@ public class RNRSAModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void sign(final String message, final String privateKeyString, final Promise promise) {
+
     AsyncTask.execute(new Runnable() {
       @Override
       public void run() {
         try {
           RSA rsa = new RSA();
           rsa.setPrivateKey(privateKeyString);
-          String signature = rsa.sign(message, SHA512withRSA);
+          String signature = rsa.sign(message, SHA256withRSA);
+        
           promise.resolve(signature);
 
         } catch (Exception e) {
@@ -166,10 +169,12 @@ public class RNRSAModule extends ReactContextBaseJavaModule {
         try {
           RSA rsa = new RSA();
           rsa.setPrivateKey(privateKeyString);
-          String signature = rsa.signHash(message, PKCS1SHA256);
+          String signature = rsa.signHash(message, NonewithRSA);
+        
           promise.resolve(signature);
 
         } catch (Exception e) {
+        
           promise.reject("Error", e.getMessage());
         }
       }

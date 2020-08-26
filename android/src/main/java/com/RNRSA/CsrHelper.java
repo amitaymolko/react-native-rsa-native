@@ -42,7 +42,9 @@ public class CsrHelper {
                     new ASN1ObjectIdentifier("1.2.840.113549.1.1.5")));
                     ALGOS.put("PKCS1SHA256".toLowerCase(), new AlgorithmIdentifier(
                         new ASN1ObjectIdentifier("1.2.840.113549.1.1.11")));
-
+                        ALGOS.put("PKCS1RSA".toLowerCase(), new AlgorithmIdentifier(
+                            new ASN1ObjectIdentifier("1.2.840.113549.1.1.1")));
+        
         }
 
         private String mAlgo;

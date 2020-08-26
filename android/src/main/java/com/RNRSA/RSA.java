@@ -2,74 +2,69 @@ package com.RNRSA;
 
 
 import android.annotation.TargetApi;
+import android.content.Context;
+import android.security.KeyPairGeneratorSpec;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
-import android.security.KeyPairGeneratorSpec;
-
 import android.util.Base64;
-import android.content.Context;
 
+import org.spongycastle.asn1.ASN1Encodable;
+import org.spongycastle.asn1.ASN1Encoding;
+import org.spongycastle.asn1.ASN1InputStream;
+import org.spongycastle.asn1.ASN1ObjectIdentifier;
+import org.spongycastle.asn1.ASN1Primitive;
+import org.spongycastle.asn1.pkcs.PrivateKeyInfo;
+import org.spongycastle.asn1.pkcs.RSAPrivateKey;
+import org.spongycastle.asn1.x509.SubjectPublicKeyInfo;
+import org.spongycastle.openssl.PEMParser;
+import org.spongycastle.operator.OperatorCreationException;
+import org.spongycastle.pkcs.PKCS10CertificationRequest;
+import org.spongycastle.util.io.pem.PemObject;
+import org.spongycastle.util.io.pem.PemReader;
+import org.spongycastle.util.io.pem.PemWriter;
 
-import java.security.MessageDigest;
-import java.security.SecureRandom;
-import java.security.spec.ECGenParameterSpec;
-import java.util.Calendar;
-import java.math.BigInteger;
+import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.math.BigInteger;
+import java.nio.charset.Charset;
 import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.KeyFactory;
 import java.security.KeyPair;
+import java.security.KeyPairGenerator;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
-import java.security.NoSuchProviderException;
-import java.security.PublicKey;
-import java.security.PrivateKey;
-import java.security.KeyFactory;
-import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
-import java.security.InvalidKeyException;
+import java.security.NoSuchProviderException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.Signature;
 import java.security.SignatureException;
 import java.security.UnrecoverableEntryException;
 import java.security.cert.CertificateException;
-import java.security.spec.X509EncodedKeySpec;
-import java.security.spec.RSAPrivateKeySpec;
+import java.security.spec.ECGenParameterSpec;
 import java.security.spec.InvalidKeySpecException;
+import java.security.spec.RSAPrivateKeySpec;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Calendar;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import javax.crypto.BadPaddingException;
 import javax.security.auth.x500.X500Principal;
 
-import java.io.IOException;
-
-
-
-import org.spongycastle.asn1.ASN1InputStream;
-import org.spongycastle.asn1.ASN1Encodable;
-import org.spongycastle.asn1.ASN1ObjectIdentifier;
-import org.spongycastle.asn1.ASN1Primitive;
-import org.spongycastle.asn1.pkcs.PKCSObjectIdentifiers;
-import org.spongycastle.asn1.pkcs.PrivateKeyInfo;
-import org.spongycastle.asn1.pkcs.RSAPublicKey;
-import org.spongycastle.asn1.pkcs.RSAPrivateKey;
-import org.spongycastle.asn1.x509.SubjectPublicKeyInfo;
-import org.spongycastle.operator.OperatorCreationException;
-import org.spongycastle.pkcs.PKCS10CertificationRequest;
-import org.spongycastle.util.io.pem.PemObject;
-import org.spongycastle.util.io.pem.PemWriter;
-import org.spongycastle.util.io.pem.PemReader;
-import org.spongycastle.asn1.pkcs.RSAPublicKey;
-import org.spongycastle.openssl.PEMParser;
-import org.spongycastle.util.io.pem.PemObject;
-
-
-import static android.security.keystore.KeyProperties.*;
-
+import static android.security.keystore.KeyProperties.DIGEST_SHA1;
+import static android.security.keystore.KeyProperties.DIGEST_SHA256;
+import static android.security.keystore.KeyProperties.DIGEST_SHA384;
+import static android.security.keystore.KeyProperties.DIGEST_SHA512;
+import static android.security.keystore.KeyProperties.PURPOSE_DECRYPT;
+import static android.security.keystore.KeyProperties.PURPOSE_ENCRYPT;
+import static android.security.keystore.KeyProperties.PURPOSE_SIGN;
+import static android.security.keystore.KeyProperties.PURPOSE_VERIFY;
 import static java.nio.charset.StandardCharsets.UTF_8;
-import java.nio.charset.Charset;
 
 
 public class RSA {
@@ -80,7 +75,7 @@ public class RSA {
     private static final String PUBLIC_HEADER = "RSA PUBLIC KEY";
     private static final String PRIVATE_HEADER = "RSA PRIVATE KEY";
     private static final String CSR_HEADER = "CERTIFICATE REQUEST";
-
+    private static final String OID_SHA256 = "2.16.840.1.101.3.4.2.1";
     private String keyTag;
 
     private PublicKey publicKey;
@@ -106,8 +101,8 @@ public class RSA {
     }
 
     public String getPublicKey() throws IOException {
-       byte[] pkcs1PublicKey = publicKeyToPkcs1(this.publicKey);
-       return dataToPem(PUBLIC_HEADER, pkcs1PublicKey);
+        byte[] pkcs1PublicKey = publicKeyToPkcs1(this.publicKey);
+        return dataToPem(PUBLIC_HEADER, pkcs1PublicKey);
         // return Base64.encodeToString(this.publicKey.getEncoded(), Base64.DEFAULT);
     }
 
@@ -179,15 +174,42 @@ public class RSA {
         byte[] signature = privateSignature.sign();
         return Base64.encodeToString(signature, Base64.DEFAULT);
     }
-    private String signHash(byte[] messageBytes, String algorithm) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
+//    private String signHash(byte[] messageBytes, String algorithm) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
+////        Cipher privateCipher = Cipher.getInstance("RSA/ECB/NoPadding");
+////        privateCipher.init(Cipher.ENCRYPT_MODE, privateKey);
+////        byte[] signature = privateCipher.doFinal(messageBytes);
+//        Signature privateSignature = Signature.getInstance(algorithm);
+//
+//        privateSignature.initSign(this.privateKey);
+//        privateSignature.update(messageBytes);
+//        byte[] signature = privateSignature.sign();
+//
+//        String strSignature = Base64.encodeToString(signature, Base64.DEFAULT);
+////
+//        return strSignature;
+//    }
+    private String signHash(byte[] hashBytes, String algorithm) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
+
+        ASN1ObjectIdentifier digestOid = new ASN1ObjectIdentifier(OID_SHA256);
+        org.spongycastle.asn1.x509.AlgorithmIdentifier sha256oid = new org.spongycastle.asn1.x509.AlgorithmIdentifier(digestOid, org.spongycastle.asn1.DERNull.INSTANCE);
+        org.spongycastle.asn1.x509.DigestInfo di = new org.spongycastle.asn1.x509.DigestInfo(sha256oid, hashBytes);
+
+        byte[] hashWithOID = new byte[0];
+        try {
+            hashWithOID = di.getEncoded(ASN1Encoding.DER);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         Signature privateSignature = Signature.getInstance(algorithm);
-        privateSignature.initSign(this.privateKey);
-        privateSignature.update(messageBytes);
-        byte[] signature = privateSignature.sign();
-        return Base64.encodeToString(signature, Base64.DEFAULT);
-    }
+        privateSignature.initSign(privateKey);
+        privateSignature.update(hashWithOID);
 
+        byte[] signature = privateSignature.sign();
+        String strSignature = Base64.encodeToString(signature, Base64.DEFAULT);
+        return strSignature;
+
+    }
     // b64 message
     public String sign64(String b64message, String algorithm) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
         byte[] messageBytes = Base64.decode(b64message, Base64.DEFAULT);
@@ -200,11 +222,11 @@ public class RSA {
         byte[] messageBytes = message.getBytes(CharsetUTF_8);
         return sign(messageBytes, signature);
     }
-  //utf-8 message
-  public String signHash(String message, String signature) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
-    byte[] messageBytes = message.getBytes(CharsetUTF_8);
-    return signHash(messageBytes, signature);
-}
+    //utf-8 message
+    public String signHash(String message, String signature) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
+        byte[] messageBytes =Base64.decode(message, Base64.DEFAULT);
+        return signHash(messageBytes, signature);
+    }
     private boolean verify(byte[] signatureBytes, byte[] messageBytes, String algorithm) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
         Signature publicSignature = Signature.getInstance(algorithm);
         publicSignature.initVerify(this.publicKey);
@@ -254,7 +276,7 @@ public class RSA {
             SubjectPublicKeyInfo subjectPublicKeyInfo = (SubjectPublicKeyInfo) pemParser.readObject();
             X509EncodedKeySpec spec = new X509EncodedKeySpec(subjectPublicKeyInfo.getEncoded());
             return KeyFactory.getInstance("RSA").generatePublic(spec);
-               } finally {
+        } finally {
             if (keyReader != null) {
                 keyReader.close();
             }
@@ -287,7 +309,7 @@ public class RSA {
         KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
         keyStore.load(null);
         KeyStore.PrivateKeyEntry privateKeyEntry = (KeyStore.PrivateKeyEntry) keyStore.getEntry(this.keyTag, null);
-        
+
         if (privateKeyEntry != null) {
             this.privateKey = privateKeyEntry.getPrivateKey();
             this.publicKey = privateKeyEntry.getCertificate().getPublicKey();
@@ -303,7 +325,7 @@ public class RSA {
     }
 
     public void generate() throws IOException, NoSuchAlgorithmException, InvalidAlgorithmParameterException {
-       this.generate(2048);
+        this.generate(2048);
     }
 
     public void generate(int keySize) throws IOException, NoSuchAlgorithmException, InvalidAlgorithmParameterException {
@@ -324,27 +346,27 @@ public class RSA {
         KeyPairGenerator kpg = KeyPairGenerator.getInstance(ALGORITHM, "AndroidKeyStore");
         if (android.os.Build.VERSION.SDK_INT >= 23) {
             kpg.initialize(
-                new KeyGenParameterSpec.Builder(
-                    keyTag,
-                    PURPOSE_ENCRYPT | PURPOSE_DECRYPT | PURPOSE_SIGN | PURPOSE_VERIFY
-                )
-                .setKeySize(keySize)
-                .setDigests(DIGEST_SHA256, DIGEST_SHA512, DIGEST_SHA1)
-                .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_RSA_PKCS1)
-                .setSignaturePaddings(KeyProperties.SIGNATURE_PADDING_RSA_PKCS1)
-                .build()
+                    new KeyGenParameterSpec.Builder(
+                            keyTag,
+                            PURPOSE_ENCRYPT | PURPOSE_DECRYPT | PURPOSE_SIGN | PURPOSE_VERIFY
+                    )
+                            .setKeySize(keySize)
+                            .setDigests(DIGEST_SHA256, DIGEST_SHA512, DIGEST_SHA1)
+                            .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_RSA_PKCS1)
+                            .setSignaturePaddings(KeyProperties.SIGNATURE_PADDING_RSA_PKCS1)
+                            .build()
             );
         } else {
             Calendar endDate = Calendar.getInstance();
             endDate.add(Calendar.YEAR, 1);
             KeyPairGeneratorSpec.Builder keyPairGeneratorSpec = new KeyPairGeneratorSpec.Builder(context)
-                .setAlias(keyTag)
-                .setSubject(new X500Principal(
-                    String.format("CN=%s, OU=%s", keyTag, context.getPackageName())
-                ))
-                .setSerialNumber(BigInteger.ONE)
-                .setStartDate(Calendar.getInstance().getTime())
-                .setEndDate(endDate.getTime());
+                    .setAlias(keyTag)
+                    .setSubject(new X500Principal(
+                            String.format("CN=%s, OU=%s", keyTag, context.getPackageName())
+                    ))
+                    .setSerialNumber(BigInteger.ONE)
+                    .setStartDate(Calendar.getInstance().getTime())
+                    .setEndDate(endDate.getTime());
             if (android.os.Build.VERSION.SDK_INT >= 19) {
                 keyPairGeneratorSpec.setKeySize(keySize).setKeyType(ALGORITHM);
             }
@@ -377,13 +399,13 @@ public class RSA {
             Calendar endDate = Calendar.getInstance();
             endDate.add(Calendar.YEAR, 1);
             KeyPairGeneratorSpec.Builder keyPairGeneratorSpec = new KeyPairGeneratorSpec.Builder(context)
-                .setAlias(keyTag)
-                .setSubject(new X500Principal(
-                    String.format("CN=%s", keyTag, context.getPackageName())
-                ))
-                .setSerialNumber(BigInteger.ONE)
-                .setStartDate(Calendar.getInstance().getTime())
-                .setEndDate(endDate.getTime());
+                    .setAlias(keyTag)
+                    .setSubject(new X500Principal(
+                            String.format("CN=%s", keyTag, context.getPackageName())
+                    ))
+                    .setSerialNumber(BigInteger.ONE)
+                    .setStartDate(Calendar.getInstance().getTime())
+                    .setEndDate(endDate.getTime());
             if (android.os.Build.VERSION.SDK_INT >= 19) {
                 keyPairGeneratorSpec.setKeySize(keySize).setKeyType(KeyProperties.KEY_ALGORITHM_EC);
             }
