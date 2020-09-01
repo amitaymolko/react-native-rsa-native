@@ -7,6 +7,7 @@ import android.security.KeyPairGeneratorSpec;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
 import android.util.Base64;
+import android.util.Log;
 
 import org.spongycastle.asn1.ASN1Encodable;
 import org.spongycastle.asn1.ASN1Encoding;
@@ -16,6 +17,8 @@ import org.spongycastle.asn1.ASN1Primitive;
 import org.spongycastle.asn1.pkcs.PrivateKeyInfo;
 import org.spongycastle.asn1.pkcs.RSAPrivateKey;
 import org.spongycastle.asn1.x509.SubjectPublicKeyInfo;
+import org.spongycastle.crypto.AsymmetricBlockCipher;
+import org.spongycastle.crypto.engines.RSAEngine;
 import org.spongycastle.openssl.PEMParser;
 import org.spongycastle.operator.OperatorCreationException;
 import org.spongycastle.pkcs.PKCS10CertificationRequest;
@@ -40,6 +43,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.Security;
 import java.security.Signature;
 import java.security.SignatureException;
 import java.security.UnrecoverableEntryException;
@@ -55,6 +59,7 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.security.auth.x500.X500Principal;
+import java.security.spec.MGF1ParameterSpec;
 
 import static android.security.keystore.KeyProperties.DIGEST_SHA1;
 import static android.security.keystore.KeyProperties.DIGEST_SHA256;
@@ -174,20 +179,7 @@ public class RSA {
         byte[] signature = privateSignature.sign();
         return Base64.encodeToString(signature, Base64.DEFAULT);
     }
-//    private String signHash(byte[] messageBytes, String algorithm) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
-////        Cipher privateCipher = Cipher.getInstance("RSA/ECB/NoPadding");
-////        privateCipher.init(Cipher.ENCRYPT_MODE, privateKey);
-////        byte[] signature = privateCipher.doFinal(messageBytes);
-//        Signature privateSignature = Signature.getInstance(algorithm);
-//
-//        privateSignature.initSign(this.privateKey);
-//        privateSignature.update(messageBytes);
-//        byte[] signature = privateSignature.sign();
-//
-//        String strSignature = Base64.encodeToString(signature, Base64.DEFAULT);
-////
-//        return strSignature;
-//    }
+
     private String signHash(byte[] hashBytes, String algorithm) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
 
         ASN1ObjectIdentifier digestOid = new ASN1ObjectIdentifier(OID_SHA256);
@@ -210,6 +202,35 @@ public class RSA {
         return strSignature;
 
     }
+    private String signHashPSS(byte[] hashBytes, String algorithm) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
+
+        final String MGF1 = "MGF1";
+        final String RAWRSASSA_PSS = "NONEWITHRSASSA-PSS";
+        final  String hashName = "SHA-256";
+        final int saltLen = org.spongycastle.jcajce.provider.util.DigestFactory.getDigest(hashName).getDigestSize();
+        Signature privateSignature = null;
+        try {
+            Security.insertProviderAt(new org.spongycastle.jce.provider.BouncyCastleProvider(), 1);
+            privateSignature = Signature.getInstance(RAWRSASSA_PSS,"SC");
+        } catch (NoSuchProviderException e) {
+            e.printStackTrace();
+        }
+
+        java.security.spec.PSSParameterSpec pssPrams = new java.security.spec.PSSParameterSpec(hashName, MGF1, new MGF1ParameterSpec(hashName), saltLen, 1);
+        try {
+            privateSignature.setParameter(pssPrams);
+        } catch (InvalidAlgorithmParameterException e) {
+            Log.i("PSS",e.getMessage());
+            e.printStackTrace();
+        }
+        privateSignature.initSign(privateKey);
+        privateSignature.update(hashBytes);
+
+        byte[] signature = privateSignature.sign();
+        String strSignature = Base64.encodeToString(signature, Base64.DEFAULT);
+        return strSignature;
+
+    }
     // b64 message
     public String sign64(String b64message, String algorithm) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
         byte[] messageBytes = Base64.decode(b64message, Base64.DEFAULT);
@@ -223,9 +244,9 @@ public class RSA {
         return sign(messageBytes, signature);
     }
     //utf-8 message
-    public String signHash(String message, String signature) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
+    public String signHash(String message, String algorithm) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
         byte[] messageBytes =Base64.decode(message, Base64.DEFAULT);
-        return signHash(messageBytes, signature);
+        return signHashPSS(messageBytes, algorithm);
     }
     private boolean verify(byte[] signatureBytes, byte[] messageBytes, String algorithm) throws NoSuchAlgorithmException, InvalidKeySpecException, IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, InvalidKeyException, SignatureException {
         Signature publicSignature = Signature.getInstance(algorithm);
