@@ -11,6 +11,11 @@ import Foundation
 @objc(RNRSAKeychain)
 class RNRSAKeychain: NSObject {
     
+    @objc 
+    static 
+    func requiresMainQueueSetup() -> Bool {
+      return false
+    }
     
     @objc
     func constantsToExport() -> [AnyHashable : Any]! {
