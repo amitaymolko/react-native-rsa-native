@@ -345,7 +345,12 @@ public class RSA {
     }
 
     @TargetApi(18)
-    public void generateCSR(String cn,String keyTag, int keySize, Context context) throws IOException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, NoSuchProviderException, UnrecoverableEntryException, KeyStoreException, CertificateException {
+    public void generateCSR(String commonName, String withAlgorithm, Context context) throws IOException, OperatorCreationException {
+        this.csr = CsrHelper.generateCSR(this.publicKey, commonName, keyTag, withAlgorithm);
+    }
+
+    @TargetApi(18)
+    public void generateCSRWithEC(String cn,String keyTag, int keySize, Context context) throws IOException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, NoSuchProviderException, UnrecoverableEntryException, KeyStoreException, CertificateException {
         this.deletePrivateKey();
         KeyPairGenerator kpg = KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_EC, "AndroidKeyStore");
         if (android.os.Build.VERSION.SDK_INT >= 23) {
@@ -383,7 +388,7 @@ public class RSA {
         this.publicKey = keyPair.getPublic();
 
         try {
-            this.csr = CsrHelper.generateCSR(this.publicKey, cn, keyTag);
+            this.csr = CsrHelper.generateCSRWithEC(this.publicKey, cn, keyTag);
         } catch (OperatorCreationException e) {
             e.printStackTrace();
         }

@@ -71,6 +71,29 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
+  public void generateCSR(final String keyTag, final String commonName, final String withAlgorithm, final Promise promise) {
+    final ReactApplicationContext reactContext = this.reactContext;
+
+    AsyncTask.execute(new Runnable() {
+      @Override
+      public void run() {
+        WritableNativeMap keys = new WritableNativeMap();
+
+        try {
+          RSA rsa = new RSA(keyTag);
+          rsa.generateCSR(commonName, withAlgorithm, reactContext);
+          keys.putString("csr", rsa.getCSR());
+          promise.resolve(keys);
+        } catch (NoSuchAlgorithmException e) {
+          promise.reject("Error", e.getMessage());
+        } catch (Exception e) {
+          promise.reject("Error", e.getMessage());
+        }
+      }
+    });
+  }
+
+  @ReactMethod
   public void generateCSRWithEC(final String cn,final String keyTag, final int keySize, final Promise promise) {
     final ReactApplicationContext reactContext = this.reactContext;
 
@@ -81,7 +104,7 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
 
         try {
           RSA rsa = new RSA();
-          rsa.generateCSR(cn,keyTag, keySize, reactContext);
+          rsa.generateCSRWithEC(cn,keyTag, keySize, reactContext);
           keys.putString("csr", rsa.getCSR());
           promise.resolve(keys);
         } catch (NoSuchAlgorithmException e) {
