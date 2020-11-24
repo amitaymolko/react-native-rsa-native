@@ -81,10 +81,8 @@ public class CertificateSigningRequest:NSObject {
         certificationRequestInfo.copyBytes(to: &certificationRequestInfoBytes, count: certificationRequestInfo.count)
         let shaBytes = keyAlgorithm.sequenceObjectEncryptionType
         
-        
-        var signature = [UInt8](repeating: 0, count: 256)
-        var signatureLen:Int = signature.count
-        
+        // Allocate enough space for RSA-8192
+        var signature = Data(capacity: 1024);
         
         if #available(iOS 11, *) {
             // Build signature - step 1: SHA1 hash
@@ -92,8 +90,7 @@ public class CertificateSigningRequest:NSObject {
             var error: Unmanaged<CFError>?
             
             if let signatureData = SecKeyCreateSignature(privateKey, keyAlgorithm.signatureAlgorithm, certificationRequestInfo as CFData, &error) as Data?{
-                signatureData.copyBytes(to: &signature, count: signatureData.count)
-                signatureLen = signatureData.count
+                signature.append(signatureData)
             }
             
             if error != nil{
@@ -140,7 +137,10 @@ public class CertificateSigningRequest:NSObject {
             }
             
             // Build signature - step 2: Sign hash
-            let result = SecKeyRawSign(privateKey, padding, digest, digest.count, &signature, &signatureLen)
+            var signatureRaw = [UInt8](repeating: 0, count: 1024);
+            var signatureRawLen = 1024;
+            let result = SecKeyRawSign(privateKey, padding, digest, digest.count, &signatureRaw, &signatureRawLen)
+            signature.append(signatureRaw, count: signatureRawLen)
             
             if result != errSecSuccess{
                 print("Error signing: \(result)")
@@ -157,7 +157,7 @@ public class CertificateSigningRequest:NSObject {
         var signData = Data(capacity: 257)
         let zero:UInt8 = 0 // Prepend zero
         signData.append(zero)
-        signData.append(signature, count: signatureLen)
+        signData.append(signature)
         appendBITSTRING(signData, into: &certificationRequest)
         
         enclose(&certificationRequest, by: SEQUENCE_tag) // Enclose into SEQUENCE

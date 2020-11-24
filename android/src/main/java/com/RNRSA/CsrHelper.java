@@ -101,11 +101,11 @@ public class CsrHelper {
     }
 
     //Create the certificate signing request (CSR) from private and public keys
-    public static PKCS10CertificationRequest generateCSR(PublicKey publicKey, String cn, String keyTag) throws IOException,
+    public static PKCS10CertificationRequest generateCSR(PublicKey publicKey, String cn, String keyTag, String withAlgorithm) throws IOException,
             OperatorCreationException {
 
         String principal = String.format(CN_PATTERN, cn);
-        ContentSigner signer = new JCESigner (DEFAULT_SIGNATURE_ALGORITHM, keyTag);
+        ContentSigner signer = new JCESigner(withAlgorithm, keyTag);
         PKCS10CertificationRequestBuilder csrBuilder = new JcaPKCS10CertificationRequestBuilder(
                 new X500Name(principal), publicKey);
 
@@ -116,6 +116,10 @@ public class CsrHelper {
                 extensionsGenerator.generate());
         PKCS10CertificationRequest csr = csrBuilder.build(signer);
         return csr;
+    }
+
+    public static PKCS10CertificationRequest generateCSRWithEC(PublicKey publicKey, String commonName, String keyTag) throws IOException, OperatorCreationException {
+        return generateCSR(publicKey, commonName, keyTag, DEFAULT_SIGNATURE_ALGORITHM);
     }
 }
 
