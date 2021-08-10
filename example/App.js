@@ -35,6 +35,12 @@ const signDemo = async () => {
   console.log('signature', signature);
   const valid = await RSA.verify(signature, secret, keys.public)
   console.log('verified', valid);
+  try {
+    await RSA.verify(signature, "wrong message", keys.public)
+    console.log("NOTE!! Something went wrong, verify should have been failed")
+  } catch (err) {
+    console.log('verify fails correctly: ', err);
+  }
 }
 
 const signAlgoDemo = async () => {
@@ -44,6 +50,12 @@ const signAlgoDemo = async () => {
   console.log('signature', signature);
   const valid = await RSA.verifyWithAlgorithm(signature, secret, keys.public, RSA.SHA256withRSA)
   console.log('verified', valid);
+  try {
+    await RSA.verifyWithAlgorithm(signature, "wrong message", keys.public, RSA.SHA256withRSA)
+    console.log("NOTE!! Something went wrong, verify should have been failed")
+  } catch (err) {
+    console.log('verify fails correctly: ', err);
+  }
 }
 
 const iosDemo = async () => {

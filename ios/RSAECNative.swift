@@ -499,7 +499,7 @@ class RSAECNative: NSObject {
     
     private func _verify(signatureBytes: Data, withMessage: Data, withAlgorithm: String) -> Bool? {
         var result = false
-        
+        self.setAlgorithm(algorithm: withAlgorithm)
         // Closures
         let verifier: SecKeyPerformBlock = { publicKey in
             if #available(iOS 10.0, *) {
