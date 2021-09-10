@@ -105,9 +105,9 @@ class RNRSA: NSObject {
             resolve(false)
             return
         }
-        let signature = rsa_ec.verify(encodedSignature: signature, withMessage: withMessage, withAlgorithm: "SHA512withRSA")
-        if(signature == nil){
-            reject("not sign it", "error", nil)
+        let verifyResult = rsa_ec.verify(encodedSignature: signature, withMessage: withMessage, withAlgorithm: "SHA512withRSA")
+        if(verifyResult == false){
+            reject("verify failed", "error", nil)
         }else {
             resolve(true)
         }
@@ -117,12 +117,14 @@ class RNRSA: NSObject {
     func verifyWithAlgorithm(_ signature: String, withMessage: String ,withKey: String, withAlgorithm: String, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) -> Void {
         let rsa_ec = RSAECNative()
         guard let _ = rsa_ec.setPublicKey(publicKey: withKey) else {
+            print("public key set failed")
             resolve(false)
             return
         }
-        let signature = rsa_ec.verify(encodedSignature: signature, withMessage: withMessage, withAlgorithm: withAlgorithm)
-        if(signature == nil){
-            reject("not sign it", "error", nil)
+        let verifyResult = rsa_ec.verify(encodedSignature: signature, withMessage: withMessage, withAlgorithm: withAlgorithm)
+        if(verifyResult == false){
+            print("verify failed")
+            reject("verify failed", "error", nil)
         }else {
             resolve(true)
         }
@@ -136,9 +138,9 @@ class RNRSA: NSObject {
             resolve(false)
             return
         }
-        let signature = rsa_ec.verify64(encodedSignature: signature, withMessage: withMessage, withAlgorithm: "SHA512withRSA")
-        if(signature == nil){
-            reject("not sign it", "error", nil)
+        let verifyResult = rsa_ec.verify64(encodedSignature: signature, withMessage: withMessage, withAlgorithm: "SHA512withRSA")
+        if(verifyResult == false){
+            reject("verify failed", "error", nil)
         }else {
             resolve(true)
         }
@@ -151,9 +153,9 @@ class RNRSA: NSObject {
             resolve(false)
             return
         }
-        let signature = rsa_ec.verify64(encodedSignature: signature, withMessage: withMessage, withAlgorithm: withAlgorithm)
-        if(signature == nil){
-            reject("not sign it", "error", nil)
+        let verifyResult = rsa_ec.verify64(encodedSignature: signature, withMessage: withMessage, withAlgorithm: withAlgorithm)
+        if(verifyResult == false){
+            reject("verify failed", "error", nil)
         }else {
             resolve(true)
         }
