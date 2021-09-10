@@ -1,6 +1,6 @@
 {
   "name": "react-native-rsa-native",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "A native implementation of RSA key generation and encryption/decryption.",
   "main": "index.js",
   "types": "index.d.ts",
