@@ -367,6 +367,9 @@ class RSAECNative: NSObject {
     public func decrypt(message: String) -> String? {
         guard let data =  Data(base64Encoded: message, options: .ignoreUnknownCharacters) else { return nil }
         let decrypted = self._decrypt(data: data)
+        if (decrypted == nil) {
+            return nil
+        }
         return String(data: decrypted!, encoding: String.Encoding.utf8)
     }
     
