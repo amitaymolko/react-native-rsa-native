@@ -45,7 +45,7 @@ public class RNRSAModule extends ReactContextBaseJavaModule {
   public void generate(final Promise promise) {
     this.generateKeys(2048, promise);
   }
-  
+
   @ReactMethod
   public void generateKeys(final int keySize, final Promise promise) {
     AsyncTask.execute(new Runnable() {
