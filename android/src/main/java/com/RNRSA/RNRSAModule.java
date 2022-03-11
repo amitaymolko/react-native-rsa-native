@@ -45,7 +45,7 @@ public class RNRSAModule extends ReactContextBaseJavaModule {
   public void generate(final Promise promise) {
     this.generateKeys(2048, promise);
   }
-
+  
   @ReactMethod
   public void generateKeys(final int keySize, final Promise promise) {
     AsyncTask.execute(new Runnable() {
@@ -54,10 +54,14 @@ public class RNRSAModule extends ReactContextBaseJavaModule {
         WritableNativeMap keys = new WritableNativeMap();
 
         try {
-          RSA rsa = new RSA();
-          rsa.generate(keySize);
-          keys.putString("public", rsa.getPublicKey());
-          keys.putString("private", rsa.getPrivateKey());
+          KeyPairGenerator kpg = KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_RSA);
+          kpg.initialize(2048);
+          KeyPair kp = kpg.generateKeyPair();
+          String publicKey = "-----BEGIN PUBLIC KEY-----" + Base64.encodeToString(kp.getPublic().getEncoded(), Base64.DEFAULT) + "-----END PUBLIC KEY-----";
+          String privateKey = "-----BEGIN RSA PRIVATE KEY-----" + Base64.encodeToString(kp.getPrivate().getEncoded(), Base64.DEFAULT) + "-----END RSA PRIVATE KEY-----";
+
+          keys.putString("public", publicKey);
+          keys.putString("private", privateKey);
           promise.resolve(keys);
         } catch (NoSuchAlgorithmException e) {
           promise.reject("Error", e.getMessage());
