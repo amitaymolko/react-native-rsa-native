@@ -47,28 +47,24 @@ import java.io.IOException;
 
 
 
-import org.spongycastle.asn1.ASN1InputStream;
-import org.spongycastle.asn1.ASN1Encodable;
-import org.spongycastle.asn1.ASN1ObjectIdentifier;
-import org.spongycastle.asn1.ASN1Primitive;
-import org.spongycastle.asn1.pkcs.PKCSObjectIdentifiers;
-import org.spongycastle.asn1.pkcs.PrivateKeyInfo;
-import org.spongycastle.asn1.pkcs.RSAPublicKey;
-import org.spongycastle.asn1.pkcs.RSAPrivateKey;
-import org.spongycastle.asn1.x509.SubjectPublicKeyInfo;
-import org.spongycastle.operator.OperatorCreationException;
-import org.spongycastle.pkcs.PKCS10CertificationRequest;
-import org.spongycastle.util.io.pem.PemObject;
-import org.spongycastle.util.io.pem.PemWriter;
-import org.spongycastle.util.io.pem.PemReader;
-import org.spongycastle.asn1.pkcs.RSAPublicKey;
-import org.spongycastle.openssl.PEMParser;
-import org.spongycastle.util.io.pem.PemObject;
-
 
 import static android.security.keystore.KeyProperties.*;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+
+import org.bouncycastle.asn1.ASN1Encodable;
+import org.bouncycastle.asn1.ASN1InputStream;
+import org.bouncycastle.asn1.ASN1Primitive;
+import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
+import org.bouncycastle.asn1.pkcs.RSAPrivateKey;
+import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
+import org.bouncycastle.openssl.PEMParser;
+import org.bouncycastle.operator.OperatorCreationException;
+import org.bouncycastle.pkcs.PKCS10CertificationRequest;
+import org.bouncycastle.util.io.pem.PemObject;
+import org.bouncycastle.util.io.pem.PemReader;
+import org.bouncycastle.util.io.pem.PemWriter;
+
 import java.nio.charset.Charset;
 
 
@@ -318,7 +314,7 @@ public class RSA {
                 )
                 .setKeySize(keySize)
                 .setDigests(DIGEST_SHA256, DIGEST_SHA512, DIGEST_SHA1)
-                .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_RSA_PKCS1)
+                .setEncryptionPaddings(ENCRYPTION_PADDING_RSA_PKCS1)
                 .setSignaturePaddings(KeyProperties.SIGNATURE_PADDING_RSA_PKCS1)
                 .build()
             );
