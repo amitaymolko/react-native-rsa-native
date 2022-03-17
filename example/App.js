@@ -170,7 +170,8 @@ const keychainDemo = async () => {
   const publicKey = await RSAKeychain.getPublicKey(keyTag);
   console.log('getPublicKey', publicKey);
 
-  const subject = 'test sdqsd, C=fr, surName=sdqsd, GIVENNAME=test, organizationIdentifier=1.0.2.15';
+  const subject =
+    'Text, C=US, surName=test, GIVENNAME=test, organizationIdentifier=1.0.2.15';
   const csr = await RSAKeychain.generateCSR(keyTag, subject, 'SHA256withRSA');
   console.log('csr', csr);
 
@@ -178,7 +179,7 @@ const keychainDemo = async () => {
   console.log('delete success', success);
 };
 
-/* const runDemos = async () => {
+const runDemos = async () => {
   await generateKeys4096Demo();
   await generateDemo();
   await signDemo();
@@ -188,9 +189,7 @@ const keychainDemo = async () => {
   await keychainDemo();
 };
 
-runDemos().then(); */
-
-keychainDemo();
+runDemos().then();
 
 class App extends Component {
   render() {
