@@ -55,8 +55,8 @@ allprojects {
 
 dependencies {
     implementation 'com.facebook.react:react-native:+'
-    implementation 'com.madgag.spongycastle:core:1.56.0.0'
-    implementation 'com.madgag.spongycastle:prov:1.56.0.0'
-    implementation 'com.madgag.spongycastle:bcpkix-jdk15on:1.56.0.0'
+    // implementation 'com.madgag.spongycastle:core:1.56.0.0'
+    // implementation 'com.madgag.spongycastle:prov:1.56.0.0'
+    // implementation 'com.madgag.spongycastle:bcpkix-jdk15on:1.56.0.0'
 }
   
