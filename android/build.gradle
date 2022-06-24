@@ -9,7 +9,7 @@ buildscript {
     if (project == rootProject) {
         repositories {
             google()
-            jcenter()
+            // jcenter()
             maven {
                 url "https://maven.fabric.io/public"
             }
@@ -45,7 +45,7 @@ allprojects {
     repositories {
         mavenLocal()
         google()
-        jcenter()
+        // jcenter()
         maven {
             // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
             url "$rootDir/../node_modules/react-native/android"
