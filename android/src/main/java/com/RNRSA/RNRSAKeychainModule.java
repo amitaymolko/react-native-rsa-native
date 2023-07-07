@@ -103,7 +103,7 @@ public class RNRSAKeychainModule extends ReactContextBaseJavaModule {
         WritableNativeMap keys = new WritableNativeMap();
 
         try {
-          RSA rsa = new RSA();
+          RSA rsa = new RSA(keyTag);
           rsa.generateCSRWithEC(cn,keyTag, keySize, reactContext);
           keys.putString("csr", rsa.getCSR());
           promise.resolve(keys);
