@@ -2,16 +2,16 @@
 package com.RNRSA;
 
 import android.os.AsyncTask;
+import android.security.keystore.KeyProperties;
+import android.util.Base64;
 
-import com.facebook.react.bridge.NoSuchKeyException;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.bridge.Promise;
-
-import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
@@ -54,10 +54,14 @@ public class RNRSAModule extends ReactContextBaseJavaModule {
         WritableNativeMap keys = new WritableNativeMap();
 
         try {
-          RSA rsa = new RSA();
-          rsa.generate(keySize);
-          keys.putString("public", rsa.getPublicKey());
-          keys.putString("private", rsa.getPrivateKey());
+          KeyPairGenerator kpg = KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_RSA);
+          kpg.initialize(2048);
+          KeyPair kp = kpg.generateKeyPair();
+          String publicKey = "-----BEGIN PUBLIC KEY-----" + Base64.encodeToString(kp.getPublic().getEncoded(), Base64.DEFAULT) + "-----END PUBLIC KEY-----";
+          String privateKey = "-----BEGIN RSA PRIVATE KEY-----" + Base64.encodeToString(kp.getPrivate().getEncoded(), Base64.DEFAULT) + "-----END RSA PRIVATE KEY-----";
+
+          keys.putString("public", publicKey);
+          keys.putString("private", privateKey);
           promise.resolve(keys);
         } catch (NoSuchAlgorithmException e) {
           promise.reject("Error", e.getMessage());
