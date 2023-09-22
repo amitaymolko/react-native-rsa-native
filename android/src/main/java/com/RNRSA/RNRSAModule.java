@@ -55,7 +55,7 @@ public class RNRSAModule extends ReactContextBaseJavaModule {
 
         try {
           KeyPairGenerator kpg = KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_RSA);
-          kpg.initialize(2048);
+          kpg.initialize(keySize);
           KeyPair kp = kpg.generateKeyPair();
           String publicKey = "-----BEGIN PUBLIC KEY-----" + Base64.encodeToString(kp.getPublic().getEncoded(), Base64.DEFAULT) + "-----END PUBLIC KEY-----";
           String privateKey = "-----BEGIN RSA PRIVATE KEY-----" + Base64.encodeToString(kp.getPrivate().getEncoded(), Base64.DEFAULT) + "-----END RSA PRIVATE KEY-----";
