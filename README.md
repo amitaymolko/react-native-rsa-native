@@ -30,6 +30,10 @@ or:
 
 `$ npm install react-native-rsa-native --save`
 
+
+### Additional step for iOS devices
+`$ pod install`
+
 ## Older React-Native versions
 If you are using an older version of React Native and are having issues try using v1.1.14
 
